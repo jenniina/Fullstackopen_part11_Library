@@ -16,7 +16,6 @@ require('dotenv').config()
 const resolvers = require('./resolvers.cjs')
 const typeDefs = require('./schema.cjs')
 
-const { startStandaloneServer } = require('@apollo/server/standalone')
 const config = require('./utils/config')
 
 mongoose
