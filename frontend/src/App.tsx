@@ -147,7 +147,7 @@ const App = () => {
             path='/login'
             element={<FormLogin notify={notify} setToken={setToken} />}
           ></Route>
-          <Route path='/setuser' element={<NewUser notify={notify} />}></Route>
+          {/* <Route path='/setuser' element={<NewUser notify={notify} />}></Route> */}
         </Routes>
       </div>
     </div>
