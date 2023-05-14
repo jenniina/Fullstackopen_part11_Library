@@ -30,6 +30,9 @@ export const ALL_USERS = gql`
       username
       favoriteGenre
       id
+      books {
+        title
+      }
     }
   }
 `

@@ -19,6 +19,7 @@ type Book {
     username: String!
     passwordHash: String!
     favoriteGenre: String!
+    books: [Book]
     id: ID!
   }
   

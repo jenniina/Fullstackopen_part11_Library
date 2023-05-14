@@ -14,6 +14,7 @@ const NewBook = (props: {
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState<string[]>([])
   const [userId, setUser] = useState('')
+
   const user = useQuery(ME)
   console.log('user: ', user)
   console.log(userId)

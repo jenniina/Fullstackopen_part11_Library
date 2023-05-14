@@ -114,6 +114,9 @@ table {
   text-align: left;
   margin: 0 auto;
 }
+table p {
+  margin: 0;
+}
 tr > * {
   border-bottom: 1px dashed currentColor;
   padding: 0 1em;

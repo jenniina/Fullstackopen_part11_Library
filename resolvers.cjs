@@ -54,7 +54,7 @@ const resolvers = {
 
     authorCount: () => Author.collection.countDocuments(),
     allAuthors: async () => await Author.find({}).populate('bookCount'),
-    allUsers: async () => await User.find({}),
+    allUsers: async () => await User.find({}).populate('books'),
     findAuthor: async (root) => await Author.findOne({ name: root.name }),
     me: (_root, _args, context) => {
       return context.currentUser
@@ -75,7 +75,6 @@ const resolvers = {
       }
       const book = await Book.findOne({ title: args.title })
       const author = await Author.findOne({ name: args.author })
-      //const user = await User.findOne({ id: args.user })
 
       if (!args.title || !args.author || !args.published || !args.genres) {
         throw new GraphQLError('Please fill in all the fields', {
@@ -111,6 +110,15 @@ const resolvers = {
         user: args.user,
       })
 
+      await User.findOneAndUpdate(
+        { _id: currentUser._id },
+        {
+          $push: {
+            books: newBook,
+          },
+        },
+        { new: true, runValidators: true, context: 'query' }
+      )
       try {
         await newBook.save()
         pubsub.publish('BOOK_ADDED', {
@@ -142,19 +150,25 @@ const resolvers = {
       return author
     },
     createUser: async (_root, args) => {
+      const user = await User.findOne({ id: args.username })
       const passwordHashh = await bcrypt.hash(args.passwordHash, 10)
-      const user = new User({
+      const newUser = new User({
         ...args,
         passwordHash: passwordHashh,
       })
-
-      return user.save().catch((error) => {
-        throw new GraphQLError('Creating the user failed', {
-          extensions: {
-            code: 'BAD_USER_INPUT',
-          },
+      if (user) {
+        throw new GraphQLError('Username already taken', {
+          code: 'BAD_USER_INPUT',
+          invalidArgs: args.username,
         })
-      })
+      } else
+        return newUser.save().catch((error) => {
+          throw new GraphQLError('Creating the user failed', {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+            },
+          })
+        })
     },
     login: async (_root, args) => {
       const user = await User.findOne({ username: args.username })
@@ -216,3 +230,5 @@ const resolvers = {
 }
 
 module.exports = resolvers
+
+// Cast to [ObjectId] failed for value "[\n' + ' {\n' + ' newBook: {\n' + " title: 'Book',\n" + ' published: 2020,\n' + ' author: new ObjectId("64426bc69e7ea7a92dbeb03b"),\n' + ' genres: [Array],\n' + ' user: new ObjectId("6460cf8a080777a10e0ef9cf"),\n' + ' _id: new ObjectId("6461145f4432b7eccc40e632")\n' + ' }\n' + ' }\n' + ']" (type string) at path "books.0" because of "CastError"

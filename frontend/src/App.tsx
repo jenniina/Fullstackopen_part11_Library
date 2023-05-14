@@ -4,7 +4,7 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import { message } from './interfaces'
-import { ALL_AUTHORS, ALL_BOOKS, BOOK_ADDED } from './queries'
+import { ALL_AUTHORS, ALL_BOOKS, ALL_USERS, BOOK_ADDED } from './queries'
 import FormLogin from './components/FormLogin'
 import {
   ApolloCache,
@@ -17,6 +17,7 @@ import { Route, Routes, NavLink } from 'react-router-dom'
 import Recommended from './components/Recommended'
 import { booksProps } from './interfaces'
 import NewUser from './components/NewUser'
+import Users from './components/Users'
 
 // function that takes care of manipulating cache
 export const updateCache = (
@@ -51,6 +52,7 @@ const App = () => {
 
   const resultAuthors = useQuery(ALL_AUTHORS)
   const resultBooks = useQuery(ALL_BOOKS)
+  const resultUsers = useQuery(ALL_USERS)
 
   const notify = (info: message, seconds: number) => {
     setMessage(info)
@@ -104,6 +106,9 @@ const App = () => {
         ) : (
           <>
             <li>
+              <NavLink to='users'>Users</NavLink>
+            </li>
+            <li>
               <NavLink to='addBook'>Add Book</NavLink>
             </li>
             <li>
@@ -132,6 +137,12 @@ const App = () => {
                 notify={notify}
                 token={token}
               />
+            }
+          ></Route>
+          <Route
+            path='/users'
+            element={
+              <Users users={resultUsers?.data?.allUsers} notify={notify} token={token} />
             }
           ></Route>
           <Route path='/' element={<Books books={resultBooks?.data?.allBooks} />}></Route>
