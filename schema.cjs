@@ -16,11 +16,16 @@ type Book {
 
   type User {
     username: String!
+    passwordHash: String!
     favoriteGenre: String!
     id: ID!
   }
   
   type Token {
+    value: String!
+  }
+  
+  type Value {
     value: String!
   }
 
@@ -30,6 +35,7 @@ type Book {
     findBook(title: String!):Book
     authorCount: Int!
     allAuthors: [Author!]!
+    allUsers: [User!]!
     findAuthor(name: String!):Author
     me: User
 }
@@ -48,12 +54,22 @@ type Mutation {
     ): Author
   createUser(
     username: String!
+    passwordHash: String!
     favoriteGenre: String!
     ): User
   login(
     username: String!
     password: String!
     ): Token
+  deleteUser(
+    username: String!
+    ):Value
+  deleteBook(
+    title: String!
+    ):Value
+  deleteAuthor(
+    name: String!
+    ):Value
 }
 type Subscription {
   bookAdded: Book!

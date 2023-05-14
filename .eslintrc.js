@@ -6,9 +6,14 @@ module.exports = {
     node: true,
   },
   extends: ['eslint:recommended', 'plugin:cypress/recommended'],
+  plugins: ['yaml'],
   overrides: [],
   parserOptions: {
-    ecmaVersion: 'latest',
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: 2018,
+    sourceType: 'module',
   },
   rules: {
     indent: ['error', 2],
@@ -18,7 +23,8 @@ module.exports = {
     'no-trailing-spaces': 'error',
     'object-curly-spacing': ['error', 'always'],
     'arrow-spacing': ['error', { before: true, after: true }],
-    'no-console': 0,
-    'no-unused-vars': 0,
+    'no-console': 'error',
+    'react/prop-types': 0,
+    // 'no-unused-vars': 2,
   },
 }

@@ -6,11 +6,12 @@ const User = require('./models/user')
 const jwt = require('jsonwebtoken')
 const { PubSub } = require('graphql-subscriptions')
 const pubsub = new PubSub()
+const bcrypt = require('bcryptjs')
 
 const resolvers = {
   Query: {
     bookCount: () => Book.collection.countDocuments(),
-    allBooks: async (root, args) => {
+    allBooks: async (_root, args) => {
       if (args.author) {
         const author = await Author.findOne({ name: args.author })
         if (author) {
@@ -30,7 +31,7 @@ const resolvers = {
 
       return Book.find({}).populate('author')
     },
-    findBook: async (root, args) => {
+    findBook: async (_root, args) => {
       if (args.author) {
         const author = await Author.findOne({ name: args.author })
         if (author) {
@@ -53,6 +54,7 @@ const resolvers = {
 
     authorCount: () => Author.collection.countDocuments(),
     allAuthors: async () => await Author.find({}).populate('bookCount'),
+    allUsers: async () => await User.find({}),
     findAuthor: async (root) => await Author.findOne({ name: root.name }),
     me: (_root, _args, context) => {
       return context.currentUser
@@ -132,26 +134,28 @@ const resolvers = {
 
       return author
     },
-    createUser: async (root, args) => {
+    createUser: async (_root, args) => {
+      const passwordHashh = await bcrypt.hash(args.passwordHash, 10)
       const user = new User({
-        username: args.username,
-        favoriteGenre: args.favoriteGenre,
+        ...args,
+        passwordHash: passwordHashh,
       })
 
       return user.save().catch((error) => {
         throw new GraphQLError('Creating the user failed', {
           extensions: {
             code: 'BAD_USER_INPUT',
-            invalidArgs: args.name,
-            error,
           },
         })
       })
     },
     login: async (_root, args) => {
       const user = await User.findOne({ username: args.username })
-
-      if (!user || args.password !== 'Testaaja') {
+      const correctPassword =
+        user === null || user === undefined
+          ? false
+          : await bcrypt.compare(args.password, user.passwordHash)
+      if (!user || !correctPassword) {
         throw new GraphQLError('wrong credentials', {
           extensions: {
             code: 'BAD_USER_INPUT',
@@ -165,6 +169,36 @@ const resolvers = {
       }
 
       return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
+    },
+    deleteUser: async (_root, args) => {
+      await User.deleteOne({ username: args.username })
+        .then(function () {
+          return { value: 'User deleted' }
+        })
+        .catch(function (error) {
+          console.log(error) // Failure
+          return { value: 'Could not remove the user' }
+        })
+    },
+    deleteBook: async (_root, args) => {
+      await Book.deleteOne({ title: args.title })
+        .then(function () {
+          return { value: 'Book deleted' }
+        })
+        .catch(function (error) {
+          console.log(error) // Failure
+          return { value: 'Could not remove the book' }
+        })
+    },
+    deleteAuthor: async (_root, args) => {
+      await Author.deleteOne({ name: args.name })
+        .then(function () {
+          return { value: 'Author deleted' }
+        })
+        .catch(function (error) {
+          console.log(error) // Failure
+          return { value: 'Could not remove the author' }
+        })
     },
   },
   Subscription: {

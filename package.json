@@ -1,13 +1,13 @@
 {
   "name": "library-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "For Fullstack Open part 11",
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint . "
+    "testmode": "cross-env NODE_ENV=test nodemon index.js",
+    "lint": "eslint ."
   },
   "author": "Jenniina Laine",
   "license": "ISC",
@@ -15,6 +15,7 @@
     "@apollo/server": "^4.6.0",
     "@graphql-tools/schema": "^9.0.18",
     "apollo-server-core": "^3.12.0",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
@@ -30,6 +31,7 @@
   "devDependencies": {
     "eslint": "^8.40.0",
     "eslint-plugin-cypress": "^2.13.3",
+    "eslint-plugin-yaml": "^0.5.0",
     "nodemon": "^2.0.22"
   }
 }

@@ -1,4 +1,4 @@
-import { gql, useQuery } from '@apollo/client'
+import { gql } from '@apollo/client'
 
 const BOOK_DETAILS = gql`
   fragment BookDetails on Book {
@@ -13,7 +13,7 @@ const BOOK_DETAILS = gql`
 `
 
 export const ALL_AUTHORS = gql`
-  query {
+  query allAuthors {
     allAuthors {
       name
       born
@@ -22,8 +22,19 @@ export const ALL_AUTHORS = gql`
     }
   }
 `
+
+export const ALL_USERS = gql`
+  query allUsers {
+    allUsers {
+      username
+      favoriteGenre
+      id
+    }
+  }
+`
+
 export const ALL_BOOKS = gql`
-  query {
+  query allBooks {
     allBooks {
       ...BookDetails
     }
@@ -69,7 +80,7 @@ export const LOGIN = gql`
 `
 
 export const ME = gql`
-  query {
+  query me {
     me {
       username
       favoriteGenre
@@ -83,4 +94,20 @@ export const BOOK_ADDED = gql`
     }
   }
   ${BOOK_DETAILS}
+`
+export const CREATE_USER = gql`
+  mutation createUser(
+    $username: String!
+    $passwordHash: String!
+    $favoriteGenre: String!
+  ) {
+    createUser(
+      username: $username
+      passwordHash: $passwordHash
+      favoriteGenre: $favoriteGenre
+    ) {
+      username
+      favoriteGenre
+    }
+  }
 `

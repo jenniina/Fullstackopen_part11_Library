@@ -16,6 +16,7 @@ import {
 import { Route, Routes, NavLink } from 'react-router-dom'
 import Recommended from './components/Recommended'
 import { booksProps } from './interfaces'
+import NewUser from './components/NewUser'
 
 // function that takes care of manipulating cache
 export const updateCache = (
@@ -68,7 +69,7 @@ const App = () => {
           error: false,
           message: `${addedBook.title} by ${
             addedBook.author.name
-          } added, in the genre: ${addedBook.genres.join(', ')}`,
+          } added, in the genres: ${addedBook.genres.join(', ')}`,
         },
         8
       )
@@ -93,26 +94,26 @@ const App = () => {
     <div>
       <ul className='main-navigation'>
         <li>
-          <NavLink to='/'> Books</NavLink>
+          <NavLink to='/'>Books</NavLink>
         </li>
         <li>
-          <NavLink to='authors'> Authors</NavLink>
+          <NavLink to='authors'>Authors</NavLink>
         </li>
         {!token ? (
           ''
         ) : (
           <>
             <li>
-              <NavLink to='addBook'> Add Book</NavLink>
+              <NavLink to='addBook'>Add Book</NavLink>
             </li>
             <li>
-              <NavLink to='recommended'> Recommended</NavLink>
+              <NavLink to='recommended'>Recommended</NavLink>
             </li>
           </>
         )}
         <li>
           {!token ? (
-            <NavLink to='login'> login</NavLink>
+            <NavLink to='login'>login</NavLink>
           ) : (
             <button className='logout' onClick={logout}>
               logout
@@ -146,6 +147,7 @@ const App = () => {
             path='/login'
             element={<FormLogin notify={notify} setToken={setToken} />}
           ></Route>
+          <Route path='/setuser' element={<NewUser notify={notify} />}></Route>
         </Routes>
       </div>
     </div>
