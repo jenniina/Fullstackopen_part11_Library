@@ -17,7 +17,7 @@ const FormLogin = ({ notify, setToken }: loginProps) => {
 
   const [login, result] = useMutation(LOGIN, {
     onError: (error) => {
-      console.log(JSON.stringify(error, null, 2))
+      //console.log(JSON.stringify(error, null, 2))
       notify({ error: true, message: error.message }, 10)
     },
   })

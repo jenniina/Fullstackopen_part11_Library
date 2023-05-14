@@ -75,6 +75,7 @@ const resolvers = {
       }
       const book = await Book.findOne({ title: args.title })
       const author = await Author.findOne({ name: args.author })
+      //const user = await User.findOne({ id: args.user })
 
       if (!args.title || !args.author || !args.published || !args.genres) {
         throw new GraphQLError('Please fill in all the fields', {
@@ -104,11 +105,17 @@ const resolvers = {
         }
       }
       const foundAuthor = await Author.findOne({ name: args.author })
-      const newBook = new Book({ ...args, author: foundAuthor._id })
+      const newBook = new Book({
+        ...args,
+        author: foundAuthor._id,
+        user: args.user,
+      })
 
       try {
         await newBook.save()
-        pubsub.publish('BOOK_ADDED', { bookAdded: newBook.populate('author') })
+        pubsub.publish('BOOK_ADDED', {
+          bookAdded: newBook.populate('author'),
+        })
 
         return newBook.populate('author')
       } catch (error) {
@@ -164,7 +171,7 @@ const resolvers = {
       }
 
       const userForToken = {
-        username: user.username,
+        user: user.id,
         id: user._id,
       }
 

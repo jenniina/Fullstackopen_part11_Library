@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import { useMutation } from '@apollo/client'
-import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS } from '../queries'
+import { useEffect, useState } from 'react'
+import { useMutation, useQuery } from '@apollo/client'
+import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS, ME } from '../queries'
 import { message } from '../interfaces'
 import { updateCache } from '../App'
 
@@ -13,12 +13,20 @@ const NewBook = (props: {
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState<string[]>([])
+  const [userId, setUser] = useState('')
+  const user = useQuery(ME)
+  console.log('user: ', user)
+  console.log(userId)
+
+  useEffect(() => {
+    setUser(user?.data?.me?.id)
+  }, [user])
 
   const [createBook] = useMutation(ADD_BOOK, {
-    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
+    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }, { query: ME }],
     onError: (error) => {
       props.notify({ error: true, message: error.message }, 10)
-      // console.log(JSON.stringify(error, null, 2))
+      console.log(JSON.stringify(error, null, 2))
     },
     update: (cache, response) => {
       updateCache(cache, { query: ALL_BOOKS }, response.data.addBook)
@@ -40,8 +48,8 @@ const NewBook = (props: {
     event.preventDefault()
 
     createBook({
-      variables: { title, author, genres, published: parseInt(published) },
-    }).catch((e) => e.message)
+      variables: { title, author, genres, published: parseInt(published), user: userId },
+    }).catch((error) => console.log(JSON.stringify(error, null, 2)))
   }
 
   const addGenre = () => {

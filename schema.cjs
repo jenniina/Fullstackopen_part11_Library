@@ -4,6 +4,7 @@ type Book {
     published: Int!
     author: Author!
     genres: [String!]!
+    user: ID
     id: ID!
   }
 
@@ -46,6 +47,7 @@ type Mutation {
     author: String!, 
     published: Int!, 
     genres: [String!]!
+    user:ID
     id: ID
     ): Book
   editAuthorBornYear(

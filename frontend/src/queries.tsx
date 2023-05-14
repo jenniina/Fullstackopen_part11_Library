@@ -9,6 +9,7 @@ const BOOK_DETAILS = gql`
     }
     genres
     id
+    user
   }
 `
 
@@ -55,8 +56,15 @@ export const ADD_BOOK = gql`
     $author: String!
     $published: Int!
     $genres: [String!]!
+    $user: ID
   ) {
-    addBook(title: $title, author: $author, published: $published, genres: $genres) {
+    addBook(
+      title: $title
+      author: $author
+      published: $published
+      user: $user
+      genres: $genres
+    ) {
       ...BookDetails
     }
   }
@@ -84,6 +92,7 @@ export const ME = gql`
     me {
       username
       favoriteGenre
+      id
     }
   }
 `
