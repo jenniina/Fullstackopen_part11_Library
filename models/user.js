@@ -8,6 +8,11 @@ const schema = new mongoose.Schema({
     unique: true,
     required: true,
   },
+  passwordHash: {
+    type: String,
+    minlength: 8,
+    required: true,
+  },
   favoriteGenre: {
     type: String,
     required: true,

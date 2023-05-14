@@ -55,6 +55,9 @@ const start = async () => {
     ],
   })
   await server.start()
+  app.get('/health', (_req, res) => {
+    res.send('ok')
+  })
   app.use(
     '/',
     cors(),

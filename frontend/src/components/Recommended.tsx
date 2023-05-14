@@ -9,7 +9,8 @@ const Books = (props: { books: booksProps[]; token: string | null }) => {
 
   if (user.loading) return <div>loading...</div>
 
-  const favorite = user.data.me.favoriteGenre
+  const favorite = user?.data?.me?.favoriteGenre
+  console.log(user)
 
   const books = props.books
 
@@ -24,7 +25,7 @@ const Books = (props: { books: booksProps[]; token: string | null }) => {
       <table>
         <tbody>
           <tr>
-            <th></th>
+            <th>title</th>
             <th>author</th>
             <th>published</th>
           </tr>
