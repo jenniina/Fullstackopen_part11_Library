@@ -1,14 +1,13 @@
 {
   "name": "library-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "For Fullstack Open part 11",
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "testmode": "cross-env NODE_ENV=test nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint . "
+    "lint": "eslint ."
   },
   "author": "Jenniina Laine",
   "license": "ISC",
@@ -32,6 +31,7 @@
   "devDependencies": {
     "eslint": "^8.40.0",
     "eslint-plugin-cypress": "^2.13.3",
+    "eslint-plugin-yaml": "^0.5.0",
     "nodemon": "^2.0.22"
   }
 }

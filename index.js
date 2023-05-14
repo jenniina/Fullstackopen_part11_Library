@@ -21,9 +21,11 @@ const config = require('./utils/config')
 mongoose
   .connect(config.MONGODB_URI)
   .then(() => {
+    // eslint-disable-next-line no-console
     console.log('connected to MongoDB')
   })
   .catch((error) => {
+    // eslint-disable-next-line no-console
     console.log('error connecting to MongoDB: ', error.message)
   })
 
@@ -75,6 +77,7 @@ const start = async () => {
   )
   const PORT = process.env.PORT || 4000
   httpServer.listen(PORT, () =>
+    // eslint-disable-next-line no-console
     console.log(`Server is now running on http://localhost:${PORT}`)
   )
 }
