@@ -10,7 +10,6 @@ const Books = (props: { books: booksProps[]; token: string | null }) => {
   if (user.loading) return <div>loading...</div>
 
   const favorite = user?.data?.me?.favoriteGenre
-  console.log(user)
 
   const books = props.books
 
