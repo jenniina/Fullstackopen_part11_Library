@@ -37,13 +37,14 @@ type Book {
     findBook(title: String!):Book
     authorCount: Int!
     allAuthors: [Author!]!
-    allUsers: [User!]!
+    allUsers(id:ID): [User!]!
     findAuthor(name: String!):Author
+    findUser(id: String!):User
     me: User
 }
 
 type Mutation {
-  addBook(
+  createBook(
     title: String!, 
     author: String!, 
     published: Int!, 
@@ -68,7 +69,7 @@ type Mutation {
     username: String!
     ):Value
   deleteBook(
-    title: String!
+    id: ID!
     ):Value
   deleteAuthor(
     name: String!

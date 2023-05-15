@@ -2,6 +2,7 @@ import { useMutation } from '@apollo/client'
 import { authorProps, message } from '../interfaces'
 import { useState } from 'react'
 import { EDIT_BORN, ALL_AUTHORS } from '../queries'
+import { Link } from 'react-router-dom'
 
 const Authors = (props: {
   authors: authorProps[]
@@ -44,7 +45,9 @@ const Authors = (props: {
           </tr>
           {authors?.map((a: authorProps) => (
             <tr key={a.name}>
-              <td>{a.name}</td>
+              <td>
+                <Link to={`/authors/${a.id}`}>{a.name}</Link>
+              </td>
               <td>{a.born}</td>
               <td>{a.bookCount}</td>
             </tr>

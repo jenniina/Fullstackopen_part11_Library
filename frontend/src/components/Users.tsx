@@ -13,7 +13,7 @@ const Users = (props: {
     .sort((a, b) => b.books.length - a.books.length)
     .map((user) => user)
 
-  if (!props.token) return <div></div>
+  if (!props.token) return <div>Please log in</div>
   return (
     <div>
       <h1>Users</h1>
@@ -26,17 +26,17 @@ const Users = (props: {
           </tr>
           {sortedByBookAmount?.map((u: userProps) => (
             <tr key={u.username}>
-              <td>{u.username}</td>
+              <td>
+                <Link to={`/users/${u.id}`}>{u.username}</Link>
+              </td>
               <td>{u.favoriteGenre}</td>
               <td>
                 {u.books
                   ?.slice()
                   .sort((a, b) => a.title.localeCompare(b.title))
                   .map((book) => (
-                    <p>
-                      <Link to={`/books/${book.id}`} key={book.title}>
-                        {book.title}
-                      </Link>
+                    <p key={book.id}>
+                      <Link to={`/books/${book.id}`}>{book.title}</Link>
                     </p>
                   ))}
               </td>

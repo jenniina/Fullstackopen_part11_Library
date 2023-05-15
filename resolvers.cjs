@@ -54,8 +54,15 @@ const resolvers = {
 
     authorCount: () => Author.collection.countDocuments(),
     allAuthors: async () => await Author.find({}).populate('bookCount'),
-    allUsers: async () => await User.find({}).populate('books'),
+    //allUsers: async () => await User.find({}).populate('books'),
+    allUsers: async (root, args) => {
+      if (args.id) {
+        return User.find({ id: args.id }).populate('books').exec()
+      }
+      return User.find({}).populate('books')
+    },
     findAuthor: async (root) => await Author.findOne({ name: root.name }),
+    findUser: async (root) => await User.findById(root),
     me: (_root, _args, context) => {
       return context.currentUser
     },
@@ -68,7 +75,7 @@ const resolvers = {
     },
   },
   Mutation: {
-    addBook: async (_root, args, context) => {
+    createBook: async (_root, args, context) => {
       const currentUser = context.currentUser
       if (!currentUser) {
         throw new AuthenticationError('Please log in')
@@ -79,12 +86,11 @@ const resolvers = {
       if (!args.title || !args.author || !args.published || !args.genres) {
         throw new GraphQLError('Please fill in all the fields', {
           code: 'BAD_USER_INPUT',
-          invalidArgs: args,
         })
       } else if (args.title.length < 3) {
         throw new GraphQLError('Title too short', {
           code: 'BAD_USER_INPUT',
-          invalidArgs: args,
+          invalidArgs: args.title,
         })
       } else if (book) {
         throw new GraphQLError('Book already added', {
@@ -106,19 +112,26 @@ const resolvers = {
       const foundAuthor = await Author.findOne({ name: args.author })
       const newBook = new Book({
         ...args,
-        author: foundAuthor._id,
-        user: args.user,
+        author: foundAuthor.id,
+        user: currentUser._id,
       })
 
-      await User.findOneAndUpdate(
-        { _id: currentUser._id },
-        {
-          $push: {
-            books: newBook,
+      try {
+        console.log(currentUser)
+        await User.findOneAndUpdate(
+          { _id: currentUser._id },
+          {
+            $push: {
+              books: newBook,
+            },
           },
-        },
-        { new: true, runValidators: true, context: 'query' }
-      )
+          { new: true, runValidators: true, context: 'query' }
+        )
+        console.log(currentUser.id)
+      } catch (error) {
+        throw new GraphQLError(error.message)
+      }
+
       try {
         await newBook.save()
         pubsub.publish('BOOK_ADDED', {
@@ -127,9 +140,7 @@ const resolvers = {
 
         return newBook.populate('author')
       } catch (error) {
-        throw new GraphQLError(error.message, {
-          invalidArgs: args,
-        })
+        throw new GraphQLError(error.message)
       }
     },
 
@@ -186,40 +197,40 @@ const resolvers = {
 
       const userForToken = {
         user: user.id,
-        id: user._id,
+        id: user.id,
       }
 
       return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
     },
     deleteUser: async (_root, args) => {
-      await User.deleteOne({ username: args.username })
-        .then(function () {
-          return { value: 'User deleted' }
-        })
-        .catch(function (error) {
-          console.log(error) // Failure
-          return { value: 'Could not remove the user' }
-        })
+      await User.deleteOne({ username: args.username }).catch(function (error) {
+        // eslint-disable-next-line no-console
+        console.log(JSON.stringify(error, null, 2)) // Failure
+      })
     },
-    deleteBook: async (_root, args) => {
-      await Book.deleteOne({ title: args.title })
-        .then(function () {
-          return { value: 'Book deleted' }
-        })
-        .catch(function (error) {
-          console.log(error) // Failure
-          return { value: 'Could not remove the book' }
-        })
+    deleteBook: async (_root, args, context) => {
+      const currentUser = context.currentUser
+      await Book.deleteOne({ _id: args.id }).catch(function (error) {
+        // eslint-disable-next-line no-console
+        console.log(JSON.stringify(error, null, 2)) // Failure
+      })
+      await User.updateOne(
+        { _id: currentUser._id },
+        {
+          $pullAll: {
+            books: args.id,
+          },
+        }
+      ).catch(function (error) {
+        // eslint-disable-next-line no-console
+        console.log(JSON.stringify(error, null, 2)) // Failure
+      })
     },
     deleteAuthor: async (_root, args) => {
-      await Author.deleteOne({ name: args.name })
-        .then(function () {
-          return { value: 'Author deleted' }
-        })
-        .catch(function (error) {
-          console.log(error) // Failure
-          return { value: 'Could not remove the author' }
-        })
+      await Author.deleteOne({ name: args.name }).catch(function (error) {
+        // eslint-disable-next-line no-console
+        console.log(JSON.stringify(error, null, 2)) // Failure
+      })
     },
   },
   Subscription: {
@@ -230,5 +241,3 @@ const resolvers = {
 }
 
 module.exports = resolvers
-
-// Cast to [ObjectId] failed for value "[\n' + ' {\n' + ' newBook: {\n' + " title: 'Book',\n" + ' published: 2020,\n' + ' author: new ObjectId("64426bc69e7ea7a92dbeb03b"),\n' + ' genres: [Array],\n' + ' user: new ObjectId("6460cf8a080777a10e0ef9cf"),\n' + ' _id: new ObjectId("6461145f4432b7eccc40e632")\n' + ' }\n' + ' }\n' + ']" (type string) at path "books.0" because of "CastError"

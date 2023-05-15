@@ -23,7 +23,7 @@ export interface userProps {
 export interface booksProps {
   title: string
   published: number
-  author: { name: string }
+  author: { name: string; id: string }
   genres: string[]
   user?: userProps['id']
   id?: string

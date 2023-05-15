@@ -1,27 +1,46 @@
-import { useQuery } from '@apollo/client'
-import { booksProps } from '../interfaces'
-import { useEffect, useState } from 'react'
-import { FILTER_BOOKS, ALL_BOOKS } from '../queries'
+import { Link, useNavigate } from 'react-router-dom'
+import { booksProps, message, userProps } from '../interfaces'
+import { useMutation } from '@apollo/client'
+import { ALL_BOOKS, ALL_USERS, DELETE_BOOK } from '../queries'
 
-const Book = (props: { book: booksProps }) => {
-  const allBooks = useQuery(ALL_BOOKS)
-
-  const { data, loading, error, refetch } = useQuery(FILTER_BOOKS)
-
+const Book = (props: {
+  book: booksProps
+  token: string | null
+  notify: ({ error, message }: message, seconds: number) => void
+  me: userProps['id']
+}) => {
   const book = props.book
-  console.log(book)
 
-  if (allBooks.loading || loading) {
-    return <div>loading...</div>
+  const navigate = useNavigate()
+
+  const [deleteBook] = useMutation(DELETE_BOOK, {
+    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_USERS }],
+    onError: (error) => {
+      console.log(JSON.stringify(error, null, 2))
+      props.notify({ error: true, message: error.message }, 10)
+    },
+    onCompleted: () => {
+      props.notify({ error: false, message: 'Successfully deleted book' }, 5)
+    },
+  })
+
+  const handleDelete = () => {
+    navigate('/')
+    deleteBook({ variables: { id: book.id } })
   }
-  if (allBooks.error || error) {
-    return <div>There was an error</div>
-  }
+
   return (
     <div>
       <h1>{book.title}</h1>
-      <p>Author: {book.author.name}</p>
+      <p>
+        Author: <Link to={`/authors/${book.author.id}`}>{book.author.name}</Link>
+      </p>
       <p>Published: {book.published}</p>
+      <p>
+        <Link to={`/`}>Genres: </Link>
+        {book.genres.join(', ')}
+      </p>
+      {props.me == book.user ? <button onClick={handleDelete}>delete book</button> : ''}
     </div>
   )
 }

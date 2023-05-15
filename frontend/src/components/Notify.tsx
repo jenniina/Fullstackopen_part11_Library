@@ -13,13 +13,13 @@ const Notify = (props: messageProps) => {
         props.info.error === true
           ? {
               color: 'red',
-              position: 'absolute',
+              position: 'fixed',
               left: 0,
               width: '100%',
             }
           : {
               color: 'black',
-              position: 'absolute',
+              position: 'fixed',
               left: 0,
               width: '100%',
             }

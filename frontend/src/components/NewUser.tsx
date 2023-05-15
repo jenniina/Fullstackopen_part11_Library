@@ -47,7 +47,10 @@ const NewUser = (props: {
           5
         )
       )
-      .catch((e) => console.log(JSON.stringify(e.message, null, 2)))
+      .catch((e) =>
+        // eslint-disable-next-line no-console
+        console.log(JSON.stringify(e.message, null, 2))
+      )
   }
 
   return (

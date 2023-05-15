@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useMutation } from '@apollo/client'
-import { LOGIN } from '../queries'
+import { LOGIN, ME } from '../queries'
 import { message } from '../interfaces'
 import { useNavigate } from 'react-router-dom'
 import { LIRARY_TOKEN } from '../App'
@@ -16,6 +16,7 @@ const FormLogin = ({ notify, setToken }: loginProps) => {
   const navigate = useNavigate()
 
   const [login, result] = useMutation(LOGIN, {
+    refetchQueries: [{ query: ME }],
     onError: (error) => {
       //console.log(JSON.stringify(error, null, 2))
       notify({ error: true, message: error.message }, 10)
