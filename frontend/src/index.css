@@ -113,6 +113,7 @@ button:focus-visible {
 table {
   text-align: left;
   margin: 0 auto;
+  border-collapse: collapse;
 }
 table p {
   margin: 0;
@@ -120,6 +121,9 @@ table p {
 tr > * {
   border-bottom: 1px dashed currentColor;
   padding: 0 1em;
+}
+tr:first-of-type > * {
+  border-bottom: 3px double currentColor;
 }
 form {
   --padding: 1em;
