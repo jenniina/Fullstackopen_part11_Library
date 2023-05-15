@@ -35,6 +35,7 @@ const NewUser = (props: {
       username,
       passwordHash: password,
       favoriteGenre: genre,
+      books: [],
     }
 
     createUser({

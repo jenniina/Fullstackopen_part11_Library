@@ -32,6 +32,7 @@ export const ALL_USERS = gql`
       id
       books {
         title
+        id
       }
     }
   }

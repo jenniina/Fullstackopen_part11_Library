@@ -10,7 +10,14 @@ export interface userProps {
   username: string
   passwordHash: string
   favoriteGenre: string
-  books?: [{ title: booksProps['title'] }]
+  books:
+    | [
+        {
+          title: booksProps['title']
+          id: booksProps['id']
+        }
+      ]
+    | []
   id?: string
 }
 export interface booksProps {

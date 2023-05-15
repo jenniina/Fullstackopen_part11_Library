@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { userProps, message } from '../interfaces'
 
 const Users = (props: {
@@ -6,7 +7,12 @@ const Users = (props: {
   token: string | null
 }) => {
   const users = props.users
-  console.log(users?.map((user) => user.books?.map((book) => book)))
+
+  const sortedByBookAmount = users
+    ?.slice()
+    .sort((a, b) => b.books.length - a.books.length)
+    .map((user) => user)
+
   if (!props.token) return <div></div>
   return (
     <div>
@@ -18,14 +24,21 @@ const Users = (props: {
             <th>favorite genre</th>
             <th>books added</th>
           </tr>
-          {users?.map((a: userProps) => (
-            <tr key={a.username}>
-              <td>{a.username}</td>
-              <td>{a.favoriteGenre}</td>
+          {sortedByBookAmount?.map((u: userProps) => (
+            <tr key={u.username}>
+              <td>{u.username}</td>
+              <td>{u.favoriteGenre}</td>
               <td>
-                {a.books?.map((book) => (
-                  <p key={book.title}>{book.title}</p>
-                ))}
+                {u.books
+                  ?.slice()
+                  .sort((a, b) => a.title.localeCompare(b.title))
+                  .map((book) => (
+                    <p>
+                      <Link to={`/books/${book.id}`} key={book.title}>
+                        {book.title}
+                      </Link>
+                    </p>
+                  ))}
               </td>
             </tr>
           ))}

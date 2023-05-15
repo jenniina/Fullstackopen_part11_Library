@@ -3,7 +3,7 @@ import Notify from './components/Notify'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
-import { message } from './interfaces'
+import { message, userProps } from './interfaces'
 import { ALL_AUTHORS, ALL_BOOKS, ALL_USERS, BOOK_ADDED } from './queries'
 import FormLogin from './components/FormLogin'
 import {
@@ -13,11 +13,12 @@ import {
   useQuery,
   useSubscription,
 } from '@apollo/client'
-import { Route, Routes, NavLink } from 'react-router-dom'
+import { Route, Routes, NavLink, useMatch } from 'react-router-dom'
 import Recommended from './components/Recommended'
 import { booksProps } from './interfaces'
 import NewUser from './components/NewUser'
 import Users from './components/Users'
+import Book from './components/Book'
 
 // function that takes care of manipulating cache
 export const updateCache = (
@@ -54,6 +55,14 @@ const App = () => {
   const resultBooks = useQuery(ALL_BOOKS)
   const resultUsers = useQuery(ALL_USERS)
 
+  const sortedUsers = resultUsers?.data?.allUsers
+    ?.slice()
+    .sort((a: { username: string }, b: { username: string }) =>
+      a.username.localeCompare(b.username)
+    )
+
+  console.log(sortedUsers)
+
   const notify = (info: message, seconds: number) => {
     setMessage(info)
     setTimeout(() => {
@@ -84,6 +93,14 @@ const App = () => {
     window.localStorage.removeItem(LIRARY_TOKEN) //keep name same in FormLogin.tsx and main.tsx
     client.resetStore()
   }
+
+  const matchBook = useMatch('/books/:id')
+
+  const book = matchBook
+    ? resultBooks?.data?.allBooks?.find(
+        (book: booksProps) => book.id === matchBook.params.id
+      )
+    : null
 
   if (resultAuthors.loading) {
     return <div>loading...</div>
@@ -138,27 +155,26 @@ const App = () => {
                 token={token}
               />
             }
-          ></Route>
+          />
           <Route
             path='/users'
             element={
               <Users users={resultUsers?.data?.allUsers} notify={notify} token={token} />
             }
-          ></Route>
-          <Route path='/' element={<Books books={resultBooks?.data?.allBooks} />}></Route>
-          <Route
-            path='/addBook'
-            element={<NewBook notify={notify} token={token} />}
-          ></Route>
+          />
+
+          <Route path='/' element={<Books books={resultBooks?.data?.allBooks} />} />
+          <Route path='/books/:id' element={<Book book={book} />} />
+          <Route path='/addBook' element={<NewBook notify={notify} token={token} />} />
           <Route
             path='/recommended'
             element={<Recommended books={resultBooks?.data?.allBooks} token={token} />}
-          ></Route>
+          />
           <Route
             path='/login'
             element={<FormLogin notify={notify} setToken={setToken} />}
-          ></Route>
-          {/* <Route path='/setuser' element={<NewUser notify={notify} />}></Route> */}
+          />
+          {/* <Route path='/setuser' element={<NewUser notify={notify} />} /> */}
         </Routes>
       </div>
     </div>
