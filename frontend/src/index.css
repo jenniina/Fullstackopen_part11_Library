@@ -121,6 +121,7 @@ table p {
 tr > * {
   border-bottom: 1px dashed currentColor;
   padding: 0 1em;
+  vertical-align: top;
 }
 tr:first-of-type > * {
   border-bottom: 3px double currentColor;
