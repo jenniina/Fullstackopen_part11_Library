@@ -171,6 +171,10 @@ const resolvers = {
         await User.findByIdAndUpdate(args.id, { favoriteGenre: args.setGenre })
       if (args.setUsername)
         await User.findByIdAndUpdate(args.id, { username: args.setUsername })
+      if (args.setPassword) {
+        const passwordHashh = await bcrypt.hash(args.setPassword, 10)
+        await User.findByIdAndUpdate(args.id, { passwordHash: passwordHashh })
+      }
     },
     createUser: async (_root, args) => {
       const user = await User.findOne({ id: args.username })

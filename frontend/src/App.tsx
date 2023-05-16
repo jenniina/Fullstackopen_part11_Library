@@ -99,14 +99,18 @@ const App = () => {
 
   const [deleteAuthor] = useMutation(DELETE_AUTHOR, {
     refetchQueries: [{ query: ALL_AUTHORS }],
+    onError: (error) => {
+      // eslint-disable-next-line no-console
+      console.log(JSON.stringify(error, null, 2))
+    },
   })
   useEffect(() => {
     //Delete authors with no books
     const noBooks = resultAuthors?.data?.allAuthors?.find(
-      (author: authorProps) => author.bookCount === 0
+      (author: authorProps, i: number) => author.bookCount === 0
     )
     if (noBooks) deleteAuthor({ variables: { name: noBooks?.name } })
-  }, [resultBooks?.data?.allBooks])
+  }, [resultBooks])
 
   const matchBook = useMatch('/books/:id')
   const matchAuthor = useMatch('/authors/:id')
