@@ -69,11 +69,17 @@ type Mutation {
     username: String!
     ):Value
   deleteBook(
-    id: ID!
+    id: ID
+    title: String
     ):Value
   deleteAuthor(
     name: String!
     ):Value
+  editUser(
+    id: ID!
+    setUsername: String
+    setGenre: String
+    ):User
 }
 type Subscription {
   bookAdded: Book!

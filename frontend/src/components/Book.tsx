@@ -16,6 +16,7 @@ const Book = (props: {
   const [deleteBook] = useMutation(DELETE_BOOK, {
     refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_USERS }, { query: ALL_AUTHORS }],
     onError: (error) => {
+      // eslint-disable-next-line no-console
       console.log(JSON.stringify(error, null, 2))
       props.notify({ error: true, message: error.message }, 10)
     },

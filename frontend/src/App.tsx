@@ -21,7 +21,7 @@ import {
   useQuery,
   useSubscription,
 } from '@apollo/client'
-import { Route, Routes, NavLink, useMatch } from 'react-router-dom'
+import { Route, Routes, NavLink, useMatch, Link } from 'react-router-dom'
 import Recommended from './components/Recommended'
 import { booksProps } from './interfaces'
 import NewUser from './components/NewUser'
@@ -173,7 +173,9 @@ const App = () => {
       </ul>
       {data?.me ? (
         <p>
-          <small>logged in as {data?.me?.username}</small>
+          <small>
+            logged in as <Link to={`/users/${data?.me?.id}`}>{data?.me?.username}</Link>
+          </small>
         </p>
       ) : (
         ''
@@ -199,7 +201,7 @@ const App = () => {
           />
           <Route
             path='/users/:id'
-            element={<User user={user} notify={notify} token={token} />}
+            element={<User user={user} notify={notify} token={token} me={data?.me?.id} />}
           />
           <Route path='/' element={<Books />} />
           <Route

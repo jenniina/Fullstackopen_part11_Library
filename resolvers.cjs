@@ -49,6 +49,10 @@ const resolvers = {
         return Book.find({ genres: { $in: [args.genre] } }).populate('author')
       }
 
+      if (args.title) {
+        return Book.findOne({ title: args.title }).populate('author')
+      }
+
       return Book.find({}).populate('author')
     },
 
@@ -117,7 +121,6 @@ const resolvers = {
       })
 
       try {
-        console.log(currentUser)
         await User.findOneAndUpdate(
           { _id: currentUser._id },
           {
@@ -127,7 +130,6 @@ const resolvers = {
           },
           { new: true, runValidators: true, context: 'query' }
         )
-        console.log(currentUser.id)
       } catch (error) {
         throw new GraphQLError(error.message)
       }
@@ -159,6 +161,16 @@ const resolvers = {
       }
 
       return author
+    },
+    editUser: async (_root, args, context) => {
+      const currentUser = context.currentUser
+      if (!currentUser) {
+        throw new AuthenticationError('Please log in')
+      }
+      if (args.setGenre)
+        await User.findByIdAndUpdate(args.id, { favoriteGenre: args.setGenre })
+      if (args.setUsername)
+        await User.findByIdAndUpdate(args.id, { username: args.setUsername })
     },
     createUser: async (_root, args) => {
       const user = await User.findOne({ id: args.username })
@@ -210,10 +222,14 @@ const resolvers = {
     },
     deleteBook: async (_root, args, context) => {
       const currentUser = context.currentUser
-      await Book.deleteOne({ _id: args.id }).catch(function (error) {
-        // eslint-disable-next-line no-console
-        console.log(JSON.stringify(error, null, 2)) // Failure
-      })
+      if (args.id)
+        await Book.deleteOne({ _id: args.id }).catch(function (error) {
+          // eslint-disable-next-line no-console
+          console.log(JSON.stringify(error, null, 2)) // Failure
+        })
+      if (args.title) {
+        await Book.findOneAndDelete({ title: args.title })
+      }
       await User.updateOne(
         { _id: currentUser._id },
         {

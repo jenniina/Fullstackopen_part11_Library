@@ -14,10 +14,10 @@ describe('site', () => {
         operationName: 'deleteBook',
         query: `
           mutation deleteBook (
-              $id: ID!
+              $title: String
             )  {
               deleteBook(
-              id: $id
+                title: $title
             ){
               value
             }

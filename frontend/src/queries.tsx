@@ -107,6 +107,15 @@ export const EDIT_BORN = gql`
     }
   }
 `
+export const EDIT_USER = gql`
+  mutation editUser($id: ID!, $setGenre: String, $setUsername: String) {
+    editUser(id: $id, setGenre: $setGenre, setUsername: $setUsername) {
+      username
+      favoriteGenre
+    }
+  }
+`
+
 export const LOGIN = gql`
   mutation login($username: String!, $password: String!) {
     login(username: $username, password: $password) {
@@ -150,8 +159,8 @@ export const CREATE_USER = gql`
 `
 
 export const DELETE_BOOK = gql`
-  mutation deleteBook($id: ID!) {
-    deleteBook(id: $id) {
+  mutation deleteBook($id: ID, $title: String) {
+    deleteBook(id: $id, title: $title) {
       value
     }
   }

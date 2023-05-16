@@ -105,7 +105,11 @@ button:focus-visible {
   gap: 0.5em;
   max-width: 400px;
 }
-
+.forms-wrap {
+  display: flex;
+  gap: 0.5em;
+  flex-wrap: row wrap;
+}
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -136,6 +140,9 @@ tr > * {
 }
 tr:first-of-type > * {
   border-bottom: 3px double currentColor;
+}
+tr:last-of-type > td {
+  border-bottom: 0;
 }
 form {
   --padding: 1em;
