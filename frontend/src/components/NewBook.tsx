@@ -3,6 +3,7 @@ import { useMutation, useQuery } from '@apollo/client'
 import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS, ALL_USERS, ME } from '../queries'
 import { message } from '../interfaces'
 import { updateCache } from '../App'
+import { useNavigate } from 'react-router-dom'
 
 const NewBook = (props: {
   notify: ({ error, message }: message, seconds: number) => void
@@ -70,8 +71,12 @@ const NewBook = (props: {
   const clearGenres = () => {
     setGenres([])
   }
-  if (!props.token) return <div>Please log in</div>
-  else
+  const navigate = useNavigate()
+
+  if (!props.token) {
+    setTimeout(() => navigate('/login'), 1000)
+    return <div>Please log in</div>
+  } else
     return (
       <div>
         <h1>Add Book</h1>

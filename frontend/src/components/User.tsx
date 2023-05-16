@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { userProps, message } from '../interfaces'
 import { ALL_USERS, EDIT_USER, ME } from '../queries'
 import { useMutation } from '@apollo/client'
@@ -62,79 +62,83 @@ const User = (props: {
     }
   }
 
-  if (!props.token) return <div>Please log in</div>
-  return (
-    <div>
-      <h1>{user?.username}</h1>
-      <table>
-        <tbody>
-          <tr>
-            <th>favorite genre</th>
-            <th>books added</th>
-          </tr>
-          <tr>
-            <td>{user?.favoriteGenre}</td>
-            <td>
-              {user?.books
-                ?.slice()
-                .sort((a, b) => a.title.localeCompare(b.title))
-                .map((book) => (
-                  <p key={book.id}>
-                    <Link to={`/books/${book.id}`}>{book.title}</Link>
-                  </p>
-                ))}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      {user.id === props.me ? (
-        <div className='forms-wrap'>
-          <div>
-            <form onSubmit={handleGenreChange}>
-              <label htmlFor='genreInput'>Change favorite genre:</label>
-              <input
-                id='genreInput'
-                value={genre}
-                onChange={({ target }) => setGenre(target.value)}
-              />
-              <button type='submit'>change&nbsp;genre</button>
-            </form>
+  const navigate = useNavigate()
+  if (!props.token) {
+    setTimeout(() => navigate('/login'), 1000)
+    return <div>Please log in</div>
+  } else
+    return (
+      <div>
+        <h1>{user?.username}</h1>
+        <table>
+          <tbody>
+            <tr>
+              <th>favorite genre</th>
+              <th>books added</th>
+            </tr>
+            <tr>
+              <td>{user?.favoriteGenre}</td>
+              <td>
+                {user?.books
+                  ?.slice()
+                  .sort((a, b) => a.title.localeCompare(b.title))
+                  .map((book) => (
+                    <p key={book.id}>
+                      <Link to={`/books/${book.id}`}>{book.title}</Link>
+                    </p>
+                  ))}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        {user.id === props.me ? (
+          <div className='forms-wrap'>
+            <div>
+              <form onSubmit={handleGenreChange}>
+                <label htmlFor='genreInput'>Change favorite genre:</label>
+                <input
+                  id='genreInput'
+                  value={genre}
+                  onChange={({ target }) => setGenre(target.value)}
+                />
+                <button type='submit'>change&nbsp;genre</button>
+              </form>
 
-            <form onSubmit={handleUsernameChange}>
-              <label htmlFor='usernameInput'>Change username:</label>
-              <input
-                id='usernameInput'
-                value={username}
-                onChange={({ target }) => setUsername(target.value)}
-              />
-              <button type='submit'>change&nbsp;username</button>
-            </form>
+              <form onSubmit={handleUsernameChange}>
+                <label htmlFor='usernameInput'>Change username:</label>
+                <input
+                  id='usernameInput'
+                  value={username}
+                  onChange={({ target }) => setUsername(target.value)}
+                />
+                <button type='submit'>change&nbsp;username</button>
+              </form>
+            </div>
+            <div>
+              <form onSubmit={handlePasswordChange}>
+                <label htmlFor='passwordInput'>Change password:</label>
+                <input
+                  id='passwordInput'
+                  value={password}
+                  type='password'
+                  onChange={({ target }) => setPassword(target.value)}
+                />
+                <label htmlFor='passwordInputConfirm'> Confirm password</label>
+                <input
+                  id='passwordInputConfirm'
+                  value={passwordConfirm}
+                  type='password'
+                  onChange={({ target }) => setPasswordConfirm(target.value)}
+                />
+                <button type='submit'>change&nbsp;password</button>
+              </form>
+            </div>
           </div>
-          <div>
-            <form onSubmit={handlePasswordChange}>
-              <label htmlFor='passwordInput'>Change password:</label>
-              <input
-                id='passwordInput'
-                value={password}
-                type='password'
-                onChange={({ target }) => setPassword(target.value)}
-              />
-              <label htmlFor='passwordInputConfirm'> Confirm password</label>
-              <input
-                id='passwordInputConfirm'
-                value={passwordConfirm}
-                type='password'
-                onChange={({ target }) => setPasswordConfirm(target.value)}
-              />
-              <button type='submit'>change&nbsp;password</button>
-            </form>
-          </div>
-        </div>
-      ) : (
-        ''
-      )}
-    </div>
-  )
+        ) : (
+          ''
+        )}
+      </div>
+    )
 }
 
 export default User

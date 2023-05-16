@@ -44,7 +44,6 @@ const Authors = (props: {
     const noBooks = authors?.find(
       (author: authorProps, _i: number) => author.bookCount === 0
     )
-    console.log('noBooks: ', noBooks)
     if (noBooks) deleteAuthor({ variables: { name: noBooks?.name } })
   }, [])
 
@@ -63,15 +62,18 @@ const Authors = (props: {
             <th>born</th>
             <th>books</th>
           </tr>
-          {authors?.map((a: authorProps) => (
-            <tr key={a.name}>
-              <td>
-                <Link to={`/authors/${a.id}`}>{a.name}</Link>
-              </td>
-              <td>{a.born}</td>
-              <td>{a.bookCount}</td>
-            </tr>
-          ))}
+          {authors
+            ?.slice()
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map((a: authorProps) => (
+              <tr key={a.name}>
+                <td>
+                  <Link to={`/authors/${a.id}`}>{a.name}</Link>
+                </td>
+                <td>{a.born}</td>
+                <td>{a.bookCount}</td>
+              </tr>
+            ))}
         </tbody>
       </table>
       {!props.token ? (

@@ -91,6 +91,9 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
+.genresButtons {
+  padding: 1em;
+}
 .genresButtons button {
   font-size: 0.8em;
 }
@@ -109,6 +112,13 @@ button:focus-visible {
   display: flex;
   gap: 0.5em;
   flex-wrap: row wrap;
+}
+.forms-wrap form {
+  gap: 0.4em;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  outline: 1px solid hsl(0, 0%, 0%, 0.5);
+  outline-offset: -1px;
 }
 @media (prefers-color-scheme: light) {
   :root {
