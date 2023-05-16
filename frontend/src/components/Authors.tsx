@@ -18,6 +18,10 @@ const Authors = (props: {
     ?.map((a) => (!a.born ? a.name : null))
     .filter((a) => a !== null)
 
+  const authorsWithBorn = authors
+    ?.map((a) => (!a.born ? null : a.name))
+    .filter((a) => a !== null)
+
   const [editAuthorBornYear] = useMutation(EDIT_BORN, {
     refetchQueries: [{ query: ALL_AUTHORS }],
     onError: (error) => {
@@ -84,8 +88,8 @@ const Authors = (props: {
             <label>
               <span>Author:</span>
               <select value={name} onChange={({ target }) => setName(target.value)}>
-                {authors?.map((a) => (
-                  <option key={a.name}>{a.name}</option>
+                {authorsWithBorn?.map((a) => (
+                  <option key={a}>{a}</option>
                 ))}
               </select>
             </label>
