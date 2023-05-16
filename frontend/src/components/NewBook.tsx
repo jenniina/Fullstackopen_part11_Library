@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import { useMutation } from '@apollo/client'
-import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS } from '../queries'
+import { useEffect, useState } from 'react'
+import { useMutation, useQuery } from '@apollo/client'
+import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS, ALL_USERS, ME } from '../queries'
 import { message } from '../interfaces'
 import { updateCache } from '../App'
 
@@ -13,15 +13,27 @@ const NewBook = (props: {
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState<string[]>([])
+  const [userId, setUser] = useState('')
+
+  const user = useQuery(ME)
+
+  useEffect(() => {
+    setUser(user?.data?.me?.id)
+  }, [user])
 
   const [createBook] = useMutation(ADD_BOOK, {
-    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
+    refetchQueries: [
+      { query: ALL_BOOKS },
+      { query: ALL_AUTHORS },
+      { query: ME },
+      { query: ALL_USERS },
+    ],
     onError: (error) => {
       props.notify({ error: true, message: error.message }, 10)
-      // console.log(JSON.stringify(error, null, 2))
+      //console.log(JSON.stringify(error, null, 2))
     },
     update: (cache, response) => {
-      updateCache(cache, { query: ALL_BOOKS }, response.data.addBook)
+      updateCache(cache, { query: ALL_BOOKS }, response.data.createBook)
     },
     onCompleted: () => {
       zero()
@@ -40,22 +52,35 @@ const NewBook = (props: {
     event.preventDefault()
 
     createBook({
-      variables: { title, author, genres, published: parseInt(published) },
-    }).catch((e) => e.message)
+      variables: { title, author, genres, published: parseInt(published), user: userId },
+    }).catch((error) =>
+      // eslint-disable-next-line no-console
+      console.log(JSON.stringify(error, null, 2))
+    )
   }
 
   const addGenre = () => {
-    setGenres(genres.concat(genre))
-    setGenre('')
+    if (genres.find((g) => g === genre))
+      props.notify({ error: true, message: `${genre} already added!` }, 10)
+    else if (genre.includes(',') || genre.includes(' '))
+      props.notify({ error: true, message: `Please add only one genre at a time!` }, 10)
+    else {
+      setGenres(genres.concat(genre))
+      setGenre('')
+    }
   }
-  if (!props.token) return <div></div>
+
+  const clearGenres = () => {
+    setGenres([])
+  }
+  if (!props.token) return <div>Please log in</div>
   else
     return (
       <div>
         <h1>Add Book</h1>
-        <form onSubmit={submit}>
+        <form id='addBookForm' onSubmit={submit}>
           <label>
-            title
+            title:
             <input
               name='title'
               value={title}
@@ -63,7 +88,7 @@ const NewBook = (props: {
             />
           </label>
           <label>
-            author
+            author:
             <input
               name='author'
               value={author}
@@ -71,7 +96,7 @@ const NewBook = (props: {
             />
           </label>
           <label>
-            published
+            published:
             <input
               type='number'
               name='published'
@@ -86,11 +111,23 @@ const NewBook = (props: {
               onChange={({ target }) => setGenre(target.value)}
             />
             <button onClick={addGenre} type='button'>
-              add&nbsp;genre
+              <small>add&nbsp;genre</small>
             </button>
           </label>
-          <div id='genres'>genres: {genres.join(' ')}</div>
-          <button type='submit'>create book</button>
+          <div id='genres'>
+            <span>
+              genres:{' '}
+              {genres.map((genre, i) => (
+                <span key={`${genre}${i}`}>
+                  <small>{genre} </small>
+                </span>
+              ))}{' '}
+            </span>
+            <button onClick={clearGenres} type='button'>
+              <small>clear&nbsp;genres</small>
+            </button>
+          </div>
+          <button type='submit'>create&nbsp;book</button>
         </form>
       </div>
     )

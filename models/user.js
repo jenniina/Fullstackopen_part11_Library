@@ -17,6 +17,18 @@ const schema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  books: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Book',
+    },
+  ],
+})
+schema.set('toJSON', {
+  transform: (_document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString()
+    delete returnedObject.__v
+  },
 })
 
 schema.plugin(uniqueValidator)

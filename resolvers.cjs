@@ -49,13 +49,24 @@ const resolvers = {
         return Book.find({ genres: { $in: [args.genre] } }).populate('author')
       }
 
+      if (args.title) {
+        return Book.findOne({ title: args.title }).populate('author')
+      }
+
       return Book.find({}).populate('author')
     },
 
     authorCount: () => Author.collection.countDocuments(),
     allAuthors: async () => await Author.find({}).populate('bookCount'),
-    allUsers: async () => await User.find({}),
+    //allUsers: async () => await User.find({}).populate('books'),
+    allUsers: async (root, args) => {
+      if (args.id) {
+        return User.find({ id: args.id }).populate('books').exec()
+      }
+      return User.find({}).populate('books')
+    },
     findAuthor: async (root) => await Author.findOne({ name: root.name }),
+    findUser: async (root) => await User.findById(root),
     me: (_root, _args, context) => {
       return context.currentUser
     },
@@ -68,7 +79,7 @@ const resolvers = {
     },
   },
   Mutation: {
-    addBook: async (_root, args, context) => {
+    createBook: async (_root, args, context) => {
       const currentUser = context.currentUser
       if (!currentUser) {
         throw new AuthenticationError('Please log in')
@@ -79,12 +90,11 @@ const resolvers = {
       if (!args.title || !args.author || !args.published || !args.genres) {
         throw new GraphQLError('Please fill in all the fields', {
           code: 'BAD_USER_INPUT',
-          invalidArgs: args,
         })
       } else if (args.title.length < 3) {
         throw new GraphQLError('Title too short', {
           code: 'BAD_USER_INPUT',
-          invalidArgs: args,
+          invalidArgs: args.title,
         })
       } else if (book) {
         throw new GraphQLError('Book already added', {
@@ -104,17 +114,35 @@ const resolvers = {
         }
       }
       const foundAuthor = await Author.findOne({ name: args.author })
-      const newBook = new Book({ ...args, author: foundAuthor._id })
+      const newBook = new Book({
+        ...args,
+        author: foundAuthor.id,
+        user: currentUser._id,
+      })
+
+      try {
+        await User.findOneAndUpdate(
+          { _id: currentUser._id },
+          {
+            $push: {
+              books: newBook,
+            },
+          },
+          { new: true, runValidators: true, context: 'query' }
+        )
+      } catch (error) {
+        throw new GraphQLError(error.message)
+      }
 
       try {
         await newBook.save()
-        pubsub.publish('BOOK_ADDED', { bookAdded: newBook.populate('author') })
+        pubsub.publish('BOOK_ADDED', {
+          bookAdded: newBook.populate('author'),
+        })
 
         return newBook.populate('author')
       } catch (error) {
-        throw new GraphQLError(error.message, {
-          invalidArgs: args,
-        })
+        throw new GraphQLError(error.message)
       }
     },
 
@@ -134,20 +162,36 @@ const resolvers = {
 
       return author
     },
+    editUser: async (_root, args, context) => {
+      const currentUser = context.currentUser
+      if (!currentUser) {
+        throw new AuthenticationError('Please log in')
+      }
+      if (args.setGenre)
+        await User.findByIdAndUpdate(args.id, { favoriteGenre: args.setGenre })
+      if (args.setUsername)
+        await User.findByIdAndUpdate(args.id, { username: args.setUsername })
+    },
     createUser: async (_root, args) => {
+      const user = await User.findOne({ id: args.username })
       const passwordHashh = await bcrypt.hash(args.passwordHash, 10)
-      const user = new User({
+      const newUser = new User({
         ...args,
         passwordHash: passwordHashh,
       })
-
-      return user.save().catch((error) => {
-        throw new GraphQLError('Creating the user failed', {
-          extensions: {
-            code: 'BAD_USER_INPUT',
-          },
+      if (user) {
+        throw new GraphQLError('Username already taken', {
+          code: 'BAD_USER_INPUT',
+          invalidArgs: args.username,
         })
-      })
+      } else
+        return newUser.save().catch((error) => {
+          throw new GraphQLError('Creating the user failed', {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+            },
+          })
+        })
     },
     login: async (_root, args) => {
       const user = await User.findOne({ username: args.username })
@@ -164,41 +208,45 @@ const resolvers = {
       }
 
       const userForToken = {
-        username: user.username,
-        id: user._id,
+        user: user.id,
+        id: user.id,
       }
 
       return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
     },
     deleteUser: async (_root, args) => {
-      await User.deleteOne({ username: args.username })
-        .then(function () {
-          return { value: 'User deleted' }
-        })
-        .catch(function (error) {
-          console.log(error) // Failure
-          return { value: 'Could not remove the user' }
-        })
+      await User.deleteOne({ username: args.username }).catch(function (error) {
+        // eslint-disable-next-line no-console
+        console.log(JSON.stringify(error, null, 2)) // Failure
+      })
     },
-    deleteBook: async (_root, args) => {
-      await Book.deleteOne({ title: args.title })
-        .then(function () {
-          return { value: 'Book deleted' }
+    deleteBook: async (_root, args, context) => {
+      const currentUser = context.currentUser
+      if (args.id)
+        await Book.deleteOne({ _id: args.id }).catch(function (error) {
+          // eslint-disable-next-line no-console
+          console.log(JSON.stringify(error, null, 2)) // Failure
         })
-        .catch(function (error) {
-          console.log(error) // Failure
-          return { value: 'Could not remove the book' }
-        })
+      if (args.title) {
+        await Book.findOneAndDelete({ title: args.title })
+      }
+      await User.updateOne(
+        { _id: currentUser._id },
+        {
+          $pullAll: {
+            books: args.id,
+          },
+        }
+      ).catch(function (error) {
+        // eslint-disable-next-line no-console
+        console.log(JSON.stringify(error, null, 2)) // Failure
+      })
     },
     deleteAuthor: async (_root, args) => {
-      await Author.deleteOne({ name: args.name })
-        .then(function () {
-          return { value: 'Author deleted' }
-        })
-        .catch(function (error) {
-          console.log(error) // Failure
-          return { value: 'Could not remove the author' }
-        })
+      await Author.deleteOne({ name: args.name }).catch(function (error) {
+        // eslint-disable-next-line no-console
+        console.log(JSON.stringify(error, null, 2)) // Failure
+      })
     },
   },
   Subscription: {

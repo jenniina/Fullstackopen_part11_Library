@@ -4,6 +4,7 @@ type Book {
     published: Int!
     author: Author!
     genres: [String!]!
+    user: ID
     id: ID!
   }
 
@@ -18,6 +19,7 @@ type Book {
     username: String!
     passwordHash: String!
     favoriteGenre: String!
+    books: [Book]
     id: ID!
   }
   
@@ -35,17 +37,19 @@ type Book {
     findBook(title: String!):Book
     authorCount: Int!
     allAuthors: [Author!]!
-    allUsers: [User!]!
+    allUsers(id:ID): [User!]!
     findAuthor(name: String!):Author
+    findUser(id: String!):User
     me: User
 }
 
 type Mutation {
-  addBook(
+  createBook(
     title: String!, 
     author: String!, 
     published: Int!, 
     genres: [String!]!
+    user:ID
     id: ID
     ): Book
   editAuthorBornYear(
@@ -65,11 +69,17 @@ type Mutation {
     username: String!
     ):Value
   deleteBook(
-    title: String!
+    id: ID
+    title: String
     ):Value
   deleteAuthor(
     name: String!
     ):Value
+  editUser(
+    id: ID!
+    setUsername: String
+    setGenre: String
+    ):User
 }
 type Subscription {
   bookAdded: Book!

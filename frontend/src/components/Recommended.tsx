@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client'
 import { booksProps } from '../interfaces'
 import { ME } from '../queries'
+import { Link } from 'react-router-dom'
 
 const Books = (props: { books: booksProps[]; token: string | null }) => {
   if (!props.token) return <div></div>
@@ -30,8 +31,12 @@ const Books = (props: { books: booksProps[]; token: string | null }) => {
           </tr>
           {filteredBooks.map((a: booksProps) => (
             <tr key={a.title}>
-              <td>{a.title}</td>
-              <td>{a.author.name}</td>
+              <td>
+                <Link to={`/books/${a.id}`}>{a.title}</Link>
+              </td>
+              <td>
+                <Link to={`/authors/${a.author.id}`}>{a.author.name}</Link>
+              </td>
               <td>{a.published}</td>
             </tr>
           ))}

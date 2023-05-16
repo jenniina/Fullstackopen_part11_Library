@@ -2,19 +2,30 @@ import { useQuery } from '@apollo/client'
 import { booksProps } from '../interfaces'
 import { useEffect, useState } from 'react'
 import { FILTER_BOOKS, ALL_BOOKS } from '../queries'
+import { Link } from 'react-router-dom'
 
-const Books = (props: { books: booksProps[] }) => {
+const Books = () => {
   const [genre, setGenre] = useState<string>('')
-
-  const allBooks = useQuery(ALL_BOOKS)
 
   const { data, loading, error, refetch } = useQuery(FILTER_BOOKS)
 
-  const books = props.books
+  const books = data?.allBooks
+    ?.slice()
+    .sort(function (a: { title: string }, b: { title: string }) {
+      let aTitle = a.title.toLowerCase()
+      let bTitle = b.title.toLowerCase()
+      if (aTitle > bTitle) {
+        return 1
+      } else if (aTitle < bTitle) {
+        return -1
+      } else {
+        return 0
+      }
+    })
 
   let genres = Array.prototype.concat.apply(
     [],
-    books.map((b) => b.genres)
+    books?.map((b: { genres: booksProps['genres'] }) => b.genres)
   )
   genres = [...new Set(genres)]
 
@@ -22,10 +33,10 @@ const Books = (props: { books: booksProps[] }) => {
     refetch({ genre: genre })
   }, [genre])
 
-  if (allBooks.loading || loading) {
+  if (loading || loading) {
     return <div>loading...</div>
   }
-  if (allBooks.error || error) {
+  if (error || error) {
     return <div>There was an error</div>
   }
   return (
@@ -33,7 +44,7 @@ const Books = (props: { books: booksProps[] }) => {
       <h1>Books</h1>
       <div className='genresButtons'>
         <button onClick={() => setGenre('')}>all genres</button>
-        {genres.map((genre) => (
+        {genres?.map((genre) => (
           <button key={genre} onClick={() => setGenre(genre)}>
             {genre}
           </button>
@@ -46,21 +57,17 @@ const Books = (props: { books: booksProps[] }) => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {genre === ''
-            ? allBooks?.data?.allBooks?.map((a: booksProps) => (
-                <tr key={a.title}>
-                  <td>{a.title}</td>
-                  <td>{a.author.name}</td>
-                  <td>{a.published}</td>
-                </tr>
-              ))
-            : data?.allBooks?.map((a: booksProps) => (
-                <tr key={a.title}>
-                  <td>{a.title}</td>
-                  <td>{a.author.name}</td>
-                  <td>{a.published}</td>
-                </tr>
-              ))}
+          {books?.map((a: booksProps) => (
+            <tr key={a.title}>
+              <td>
+                <Link to={`/books/${a.id}`}>{a.title}</Link>
+              </td>
+              <td>
+                <Link to={`/authors/${a.author.id}`}>{a.author.name}</Link>
+              </td>
+              <td>{a.published}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

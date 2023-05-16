@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useMutation } from '@apollo/client'
 import { ALL_USERS, CREATE_USER } from '../queries'
-import { message } from '../interfaces'
+import { message, userProps } from '../interfaces'
 import { updateCache } from '../App'
 
 const NewUser = (props: {
@@ -31,8 +31,15 @@ const NewUser = (props: {
   const submit = async (event: React.FormEvent) => {
     event.preventDefault()
 
+    const user: userProps = {
+      username,
+      passwordHash: password,
+      favoriteGenre: genre,
+      books: [],
+    }
+
     createUser({
-      variables: { username, passwordHash: password, favoriteGenre: genre },
+      variables: user,
     })
       .then(() =>
         props.notify(
@@ -40,7 +47,10 @@ const NewUser = (props: {
           5
         )
       )
-      .catch((e) => console.log(JSON.stringify(e.message, null, 2)))
+      .catch((e) =>
+        // eslint-disable-next-line no-console
+        console.log(JSON.stringify(e.message, null, 2))
+      )
   }
 
   return (

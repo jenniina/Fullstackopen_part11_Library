@@ -1,22 +1,34 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Notify from './components/Notify'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
-import { message } from './interfaces'
-import { ALL_AUTHORS, ALL_BOOKS, BOOK_ADDED } from './queries'
+import { authorProps, message, userProps } from './interfaces'
+import {
+  ALL_AUTHORS,
+  ALL_BOOKS,
+  ALL_USERS,
+  BOOK_ADDED,
+  DELETE_AUTHOR,
+  ME,
+} from './queries'
 import FormLogin from './components/FormLogin'
 import {
   ApolloCache,
   DocumentNode,
   useApolloClient,
+  useMutation,
   useQuery,
   useSubscription,
 } from '@apollo/client'
-import { Route, Routes, NavLink } from 'react-router-dom'
+import { Route, Routes, NavLink, useMatch, Link } from 'react-router-dom'
 import Recommended from './components/Recommended'
 import { booksProps } from './interfaces'
 import NewUser from './components/NewUser'
+import Users from './components/Users'
+import Book from './components/Book'
+import Author from './components/Author'
+import User from './components/User'
 
 // function that takes care of manipulating cache
 export const updateCache = (
@@ -51,6 +63,11 @@ const App = () => {
 
   const resultAuthors = useQuery(ALL_AUTHORS)
   const resultBooks = useQuery(ALL_BOOKS)
+  const resultUsers = useQuery(ALL_USERS)
+
+  const { data, refetch } = useQuery(ME)
+
+  refetch({ username: data?.me?.username })
 
   const notify = (info: message, seconds: number) => {
     setMessage(info)
@@ -61,8 +78,6 @@ const App = () => {
 
   useSubscription(BOOK_ADDED, {
     onData: ({ data }) => {
-      console.log(data)
-
       const addedBook = data.data.bookAdded
       notify(
         {
@@ -73,7 +88,6 @@ const App = () => {
         },
         8
       )
-
       updateCache(client.cache, { query: ALL_BOOKS }, addedBook)
     },
   })
@@ -82,6 +96,39 @@ const App = () => {
     window.localStorage.removeItem(LIRARY_TOKEN) //keep name same in FormLogin.tsx and main.tsx
     client.resetStore()
   }
+
+  const [deleteAuthor] = useMutation(DELETE_AUTHOR, {
+    refetchQueries: [{ query: ALL_AUTHORS }],
+  })
+  useEffect(() => {
+    //Delete authors with no books
+    const noBooks = resultAuthors?.data?.allAuthors?.find(
+      (author: authorProps) => author.bookCount === 0
+    )
+    if (noBooks) deleteAuthor({ variables: { name: noBooks?.name } })
+  }, [resultBooks?.data?.allBooks])
+
+  const matchBook = useMatch('/books/:id')
+  const matchAuthor = useMatch('/authors/:id')
+  const matchUser = useMatch('/users/:id')
+
+  const book = matchBook
+    ? resultBooks?.data?.allBooks?.find(
+        (book: booksProps) => book.id === matchBook.params.id
+      )
+    : null
+
+  const author: authorProps = matchAuthor
+    ? resultAuthors?.data?.allAuthors?.find(
+        (author: authorProps) => author.id === matchAuthor.params.id
+      )
+    : null
+
+  const user: userProps = matchUser
+    ? resultUsers?.data?.allUsers?.find(
+        (user: userProps) => user.id === matchUser.params.id
+      )
+    : null
 
   if (resultAuthors.loading) {
     return <div>loading...</div>
@@ -104,6 +151,9 @@ const App = () => {
         ) : (
           <>
             <li>
+              <NavLink to='users'>Users</NavLink>
+            </li>
+            <li>
               <NavLink to='addBook'>Add Book</NavLink>
             </li>
             <li>
@@ -121,6 +171,15 @@ const App = () => {
           )}
         </li>
       </ul>
+      {data?.me ? (
+        <p>
+          <small>
+            logged in as <Link to={`/users/${data?.me?.id}`}>{data?.me?.username}</Link>
+          </small>
+        </p>
+      ) : (
+        ''
+      )}
       <Notify info={message} />
       <div className='main-container'>
         <Routes>
@@ -133,21 +192,33 @@ const App = () => {
                 token={token}
               />
             }
-          ></Route>
-          <Route path='/' element={<Books books={resultBooks?.data?.allBooks} />}></Route>
+          />
           <Route
-            path='/addBook'
-            element={<NewBook notify={notify} token={token} />}
-          ></Route>
+            path='/users'
+            element={
+              <Users users={resultUsers?.data?.allUsers} notify={notify} token={token} />
+            }
+          />
+          <Route
+            path='/users/:id'
+            element={<User user={user} notify={notify} token={token} me={data?.me?.id} />}
+          />
+          <Route path='/' element={<Books />} />
+          <Route
+            path='/books/:id'
+            element={<Book book={book} token={token} notify={notify} me={data?.me?.id} />}
+          />
+          <Route path='/authors/:id' element={<Author author={author} />} />
+          <Route path='/addBook' element={<NewBook notify={notify} token={token} />} />
           <Route
             path='/recommended'
             element={<Recommended books={resultBooks?.data?.allBooks} token={token} />}
-          ></Route>
+          />
           <Route
             path='/login'
             element={<FormLogin notify={notify} setToken={setToken} />}
-          ></Route>
-          <Route path='/setuser' element={<NewUser notify={notify} />}></Route>
+          />
+          {/* <Route path='/setuser' element={<NewUser notify={notify} />} /> */}
         </Routes>
       </div>
     </div>
