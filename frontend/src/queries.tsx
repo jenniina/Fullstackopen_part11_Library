@@ -156,3 +156,11 @@ export const DELETE_BOOK = gql`
     }
   }
 `
+
+export const DELETE_AUTHOR = gql`
+  mutation deleteAuthor($name: String!) {
+    deleteAuthor(name: $name) {
+      value
+    }
+  }
+`

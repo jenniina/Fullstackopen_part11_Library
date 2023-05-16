@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client'
 import { authorProps, message } from '../interfaces'
-import { useState } from 'react'
-import { EDIT_BORN, ALL_AUTHORS } from '../queries'
+import { useEffect, useState } from 'react'
+import { EDIT_BORN, ALL_AUTHORS, DELETE_AUTHOR } from '../queries'
 import { Link } from 'react-router-dom'
 
 const Authors = (props: {
