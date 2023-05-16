@@ -28,10 +28,6 @@ const NewBook = (props: {
       { query: ME },
       { query: ALL_USERS },
     ],
-    onError: (error) => {
-      props.notify({ error: true, message: error.message }, 10)
-      //console.log(JSON.stringify(error, null, 2))
-    },
     update: (cache, response) => {
       updateCache(cache, { query: ALL_BOOKS }, response.data.createBook)
     },
@@ -50,7 +46,8 @@ const NewBook = (props: {
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault()
-
+    if (!title || !published || !author || !genres)
+      props.notify({ error: true, message: 'Please fill in all the fields' }, 5)
     createBook({
       variables: { title, author, genres, published: parseInt(published), user: userId },
     }).catch((error) =>

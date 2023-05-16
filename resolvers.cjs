@@ -87,7 +87,7 @@ const resolvers = {
       const book = await Book.findOne({ title: args.title })
       const author = await Author.findOne({ name: args.author })
 
-      if (!args.title || !args.author || !args.published || !args.genres) {
+      if (!args.title || !args.author || !args.published || args.genres.length === 0) {
         throw new GraphQLError('Please fill in all the fields', {
           code: 'BAD_USER_INPUT',
         })

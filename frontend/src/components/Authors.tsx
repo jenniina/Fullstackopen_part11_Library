@@ -32,6 +32,22 @@ const Authors = (props: {
     },
   })
 
+  const [deleteAuthor] = useMutation(DELETE_AUTHOR, {
+    refetchQueries: [{ query: ALL_AUTHORS }],
+    onError: (error) => {
+      // eslint-disable-next-line no-console
+      console.log(JSON.stringify(error, null, 2))
+    },
+  })
+  useEffect(() => {
+    //Delete authors with no books
+    const noBooks = authors?.find(
+      (author: authorProps, _i: number) => author.bookCount === 0
+    )
+    console.log('noBooks: ', noBooks)
+    if (noBooks) deleteAuthor({ variables: { name: noBooks?.name } })
+  }, [])
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     editAuthorBornYear({ variables: { name, setBornTo: Number(born) } })

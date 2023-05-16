@@ -4,27 +4,18 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import { authorProps, message, userProps } from './interfaces'
-import {
-  ALL_AUTHORS,
-  ALL_BOOKS,
-  ALL_USERS,
-  BOOK_ADDED,
-  DELETE_AUTHOR,
-  ME,
-} from './queries'
+import { ALL_AUTHORS, ALL_BOOKS, ALL_USERS, BOOK_ADDED, ME } from './queries'
 import FormLogin from './components/FormLogin'
 import {
   ApolloCache,
   DocumentNode,
   useApolloClient,
-  useMutation,
   useQuery,
   useSubscription,
 } from '@apollo/client'
 import { Route, Routes, NavLink, useMatch, Link } from 'react-router-dom'
 import Recommended from './components/Recommended'
 import { booksProps } from './interfaces'
-import NewUser from './components/NewUser'
 import Users from './components/Users'
 import Book from './components/Book'
 import Author from './components/Author'
@@ -96,21 +87,6 @@ const App = () => {
     window.localStorage.removeItem(LIRARY_TOKEN) //keep name same in FormLogin.tsx and main.tsx
     client.resetStore()
   }
-
-  const [deleteAuthor] = useMutation(DELETE_AUTHOR, {
-    refetchQueries: [{ query: ALL_AUTHORS }],
-    onError: (error) => {
-      // eslint-disable-next-line no-console
-      console.log(JSON.stringify(error, null, 2))
-    },
-  })
-  useEffect(() => {
-    //Delete authors with no books
-    const noBooks = resultAuthors?.data?.allAuthors?.find(
-      (author: authorProps, i: number) => author.bookCount === 0
-    )
-    if (noBooks) deleteAuthor({ variables: { name: noBooks?.name } })
-  }, [resultBooks])
 
   const matchBook = useMatch('/books/:id')
   const matchAuthor = useMatch('/authors/:id')
