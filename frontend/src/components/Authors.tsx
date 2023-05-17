@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client'
 import { authorProps, message } from '../interfaces'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { EDIT_BORN, ALL_AUTHORS, DELETE_AUTHOR } from '../queries'
 import { Link } from 'react-router-dom'
 
@@ -10,7 +10,11 @@ const Authors = (props: {
   token: string | null
 }) => {
   const [name, setName] = useState<string>('')
+  const [name2, setName2] = useState<string>('')
   const [born, setBorn] = useState<number | string | undefined>('')
+  const [born2, setBorn2] = useState<number | string | undefined>('')
+  const addRef = useRef<HTMLFormElement>(null)
+  const changeRef = useRef<HTMLFormElement>(null)
 
   const authors = props.authors
 
@@ -19,7 +23,7 @@ const Authors = (props: {
     .filter((a) => a !== null)
 
   const authorsWithBorn = authors
-    ?.map((a) => (!a.born ? null : a.name))
+    ?.map((a) => (!a.born ? null : a))
     .filter((a) => a !== null)
 
   const [editAuthorBornYear] = useMutation(EDIT_BORN, {
@@ -49,7 +53,22 @@ const Authors = (props: {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    editAuthorBornYear({ variables: { name, setBornTo: Number(born) } })
+    if (!born)
+      props.notify({ error: true, message: 'Please fill in the birth year field' }, 5)
+    else if (window.confirm(`Change birthdate to ${born}?`)) {
+      editAuthorBornYear({ variables: { name, setBornTo: Number(born) } })
+      addRef.current?.reset()
+    }
+  }
+
+  const handleSubmit2 = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!born2)
+      props.notify({ error: true, message: 'Please fill in the birth year field' }, 5)
+    else if (window.confirm(`Change birthdate to ${born2}?`)) {
+      editAuthorBornYear({ variables: { name, setBornTo: Number(born2) } })
+      changeRef.current?.reset()
+    }
   }
 
   return (
@@ -80,8 +99,8 @@ const Authors = (props: {
         ''
       ) : (
         <>
-          <form onSubmit={handleSubmit}>
-            <h2>Add birthyear</h2>
+          <form ref={addRef} className='form-authors' onSubmit={handleSubmit}>
+            <legend>Add birthyear</legend>
             <label>
               <span>Author:</span>
               <select value={name} onChange={({ target }) => setName(target.value)}>
@@ -101,13 +120,13 @@ const Authors = (props: {
             <button type='submit'>submit</button>
           </form>
 
-          <form onSubmit={handleSubmit}>
-            <h2>Change birthyear</h2>
+          <form ref={changeRef} className='form-authors' onSubmit={handleSubmit2}>
+            <legend>Change birthyear</legend>
             <label>
               <span>Author:</span>
-              <select value={name} onChange={({ target }) => setName(target.value)}>
+              <select value={name2} onChange={({ target }) => setName2(target.value)}>
                 {authorsWithBorn?.map((a) => (
-                  <option key={a}>{a}</option>
+                  <option key={a?.name}>{`${a?.name}: ${a?.born}`}</option>
                 ))}
               </select>
             </label>
@@ -116,7 +135,7 @@ const Authors = (props: {
               <input
                 type='number'
                 name='born'
-                onChange={({ target }) => setBorn(target.value)}
+                onChange={({ target }) => setBorn2(target.value)}
               />
             </label>
             <button type='submit'>submit</button>

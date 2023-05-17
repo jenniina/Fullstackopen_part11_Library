@@ -94,8 +94,11 @@ const User = (props: {
         {user?.id === props.me ? (
           <div className='forms-wrap'>
             <div>
-              <form onSubmit={handleGenreChange}>
-                <label htmlFor='genreInput'>Change favorite genre:</label>
+              <form className='form-user' onSubmit={handleGenreChange}>
+                <legend>Change favorite genre</legend>
+                <label htmlFor='genreInput' className='screen-reader-text'>
+                  Change favorite genre
+                </label>
                 <input
                   id='genreInput'
                   value={genre}
@@ -104,8 +107,11 @@ const User = (props: {
                 <button type='submit'>change&nbsp;genre</button>
               </form>
 
-              <form onSubmit={handleUsernameChange}>
-                <label htmlFor='usernameInput'>Change username:</label>
+              <form className='form-user' onSubmit={handleUsernameChange}>
+                <legend>Change username</legend>
+                <label htmlFor='usernameInput' className='screen-reader-text'>
+                  Change username:
+                </label>
                 <input
                   id='usernameInput'
                   value={username}
@@ -115,15 +121,20 @@ const User = (props: {
               </form>
             </div>
             <div>
-              <form onSubmit={handlePasswordChange}>
-                <label htmlFor='passwordInput'>Change password:</label>
+              <form className='form-user' onSubmit={handlePasswordChange}>
+                <legend>Change password</legend>
+                <label htmlFor='passwordInput' className='screen-reader-text'>
+                  Change password
+                </label>
                 <input
                   id='passwordInput'
                   value={password}
                   type='password'
                   onChange={({ target }) => setPassword(target.value)}
                 />
-                <label htmlFor='passwordInputConfirm'> Confirm password</label>
+                <label htmlFor='passwordInputConfirm'>
+                  <small>Confirm password</small>
+                </label>
                 <input
                   id='passwordInputConfirm'
                   value={passwordConfirm}
