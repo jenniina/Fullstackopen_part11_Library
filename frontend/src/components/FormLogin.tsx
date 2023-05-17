@@ -21,6 +21,11 @@ const FormLogin = ({ notify, setToken }: loginProps) => {
       //console.log(JSON.stringify(error, null, 2))
       notify({ error: true, message: error.message }, 10)
     },
+    onCompleted: () => {
+      setTimeout(() => {
+        navigate('/addBook')
+      }, 500)
+    },
   })
 
   useEffect(() => {
@@ -34,13 +39,9 @@ const FormLogin = ({ notify, setToken }: loginProps) => {
   const submit = async (event: React.FormEvent) => {
     event.preventDefault()
 
-    login({ variables: { username, password } })
-      .then(() => {
-        setTimeout(() => {
-          navigate('/')
-        }, 500)
-      })
-      .catch((error) => notify({ error: true, message: error.message }, 10))
+    login({ variables: { username, password } }).catch((error) =>
+      notify({ error: true, message: error.message }, 10)
+    )
   }
 
   return (

@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { booksProps, message, userProps } from '../interfaces'
 import { useMutation } from '@apollo/client'
 import { ALL_AUTHORS, ALL_BOOKS, ALL_USERS, DELETE_BOOK } from '../queries'
+import { updateCache } from '../App'
 
 const Book = (props: {
   book: booksProps

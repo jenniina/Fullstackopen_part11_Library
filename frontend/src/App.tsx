@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Notify from './components/Notify'
 import Authors from './components/Authors'
 import Books from './components/Books'
@@ -20,6 +20,8 @@ import Users from './components/Users'
 import Book from './components/Book'
 import Author from './components/Author'
 import User from './components/User'
+import NewUser from './components/NewUser'
+import { useScrollbarWidth } from './hooks/useScrollbarWidth'
 
 // function that takes care of manipulating cache
 export const updateCache = (
@@ -110,6 +112,12 @@ const App = () => {
       )
     : null
 
+  const scrollbarWidth = useScrollbarWidth()
+
+  const style: React.CSSProperties = {
+    ['--scrollbar_width' as string]: `${scrollbarWidth}px`,
+  }
+
   if (resultAuthors.loading) {
     return <div>loading...</div>
   }
@@ -118,7 +126,7 @@ const App = () => {
   }
 
   return (
-    <div>
+    <div style={style}>
       <ul className='main-navigation'>
         <li>
           <NavLink to='/'>Books</NavLink>
@@ -198,6 +206,7 @@ const App = () => {
             path='/login'
             element={<FormLogin notify={notify} setToken={setToken} />}
           />
+          {/* Uncomment the following line to get new user page: */}
           {/* <Route path='/setuser' element={<NewUser notify={notify} />} /> */}
         </Routes>
       </div>

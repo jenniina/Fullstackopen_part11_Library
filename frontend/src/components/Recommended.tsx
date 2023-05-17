@@ -4,7 +4,7 @@ import { ME } from '../queries'
 import { Link, useNavigate } from 'react-router-dom'
 
 const Books = (props: { books: booksProps[]; token: string | null }) => {
-  if (!props.token) return <div></div>
+  const navigate = useNavigate()
 
   const user = useQuery(ME)
 
@@ -16,8 +16,6 @@ const Books = (props: { books: booksProps[]; token: string | null }) => {
 
   const filteredBooks = books?.filter((book) => book.genres.includes(favorite))
 
-  const navigate = useNavigate()
-
   if (!props.token) {
     setTimeout(() => navigate('/login'), 1000)
     return <div>Please log in</div>
@@ -26,7 +24,10 @@ const Books = (props: { books: booksProps[]; token: string | null }) => {
       <div>
         <h2>Recommendations</h2>
         <p>
-          Books in your favorite genre: <em>{favorite}</em>
+          Books in your favorite genre:{' '}
+          <span style={{ display: 'block' }}>
+            <em>{favorite}</em>
+          </span>
         </p>
         <table>
           <tbody>

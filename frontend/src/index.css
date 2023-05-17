@@ -1,11 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat&family=Oswald:wght@500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&display=swap');
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --letter-spacing: 0.03em;
+  --text-family: Lato, Helvetica, Arial, sans-serif;
+  --title-family: Oswald, Lato, Helvetica, Arial, sans-serif;
+  font-family: var(--text-family);
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color-scheme: dark;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,7 +16,39 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
-  font-size: 14px;
+  font-size: 13px;
+
+  --hue-primary: 170;
+  --sat: 100%; /*saturation*/
+
+  --color-primary-1: hsl(var(--hue-primary), var(--sat), 1.5%);
+  --color-primary-2: hsl(var(--hue-primary), var(--sat), 4%);
+  --color-primary-3: hsl(var(--hue-primary), var(--sat), 7%); /**/
+  --color-primary-4: hsl(var(--hue-primary), var(--sat), 10%); /**/
+  --color-primary-5: hsl(var(--hue-primary), var(--sat), 14%);
+  --color-primary-6: hsl(var(--hue-primary), var(--sat), 18%); /**/
+  --color-primary-7: hsl(var(--hue-primary), var(--sat), 22%);
+  --color-primary-8: hsl(var(--hue-primary), var(--sat), 26%); /**/
+  --color-primary-9: hsl(var(--hue-primary), var(--sat), 32%);
+  --color-primary-10: hsl(var(--hue-primary), var(--sat), 37%); /**/
+  --color-primary-11: hsl(var(--hue-primary), var(--sat), 43%);
+  --color-primary-12: hsl(var(--hue-primary), var(--sat), 54%);
+  --color-primary-13: hsl(var(--hue-primary), var(--sat), 62%);
+  --color-primary-14: hsl(var(--hue-primary), var(--sat), 68%); /**/
+  --color-primary-15: hsl(var(--hue-primary), var(--sat), 72%); /**/
+  --color-primary-16: hsl(var(--hue-primary), var(--sat), 77%); /**/
+  --color-primary-17: hsl(var(--hue-primary), var(--sat), 82%); /**/
+  --color-primary-18: hsl(var(--hue-primary), var(--sat), 88%); /**/
+  --color-primary-19: hsl(var(--hue-primary), var(--sat), 92%);
+  --color-primary-20: hsl(var(--hue-primary), var(--sat), 96%);
+
+  color: var(--color-primary-18);
+  background-color: var(--color-primary-1);
+}
+@media (min-width: 400px) {
+  :root {
+    font-size: 14px;
+  }
 }
 @media (min-width: 600px) {
   :root {
@@ -29,7 +64,7 @@
 a,
 button.logout {
   font-weight: 500;
-  color: Turquoise;
+  color: var(--color-primary-14);
   text-decoration: inherit;
 }
 a:hover,
@@ -40,17 +75,31 @@ button.logout:hover {
 body {
   margin: 0;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   min-height: 100vh;
 }
-
+@media (min-width: 400px) {
+  body {
+    justify-content: center;
+  }
+}
 #root {
   max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  margin: 0;
+  padding: 0.2rem;
   text-align: center;
 }
-
+@media (min-width: 400px) {
+  #root {
+    padding: 1rem;
+    margin: 0 auto;
+  }
+}
+@media (min-width: 600px) {
+  #root {
+    padding: 2rem;
+  }
+}
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
@@ -65,11 +114,12 @@ h3 {
 button {
   border-radius: 8px;
   border: 1px solid transparent;
+  border-bottom-color: var(--color-primary-5);
   padding: 0.3em 0.8em 0.4em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--color-primary-3);
   cursor: pointer;
   transition: border-color 0.25s;
   margin-top: 0.2em;
@@ -85,7 +135,7 @@ button-logout:hover {
   margin: 0;
 }
 button:hover {
-  border-color: turquoise;
+  border-color: var(--color-primary-14);
 }
 button:focus,
 button:focus-visible {
@@ -97,40 +147,31 @@ button:focus-visible {
 .genresButtons button {
   font-size: 0.8em;
 }
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a {
-    color: Teal;
-  }
-  a:hover {
-    color: black;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
 table {
   text-align: left;
-  margin: 0 auto;
+  margin: 0;
   border-collapse: collapse;
+}
+@media (min-width: 400px) {
+  table {
+    margin: 0 auto;
+  }
 }
 table p {
   margin: 0;
 }
 tr > * {
   border-bottom: 1px dashed currentColor;
-  padding: 0 1em;
+  padding: 0.3em 0.1em;
   vertical-align: top;
+}
+@media (min-width: 400px) {
+  tr > * {
+    padding: 0.4em 0.6em;
+  }
 }
 tr:first-of-type > * {
   border-bottom: 3px double currentColor;
-}
-tr:last-of-type > td {
-  border-bottom: 0;
 }
 form {
   --padding: 1em;
@@ -138,7 +179,12 @@ form {
   gap: var(--padding);
   flex-flow: column nowrap;
   padding: var(--padding);
-  margin: var(--padding);
+  margin: 1em 0.2em;
+}
+@media (min-width: 400px) {
+  form {
+    margin: var(--padding);
+  }
 }
 form legend {
   border-bottom: 3px double currentColor;
@@ -151,20 +197,39 @@ form legend {
 form label {
   display: flex;
   justify-content: space-between;
+  flex-flow: column nowrap;
   gap: calc(var(--padding) / 2);
 }
 form label span {
-  min-width: 30%;
+  min-width: 100%;
 }
-form select,
+form select {
+  width: 100%;
+}
 form input {
-  width: calc(70% - var(--padding));
+  width: calc(100% - var(--padding));
 }
-
+@media (min-width: 400px) {
+  form label {
+    flex-flow: row nowrap;
+  }
+  form label span {
+    min-width: 30%;
+  }
+  form select {
+    width: 70%;
+  }
+  form input {
+    width: calc(70% - var(--padding));
+  }
+}
 #addBookForm #genres {
   display: flex;
   justify-content: space-between;
   gap: 0.5em;
+}
+#addBookForm #genres button:hover {
+  border-color: red;
 }
 #addBookForm #genres > span {
   display: flex;
@@ -175,7 +240,12 @@ form input {
 .forms-wrap {
   display: flex;
   gap: 0.5em;
-  flex-wrap: row wrap;
+  flex-flow: column nowrap;
+}
+@media (min-width: 400px) {
+  .forms-wrap {
+    flex-flow: row nowrap;
+  }
 }
 .form-user,
 .form-authors {
@@ -186,9 +256,10 @@ form input {
   outline-offset: -1px;
 }
 .form-user input {
-  width: 100%;
+  width: calc(100% - var(--padding));
 }
-.form-authors label {
+.form-authors label,
+#addBookForm span {
   text-align: left;
 }
 ul {
@@ -197,14 +268,26 @@ ul {
 ul.main-navigation {
   list-style: none;
   display: flex;
+  flex-flow: row wrap;
   gap: 1em;
   justify-content: center;
   padding-left: 0;
+  max-width: calc(100vw - var(--scrollbar_width));
+  letter-spacing: calc(var(--letter-spacing) * -2);
+  margin: 0;
+}
+@media (min-width: 400px) {
+  ul.main-navigation {
+    margin: 0 auto;
+  }
+}
+ul.main-navigation + p {
+  max-width: calc(100vw - var(--scrollbar_width));
 }
 .active {
   text-decoration: underline;
   opacity: 0.8;
-  font-weight: 100;
+  font-weight: 300;
   color: currentColor;
 }
 .main-container {
@@ -224,3 +307,41 @@ ul.main-navigation {
   margin: -1px;
   border: 0;
 }
+*:not(table) {
+  max-width: calc(100vw - var(--scrollbar_width));
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  word-break: break-all;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+legend {
+  font-family: var(--title-family);
+}
+
+/* @media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a {
+    color: Teal;
+  }
+  a:hover {
+    color: black;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+} */

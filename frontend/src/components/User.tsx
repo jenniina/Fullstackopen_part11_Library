@@ -17,6 +17,8 @@ const User = (props: {
   const [password, setPassword] = useState('')
   const [passwordConfirm, setPasswordConfirm] = useState('')
 
+  const navigate = useNavigate()
+
   const [editUser] = useMutation(EDIT_USER, {
     refetchQueries: [{ query: ALL_USERS }, { query: ME }],
     onError: (error) => {
@@ -61,8 +63,6 @@ const User = (props: {
       setPasswordConfirm('')
     }
   }
-  console.log(user)
-  const navigate = useNavigate()
   if (!props.token) {
     setTimeout(() => navigate('/login'), 1000)
     return <div>Please log in</div>
@@ -70,81 +70,102 @@ const User = (props: {
     return (
       <div>
         <h1>{user?.username}</h1>
-        <table>
-          <tbody>
-            <tr>
-              <th>favorite genre</th>
-              <th>books added</th>
-            </tr>
-            <tr>
-              <td>{user?.favoriteGenre}</td>
-              <td>
-                {user?.books
-                  ?.slice()
-                  .sort((a, b) => a.title.localeCompare(b.title))
-                  .map((book) => (
-                    <p key={book.id}>
-                      <Link to={`/books/${book.id}`}>{book.title}</Link>
-                    </p>
-                  ))}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        {user?.id === props.me ? (
-          <div className='forms-wrap'>
-            <div>
-              <form className='form-user' onSubmit={handleGenreChange}>
-                <legend>Change favorite genre</legend>
-                <label htmlFor='genreInput' className='screen-reader-text'>
-                  Change favorite genre
-                </label>
-                <input
-                  id='genreInput'
-                  value={genre}
-                  onChange={({ target }) => setGenre(target.value)}
-                />
-                <button type='submit'>change&nbsp;genre</button>
-              </form>
 
-              <form className='form-user' onSubmit={handleUsernameChange}>
-                <legend>Change username</legend>
-                <label htmlFor='usernameInput' className='screen-reader-text'>
-                  Change username:
-                </label>
-                <input
-                  id='usernameInput'
-                  value={username}
-                  onChange={({ target }) => setUsername(target.value)}
-                />
-                <button type='submit'>change&nbsp;username</button>
-              </form>
+        <p>
+          <span>favorite genre: </span>
+          <span>
+            <em>{user?.favoriteGenre}</em>
+          </span>
+        </p>
+        {user?.books.length === 0 || user?.books === undefined ? (
+          <>
+            <p>No books added yet!</p>
+            {user.id === props.me ? (
+              <p>
+                <Link to='/addBook'>Add a book</Link>
+              </p>
+            ) : (
+              ''
+            )}
+          </>
+        ) : (
+          <table>
+            <tbody>
+              <tr>
+                <th>books added</th>
+              </tr>
+
+              {user?.books
+                ?.slice()
+                .sort((a, b) => a.title.localeCompare(b.title))
+                .map((book) => (
+                  <tr key={book.id}>
+                    <td>
+                      <Link to={`/books/${book.id}`}>{book.title}</Link>
+                    </td>{' '}
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        )}
+
+        {user?.id === props.me ? (
+          <>
+            <h2>Settings</h2>{' '}
+            <div className='forms-wrap'>
+              <div>
+                <form className='form-user' onSubmit={handleGenreChange}>
+                  <legend>Change favorite genre</legend>
+                  <label htmlFor='genreInput' className='screen-reader-text'>
+                    Change favorite genre
+                  </label>
+                  <input
+                    id='genreInput'
+                    value={genre}
+                    onChange={({ target }) => setGenre(target.value)}
+                  />
+                  <button type='submit'>change&nbsp;genre</button>
+                </form>
+
+                <form className='form-user' onSubmit={handleUsernameChange}>
+                  <legend>Change username</legend>
+                  <label htmlFor='usernameInput' className='screen-reader-text'>
+                    Change username:
+                  </label>
+                  <input
+                    id='usernameInput'
+                    value={username}
+                    onChange={({ target }) => setUsername(target.value)}
+                  />
+                  <button type='submit'>change&nbsp;username</button>
+                </form>
+              </div>
+              <div>
+                <form className='form-user' onSubmit={handlePasswordChange}>
+                  <legend>Change password</legend>
+                  <label htmlFor='passwordInput' className='screen-reader-text'>
+                    Change password
+                  </label>
+                  <input
+                    id='passwordInput'
+                    value={password}
+                    type='password'
+                    onChange={({ target }) => setPassword(target.value)}
+                  />
+                  <label htmlFor='passwordInputConfirm'>
+                    <small>Confirm password</small>
+                  </label>
+                  <input
+                    id='passwordInputConfirm'
+                    value={passwordConfirm}
+                    type='password'
+                    onChange={({ target }) => setPasswordConfirm(target.value)}
+                  />
+                  <button type='submit'>change&nbsp;password</button>
+                </form>
+              </div>
             </div>
-            <div>
-              <form className='form-user' onSubmit={handlePasswordChange}>
-                <legend>Change password</legend>
-                <label htmlFor='passwordInput' className='screen-reader-text'>
-                  Change password
-                </label>
-                <input
-                  id='passwordInput'
-                  value={password}
-                  type='password'
-                  onChange={({ target }) => setPassword(target.value)}
-                />
-                <label htmlFor='passwordInputConfirm'>
-                  <small>Confirm password</small>
-                </label>
-                <input
-                  id='passwordInputConfirm'
-                  value={passwordConfirm}
-                  type='password'
-                  onChange={({ target }) => setPasswordConfirm(target.value)}
-                />
-                <button type='submit'>change&nbsp;password</button>
-              </form>
-            </div>
-          </div>
+          </>
         ) : (
           ''
         )}

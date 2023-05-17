@@ -47,7 +47,7 @@ const NewBook = (props: {
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault()
-    if (!title || !published || !author || !genres)
+    if (!title || !published || !author || genres.length === 0)
       props.notify({ error: true, message: 'Please fill in all the fields' }, 5)
     createBook({
       variables: { title, author, genres, published: parseInt(published), user: userId },
@@ -82,7 +82,7 @@ const NewBook = (props: {
         <h1>Add Book</h1>
         <form id='addBookForm' onSubmit={submit}>
           <label>
-            title:
+            <span>title: </span>
             <input
               name='title'
               value={title}
@@ -90,7 +90,7 @@ const NewBook = (props: {
             />
           </label>
           <label>
-            author:
+            <span>author: </span>
             <input
               name='author'
               value={author}
@@ -98,7 +98,7 @@ const NewBook = (props: {
             />
           </label>
           <label>
-            published:
+            <span>published: </span>
             <input
               type='number'
               name='published'
@@ -107,6 +107,7 @@ const NewBook = (props: {
             />
           </label>
           <label>
+            <span>genre: </span>
             <input
               name='genre'
               value={genre}
