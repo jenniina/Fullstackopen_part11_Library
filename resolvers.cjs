@@ -78,6 +78,7 @@ const resolvers = {
       return books.length
     },
   },
+
   Mutation: {
     createBook: async (_root, args, context) => {
       const currentUser = context.currentUser

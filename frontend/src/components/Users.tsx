@@ -35,16 +35,7 @@ const Users = (props: {
                   <Link to={`/users/${u.id}`}>{u.username}</Link>
                 </td>
                 <td>{u.favoriteGenre}</td>
-                <td>
-                  {u.books
-                    ?.slice()
-                    .sort((a, b) => a.title.localeCompare(b.title))
-                    .map((book) => (
-                      <p key={book.id}>
-                        <Link to={`/books/${book.id}`}>{book.title}</Link>
-                      </p>
-                    ))}
-                </td>
+                <td>{u.books.length}</td>
               </tr>
             ))}
           </tbody>

@@ -61,7 +61,7 @@ const User = (props: {
       setPasswordConfirm('')
     }
   }
-
+  console.log(user)
   const navigate = useNavigate()
   if (!props.token) {
     setTimeout(() => navigate('/login'), 1000)
@@ -91,7 +91,7 @@ const User = (props: {
             </tr>
           </tbody>
         </table>
-        {user.id === props.me ? (
+        {user?.id === props.me ? (
           <div className='forms-wrap'>
             <div>
               <form onSubmit={handleGenreChange}>
