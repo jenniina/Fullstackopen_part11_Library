@@ -31,7 +31,7 @@ jobs:
         id: e2e
         uses: cypress-io/github-action@dfda9365a4881a8521b8e3c3538275242aae9151
         with:
-          start: npm run server:test
+          start: npm run server
           command: npm run test:e2e
           wait-on: 'http://localhost:3001'
           working-directory: frontend
