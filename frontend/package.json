@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "server": "npm run dev && cd .. && npm run testmode",
+    "server": "cd .. && npm run testmode",
+    "server-and-test": "start-server-and-test dev http://localhost:5173 test:e2e",
     "cypress:open": "cross-env NODE_ENV=test cypress open",
     "test:e2e": "cross-env NODE_ENV=test cypress run"
   },
@@ -19,6 +20,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.10.0",
+    "start-server-and-test": "^2.0.0",
     "uuid": "^9.0.0",
     "vitest": "^0.31.0"
   },
