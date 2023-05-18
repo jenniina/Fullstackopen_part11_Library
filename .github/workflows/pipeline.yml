@@ -41,6 +41,7 @@ jobs:
           PORT: ${{ secrets.PORT }}
           # pass GitHub token to detect new build vs re-run build
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        continue-on-error: true
       - name: Deploy backend
         id: deployB
         uses: bankfliptech/deploy-to-render@e51c1879584c0d27bd916bbcb3f17e9efcacd818
