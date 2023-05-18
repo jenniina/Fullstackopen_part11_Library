@@ -135,7 +135,7 @@ describe('site', () => {
     cy.wait(1005)
     cy.get('input[name*="password"]').type('Anonymous')
     cy.get('button[type="submit"]').click()
-    cy.wait(1000)
+    cy.wait(3000)
     cy.get('.main-navigation').get('button').contains('logout')
   })
 
@@ -148,7 +148,7 @@ describe('site', () => {
     cy.wait(1005)
     cy.get('input[name*="password"]').type('Anonymous')
     cy.get('button[type="submit"]').click()
-    cy.wait(2000)
+    cy.wait(3000)
     //cy.get('.main-navigation').contains('Add Book').click()
     //cy.wait(2000)
     cy.get('label').eq(0).click()
