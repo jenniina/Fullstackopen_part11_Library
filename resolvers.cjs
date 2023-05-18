@@ -78,6 +78,7 @@ const resolvers = {
       return books.length
     },
   },
+
   Mutation: {
     createBook: async (_root, args, context) => {
       const currentUser = context.currentUser
@@ -87,7 +88,7 @@ const resolvers = {
       const book = await Book.findOne({ title: args.title })
       const author = await Author.findOne({ name: args.author })
 
-      if (!args.title || !args.author || !args.published || !args.genres) {
+      if (!args.title || !args.author || !args.published || args.genres.length === 0) {
         throw new GraphQLError('Please fill in all the fields', {
           code: 'BAD_USER_INPUT',
         })
@@ -171,6 +172,10 @@ const resolvers = {
         await User.findByIdAndUpdate(args.id, { favoriteGenre: args.setGenre })
       if (args.setUsername)
         await User.findByIdAndUpdate(args.id, { username: args.setUsername })
+      if (args.setPassword) {
+        const passwordHashh = await bcrypt.hash(args.setPassword, 10)
+        await User.findByIdAndUpdate(args.id, { passwordHash: passwordHashh })
+      }
     },
     createUser: async (_root, args) => {
       const user = await User.findOne({ id: args.username })

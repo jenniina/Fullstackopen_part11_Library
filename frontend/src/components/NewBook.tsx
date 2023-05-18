@@ -3,6 +3,7 @@ import { useMutation, useQuery } from '@apollo/client'
 import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS, ALL_USERS, ME } from '../queries'
 import { message } from '../interfaces'
 import { updateCache } from '../App'
+import { useNavigate } from 'react-router-dom'
 
 const NewBook = (props: {
   notify: ({ error, message }: message, seconds: number) => void
@@ -28,10 +29,6 @@ const NewBook = (props: {
       { query: ME },
       { query: ALL_USERS },
     ],
-    onError: (error) => {
-      props.notify({ error: true, message: error.message }, 10)
-      //console.log(JSON.stringify(error, null, 2))
-    },
     update: (cache, response) => {
       updateCache(cache, { query: ALL_BOOKS }, response.data.createBook)
     },
@@ -50,7 +47,8 @@ const NewBook = (props: {
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault()
-
+    if (!title || !published || !author || genres.length === 0)
+      props.notify({ error: true, message: 'Please fill in all the fields' }, 5)
     createBook({
       variables: { title, author, genres, published: parseInt(published), user: userId },
     }).catch((error) =>
@@ -73,47 +71,66 @@ const NewBook = (props: {
   const clearGenres = () => {
     setGenres([])
   }
-  if (!props.token) return <div>Please log in</div>
-  else
+  const navigate = useNavigate()
+
+  if (!props.token) {
+    setTimeout(() => navigate('/login'), 1000)
+    return <div>Please log in</div>
+  } else
     return (
       <div>
         <h1>Add Book</h1>
         <form id='addBookForm' onSubmit={submit}>
-          <label>
-            title:
-            <input
-              name='title'
-              value={title}
-              onChange={({ target }) => setTitle(target.value)}
-            />
-          </label>
-          <label>
-            author:
-            <input
-              name='author'
-              value={author}
-              onChange={({ target }) => setAuthor(target.value)}
-            />
-          </label>
-          <label>
-            published:
-            <input
-              type='number'
-              name='published'
-              value={published}
-              onChange={({ target }) => setPublished(target.value)}
-            />
-          </label>
-          <label>
-            <input
-              name='genre'
-              value={genre}
-              onChange={({ target }) => setGenre(target.value)}
-            />
-            <button onClick={addGenre} type='button'>
-              <small>add&nbsp;genre</small>
-            </button>
-          </label>
+          <div className='input-wrap'>
+            <label>
+              <input
+                name='title'
+                value={title}
+                type='text'
+                required
+                onChange={({ target }) => setTitle(target.value)}
+              />
+              <span>title: </span>
+            </label>
+          </div>
+          <div className='input-wrap'>
+            <label>
+              <input
+                name='author'
+                value={author}
+                type='text'
+                required
+                onChange={({ target }) => setAuthor(target.value)}
+              />
+              <span>author: </span>
+            </label>
+          </div>
+          <div className='input-wrap'>
+            <label>
+              <input
+                type='number'
+                name='published'
+                required
+                value={published}
+                onChange={({ target }) => setPublished(target.value)}
+              />
+              <span>published: </span>
+            </label>
+          </div>
+          <div className='input-wrap'>
+            <label id='genreLabel'>
+              <input
+                name='genre'
+                value={genre}
+                type='text'
+                onChange={({ target }) => setGenre(target.value)}
+              />
+              <span>genre: </span>
+            </label>
+          </div>
+          <button onClick={addGenre} type='button'>
+            <small>add&nbsp;genre</small>
+          </button>
           <div id='genres'>
             <span>
               genres:{' '}

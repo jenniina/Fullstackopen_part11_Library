@@ -1,34 +1,27 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Notify from './components/Notify'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import { authorProps, message, userProps } from './interfaces'
-import {
-  ALL_AUTHORS,
-  ALL_BOOKS,
-  ALL_USERS,
-  BOOK_ADDED,
-  DELETE_AUTHOR,
-  ME,
-} from './queries'
+import { ALL_AUTHORS, ALL_BOOKS, ALL_USERS, BOOK_ADDED, ME } from './queries'
 import FormLogin from './components/FormLogin'
 import {
   ApolloCache,
   DocumentNode,
   useApolloClient,
-  useMutation,
   useQuery,
   useSubscription,
 } from '@apollo/client'
 import { Route, Routes, NavLink, useMatch, Link } from 'react-router-dom'
 import Recommended from './components/Recommended'
 import { booksProps } from './interfaces'
-import NewUser from './components/NewUser'
 import Users from './components/Users'
 import Book from './components/Book'
 import Author from './components/Author'
 import User from './components/User'
+import NewUser from './components/NewUser'
+import { useScrollbarWidth } from './hooks/useScrollbarWidth'
 
 // function that takes care of manipulating cache
 export const updateCache = (
@@ -97,17 +90,6 @@ const App = () => {
     client.resetStore()
   }
 
-  const [deleteAuthor] = useMutation(DELETE_AUTHOR, {
-    refetchQueries: [{ query: ALL_AUTHORS }],
-  })
-  useEffect(() => {
-    //Delete authors with no books
-    const noBooks = resultAuthors?.data?.allAuthors?.find(
-      (author: authorProps) => author.bookCount === 0
-    )
-    if (noBooks) deleteAuthor({ variables: { name: noBooks?.name } })
-  }, [resultBooks?.data?.allBooks])
-
   const matchBook = useMatch('/books/:id')
   const matchAuthor = useMatch('/authors/:id')
   const matchUser = useMatch('/users/:id')
@@ -130,6 +112,12 @@ const App = () => {
       )
     : null
 
+  const scrollbarWidth = useScrollbarWidth()
+
+  const style: React.CSSProperties = {
+    ['--scrollbar_width' as string]: `${scrollbarWidth}px`,
+  }
+
   if (resultAuthors.loading) {
     return <div>loading...</div>
   }
@@ -138,7 +126,7 @@ const App = () => {
   }
 
   return (
-    <div>
+    <div style={style}>
       <ul className='main-navigation'>
         <li>
           <NavLink to='/'>Books</NavLink>
@@ -218,6 +206,7 @@ const App = () => {
             path='/login'
             element={<FormLogin notify={notify} setToken={setToken} />}
           />
+          {/* Uncomment the following line to get new user page: */}
           {/* <Route path='/setuser' element={<NewUser notify={notify} />} /> */}
         </Routes>
       </div>

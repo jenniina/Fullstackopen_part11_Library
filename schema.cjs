@@ -79,6 +79,7 @@ type Mutation {
     id: ID!
     setUsername: String
     setGenre: String
+    setPassword: String
     ):User
 }
 type Subscription {

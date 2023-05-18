@@ -108,10 +108,21 @@ export const EDIT_BORN = gql`
   }
 `
 export const EDIT_USER = gql`
-  mutation editUser($id: ID!, $setGenre: String, $setUsername: String) {
-    editUser(id: $id, setGenre: $setGenre, setUsername: $setUsername) {
+  mutation editUser(
+    $id: ID!
+    $setGenre: String
+    $setUsername: String
+    $setPassword: String
+  ) {
+    editUser(
+      id: $id
+      setGenre: $setGenre
+      setUsername: $setUsername
+      setPassword: $setPassword
+    ) {
       username
       favoriteGenre
+      passwordHash
     }
   }
 `

@@ -44,11 +44,13 @@ const Books = () => {
       <h1>Books</h1>
       <div className='genresButtons'>
         <button onClick={() => setGenre('')}>all genres</button>
-        {genres?.map((genre) => (
-          <button key={genre} onClick={() => setGenre(genre)}>
-            {genre}
-          </button>
-        ))}
+        {genres
+          ?.sort((a, b) => a.localeCompare(b))
+          .map((genre) => (
+            <button key={genre} onClick={() => setGenre(genre)}>
+              {genre}
+            </button>
+          ))}
       </div>
       <table>
         <tbody>

@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useMutation } from '@apollo/client'
 import { ALL_USERS, CREATE_USER } from '../queries'
 import { message, userProps } from '../interfaces'
-import { updateCache } from '../App'
 
 const NewUser = (props: {
   notify: ({ error, message }: message, seconds: number) => void
