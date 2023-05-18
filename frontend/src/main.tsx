@@ -15,6 +15,7 @@ import { getMainDefinition } from '@apollo/client/utilities'
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { createClient } from 'graphql-ws'
 import { LIRARY_TOKEN } from './App'
+import { ThemeProvider } from './hooks/useTheme'
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem(LIRARY_TOKEN) //keep name same in App.tsx and FormLogin.tsx
@@ -60,7 +61,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <Router>
       <ApolloProvider client={client}>
-        <App />
+        <ThemeProvider key={null} type={''} props={undefined}>
+          <App />
+        </ThemeProvider>
       </ApolloProvider>
     </Router>
   </React.StrictMode>

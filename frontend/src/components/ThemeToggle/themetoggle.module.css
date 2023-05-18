@@ -1,0 +1,136 @@
+/*
+/*
+/*
+/******************************************************/
+/*******       Dark to Light Mode Toggle       *******/
+/****************************************************/
+
+.dlt-theme-toggle-wrap {
+  transform: translateY(-0.1em);
+}
+
+button.dlt-btn {
+  transform-origin: 50% 50%;
+  background: transparent;
+  outline: none;
+  border: none;
+  font-size: 0.8em;
+  margin: 0 -0.625em;
+}
+.light button.dlt-btn {
+  background: transparent;
+}
+.transformations button.dlt-btn {
+  transition-property: transform;
+  transition-duration: 0.4s;
+  transition-timing-function: ease-in-out;
+}
+button.dlt-btn:focus {
+  box-shadow: none;
+  outline: none;
+}
+.dlt-btn:hover,
+.dlt-btn:focus {
+  transform: scale(1.2);
+  outline: none;
+  border: none;
+}
+.dlt-btn-inner-left:empty {
+  margin-left: -0.625em;
+}
+.dlt-btn .dlt-btn-inner,
+.dlt-btn .dlt-btn-inner-left {
+  display: inline-block;
+  font-size: 0.875em;
+  position: relative;
+  padding: 0;
+  line-height: 1em;
+  cursor: pointer;
+  font-weight: normal;
+}
+.dlt-btn-inner-left::before,
+.dlt-btn-inner-left::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  transition-duration: 0.4s;
+  transition-timing-function: ease-in-out;
+  transition-property: transform, box-shadow, background-color, margin, border, outline,
+    right;
+}
+.dlt-btn .dlt-btn-inner-left::before {
+  /*Sun in light mode*/
+  content: '';
+  display: block;
+  position: absolute;
+  z-index: 1;
+  line-height: 2.125em;
+  text-indent: 2.5em;
+  height: 0.8em;
+  width: 0.8em;
+  margin: 0.35em;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  right: 1.625em;
+  bottom: 0em;
+  transform: rotate(-45deg);
+  outline: dotted 0.143em darkorange; /*lightmode sun rays*/
+  outline-offset: 0px;
+  background: darkorange; /* lightmode sun*/
+}
+
+.dlt-btn.active .dlt-btn-inner-left::before /*Crescent Moon*/ {
+  right: 1.0625em;
+  box-shadow: 0.3125em 0.3125em 0 0 white;
+  background: transparent;
+  outline-color: transparent;
+}
+.dlt-btn.active:hover .dlt-btn-inner-left::before  /*Crescent Moon*/ {
+  box-shadow: 0.8125em 0.8125em 0 0 gold; /*dark mode moon on hover*/
+  background-color: var(--color-primary-6);
+  transform: translateX(-0.7em) rotate(-45deg);
+}
+.dlt-btn .dlt-btn-inner-left::after {
+  content: '';
+  display: inline-block;
+  width: 2.5em;
+  height: 1.5em;
+  -webkit-border-radius: 1em;
+  -moz-border-radius: 1em;
+  border-radius: 1em;
+  vertical-align: middle;
+  margin: 0 0.625em;
+  border: 0.15em solid var(--color-primary-15);
+}
+.light .dlt-btn:hover .dlt-btn-inner-left::after {
+  border: 0.15em solid var(--color-primary-17);
+}
+.dlt-btn:focus .dlt-btn-inner-left::after {
+  outline: 1px solid currentColor;
+  outline-offset: 1px;
+}
+
+.light .dlt-btn:hover .dlt-btn-inner-left::after {
+  background-color: var(--color-primary-13); /*light mode bg on hover*/
+}
+.dlt-btn.active .dlt-btn-inner-left::after {
+  background-color: var(--color-primary-2);
+  border: 0.125em solid var(--color-primary-20);
+}
+.dlt-btn.active:hover .dlt-btn-inner-left::after {
+  border-color: var(--color-primary-15); /*outer border*/
+}
+.dlt-btn .dlt-btn-inner-left::after,
+.dlt-btn:hover .dlt-btn-inner-left::before {
+  outline-color: transparent;
+  background-color: white;
+}
+
+.dlt-btn .dlt-inner-wrapper {
+  transition: transform 0.4s ease-in-out;
+}
+.dlt-btn:hover .dlt-btn-inner-left::after {
+  background-color: var(--color-primary-6); /*dark mode bg on hover*/
+}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { KeyboardEvent, useEffect, useRef, useState } from 'react'
 import { useMutation, useQuery } from '@apollo/client'
 import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS, ALL_USERS, ME } from '../queries'
 import { message } from '../interfaces'
@@ -16,7 +16,11 @@ const NewBook = (props: {
   const [genres, setGenres] = useState<string[]>([])
   const [userId, setUser] = useState('')
 
+  const genreButton = useRef<HTMLButtonElement>(null)
+
   const user = useQuery(ME)
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     setUser(user?.data?.me?.id)
@@ -70,8 +74,18 @@ const NewBook = (props: {
 
   const clearGenres = () => {
     setGenres([])
+    props.notify({ error: false, message: `Cleared genres list` }, 10)
   }
-  const navigate = useNavigate()
+  const keyHandlerGenre = (e: KeyboardEvent<HTMLInputElement>) => {
+    switch (e.code) {
+      case 'Enter':
+      case 'Tab':
+        e.preventDefault()
+        genreButton.current?.click()
+        addGenre()
+        props.notify({ error: false, message: `Added ${genre} to genres list` }, 10)
+    }
+  }
 
   if (!props.token) {
     setTimeout(() => navigate('/login'), 1000)
@@ -90,7 +104,9 @@ const NewBook = (props: {
                 required
                 onChange={({ target }) => setTitle(target.value)}
               />
-              <span>title: </span>
+              <span>
+                <small>title: </small>
+              </span>
             </label>
           </div>
           <div className='input-wrap'>
@@ -102,7 +118,9 @@ const NewBook = (props: {
                 required
                 onChange={({ target }) => setAuthor(target.value)}
               />
-              <span>author: </span>
+              <span>
+                <small>author: </small>
+              </span>
             </label>
           </div>
           <div className='input-wrap'>
@@ -114,26 +132,34 @@ const NewBook = (props: {
                 value={published}
                 onChange={({ target }) => setPublished(target.value)}
               />
-              <span>published: </span>
+              <span>
+                <small>published: </small>
+              </span>
             </label>
           </div>
-          <div className='input-wrap'>
-            <label id='genreLabel'>
-              <input
-                name='genre'
-                value={genre}
-                type='text'
-                onChange={({ target }) => setGenre(target.value)}
-              />
-              <span>genre: </span>
-            </label>
+          <div className='input-wrap-wrap'>
+            <div className='input-wrap genre'>
+              <label id='genreLabel'>
+                <input
+                  name='genre'
+                  value={genre}
+                  type='text'
+                  onChange={({ target }) => setGenre(target.value)}
+                  onKeyDown={(e) => keyHandlerGenre(e)}
+                />
+                <span>
+                  <small>genre: </small>
+                </span>
+              </label>
+            </div>
+
+            <button ref={genreButton} id='add-genre' onClick={addGenre} type='button'>
+              <small>add&nbsp;genre</small>
+            </button>
           </div>
-          <button onClick={addGenre} type='button'>
-            <small>add&nbsp;genre</small>
-          </button>
           <div id='genres'>
             <span>
-              genres:{' '}
+              <small>genres: </small>
               {genres.map((genre, i) => (
                 <span key={`${genre}${i}`}>
                   <small>{genre} </small>

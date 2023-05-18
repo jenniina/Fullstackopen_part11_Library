@@ -31,7 +31,6 @@ const Authors = (props: {
     ?.map((a) => (!a.born ? a.name : null))
     .filter((a) => a !== null)
 
-  // console.log(authors)
   // const authorsWithoutBornObjects: SelectOption[] = Object.entries(
   //   authorsWithoutBorn
   // ).map(([label, value]) => ({
@@ -59,8 +58,6 @@ const Authors = (props: {
     authorsWithoutBornObjectsHasRun = true
   }, [authorsWithoutBorn])
 
-  console.log(authorsWithoutBornObjects)
-
   const authorsWithBorn = authors
     ?.map((a) => (!a.born ? null : `${a.name}: ${a.born}`))
     .filter((a) => a !== null)
@@ -84,8 +81,6 @@ const Authors = (props: {
     }
     authorsWITHBornObjectsHasRun = true
   }, [authorsWithoutBorn])
-
-  console.log(authorsWITHBornObjects)
 
   const [editAuthorBornYear] = useMutation(EDIT_BORN, {
     refetchQueries: [{ query: ALL_AUTHORS }],
