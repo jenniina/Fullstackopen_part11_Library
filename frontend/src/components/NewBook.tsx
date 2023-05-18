@@ -81,42 +81,57 @@ const NewBook = (props: {
       <div>
         <h1>Add Book</h1>
         <form id='addBookForm' onSubmit={submit}>
-          <label>
-            <span>title: </span>
-            <input
-              name='title'
-              value={title}
-              onChange={({ target }) => setTitle(target.value)}
-            />
-          </label>
-          <label>
-            <span>author: </span>
-            <input
-              name='author'
-              value={author}
-              onChange={({ target }) => setAuthor(target.value)}
-            />
-          </label>
-          <label>
-            <span>published: </span>
-            <input
-              type='number'
-              name='published'
-              value={published}
-              onChange={({ target }) => setPublished(target.value)}
-            />
-          </label>
-          <label>
-            <span>genre: </span>
-            <input
-              name='genre'
-              value={genre}
-              onChange={({ target }) => setGenre(target.value)}
-            />
-            <button onClick={addGenre} type='button'>
-              <small>add&nbsp;genre</small>
-            </button>
-          </label>
+          <div className='input-wrap'>
+            <label>
+              <input
+                name='title'
+                value={title}
+                type='text'
+                required
+                onChange={({ target }) => setTitle(target.value)}
+              />
+              <span>title: </span>
+            </label>
+          </div>
+          <div className='input-wrap'>
+            <label>
+              <input
+                name='author'
+                value={author}
+                type='text'
+                required
+                onChange={({ target }) => setAuthor(target.value)}
+              />
+              <span>author: </span>
+            </label>
+          </div>
+          <div className='input-wrap'>
+            <label>
+              <input
+                type='number'
+                name='published'
+                required
+                value={published}
+                onChange={({ target }) => setPublished(target.value)}
+              />
+              <span>published: </span>
+            </label>
+          </div>
+          <div className='input-wrap'>
+            <label>
+              <input
+                name='genre'
+                value={genre}
+                type='text'
+                required
+                onChange={({ target }) => setGenre(target.value)}
+              />
+              <span>genre: </span>
+            </label>
+          </div>
+          <button onClick={addGenre} type='button'>
+            <small>add&nbsp;genre</small>
+          </button>
           <div id='genres'>
             <span>
               genres:{' '}

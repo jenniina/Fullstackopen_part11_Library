@@ -102,7 +102,7 @@ const User = (props: {
                   <tr key={book.id}>
                     <td>
                       <Link to={`/books/${book.id}`}>{book.title}</Link>
-                    </td>{' '}
+                    </td>
                   </tr>
                 ))}
             </tbody>
@@ -111,56 +111,71 @@ const User = (props: {
 
         {user?.id === props.me ? (
           <>
-            <h2>Settings</h2>{' '}
+            <h2>Settings</h2>
             <div className='forms-wrap'>
               <div>
                 <form className='form-user' onSubmit={handleGenreChange}>
                   <legend>Change favorite genre</legend>
-                  <label htmlFor='genreInput' className='screen-reader-text'>
-                    Change favorite genre
-                  </label>
-                  <input
-                    id='genreInput'
-                    value={genre}
-                    onChange={({ target }) => setGenre(target.value)}
-                  />
+                  <div className='input-wrap'>
+                    <label htmlFor='genreInput'>
+                      <input
+                        id='genreInput'
+                        value={genre}
+                        required
+                        type='text'
+                        onChange={({ target }) => setGenre(target.value)}
+                      />
+                      <span>Change favorite genre</span>
+                    </label>
+                  </div>
                   <button type='submit'>change&nbsp;genre</button>
                 </form>
 
                 <form className='form-user' onSubmit={handleUsernameChange}>
                   <legend>Change username</legend>
-                  <label htmlFor='usernameInput' className='screen-reader-text'>
-                    Change username:
-                  </label>
-                  <input
-                    id='usernameInput'
-                    value={username}
-                    onChange={({ target }) => setUsername(target.value)}
-                  />
+                  <div className='input-wrap'>
+                    <label htmlFor='usernameInput'>
+                      <input
+                        id='usernameInput'
+                        required
+                        type='text'
+                        value={username}
+                        onChange={({ target }) => setUsername(target.value)}
+                      />
+                      <span>Change username</span>
+                    </label>
+                  </div>
                   <button type='submit'>change&nbsp;username</button>
                 </form>
               </div>
               <div>
                 <form className='form-user' onSubmit={handlePasswordChange}>
                   <legend>Change password</legend>
-                  <label htmlFor='passwordInput' className='screen-reader-text'>
-                    Change password
-                  </label>
-                  <input
-                    id='passwordInput'
-                    value={password}
-                    type='password'
-                    onChange={({ target }) => setPassword(target.value)}
-                  />
-                  <label htmlFor='passwordInputConfirm'>
-                    <small>Confirm password</small>
-                  </label>
-                  <input
-                    id='passwordInputConfirm'
-                    value={passwordConfirm}
-                    type='password'
-                    onChange={({ target }) => setPasswordConfirm(target.value)}
-                  />
+
+                  <div className='input-wrap'>
+                    <label htmlFor='passwordInput'>
+                      <input
+                        id='passwordInput'
+                        value={password}
+                        required
+                        type='password'
+                        onChange={({ target }) => setPassword(target.value)}
+                      />
+                      <span>Change password</span>
+                    </label>
+                  </div>
+                  <div className='input-wrap'>
+                    <label htmlFor='passwordInputConfirm'>
+                      <input
+                        id='passwordInputConfirm'
+                        value={passwordConfirm}
+                        required
+                        type='password'
+                        onChange={({ target }) => setPasswordConfirm(target.value)}
+                      />
+                      <span>Confirm password</span>
+                    </label>
+                  </div>
                   <button type='submit'>change&nbsp;password</button>
                 </form>
               </div>

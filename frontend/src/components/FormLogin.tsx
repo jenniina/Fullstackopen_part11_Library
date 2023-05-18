@@ -47,24 +47,31 @@ const FormLogin = ({ notify, setToken }: loginProps) => {
   return (
     <div>
       <h1>Login</h1>
-      <form onSubmit={submit}>
-        <label>
-          <span>username: </span>
-          <input
-            name='username'
-            value={username}
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </label>
-        <label>
-          <span>password: </span>
-          <input
-            name='password'
-            type='password'
-            value={password}
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </label>
+      <form className='form-login' onSubmit={submit}>
+        <div className='input-wrap'>
+          <label>
+            <input
+              name='username'
+              value={username}
+              required
+              type='text'
+              onChange={({ target }) => setUsername(target.value)}
+            />
+            <span>username: </span>
+          </label>
+        </div>
+        <div className='input-wrap'>
+          <label>
+            <input
+              name='password'
+              type='password'
+              required
+              value={password}
+              onChange={({ target }) => setPassword(target.value)}
+            />
+            <span>password: </span>
+          </label>
+        </div>
         <button type='submit'>login</button>
       </form>
     </div>
