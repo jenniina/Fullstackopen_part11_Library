@@ -84,7 +84,7 @@ jobs:
           fetch-depth: '0'
       - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
         with:
-          node-version: '16'
+          node-version: '18'
       - name: Bump version and push tag
         if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
         uses: anothrNick/github-tag-action@8c8163ef62cf9c4677c8e800f36270af27930f42
