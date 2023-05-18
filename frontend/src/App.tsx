@@ -62,8 +62,6 @@ const App = () => {
 
   refetch()
 
-  console.log(data?.me)
-
   const notify = (info: message, seconds: number) => {
     setMessage(info)
     setTimeout(() => {

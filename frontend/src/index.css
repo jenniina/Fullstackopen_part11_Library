@@ -235,8 +235,15 @@ form input {
 }
 #addBookForm #genres {
   display: flex;
-  justify-content: space-between;
-  gap: 0.5em;
+  flex-flow: column nowrap;
+  gap: 0.8em;
+}
+@media (min-width: 400px) {
+  #addBookForm #genres {
+    justify-content: space-between;
+    flex-flow: row nowrap;
+    gap: 0.5em;
+  }
 }
 #addBookForm #genres button:hover {
   border-color: red;
@@ -451,6 +458,20 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type='number'] {
   -moz-appearance: textfield;
+}
+
+.input-wrap-wrap {
+  display: flex;
+  flex-flow: column nowrap;
+
+  gap: 0.8em;
+}
+@media (min-width: 400px) {
+  .input-wrap-wrap {
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
 }
 /* @media (prefers-color-scheme: light) {
   :root {

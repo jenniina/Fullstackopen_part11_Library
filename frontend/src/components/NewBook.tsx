@@ -131,21 +131,24 @@ const NewBook = (props: {
               <span>published: </span>
             </label>
           </div>
-          <div className='input-wrap'>
-            <label id='genreLabel'>
-              <input
-                name='genre'
-                value={genre}
-                type='text'
-                onChange={({ target }) => setGenre(target.value)}
-                onKeyDown={(e) => keyHandlerGenre(e)}
-              />
-              <span>genre: </span>
-            </label>
+          <div className='input-wrap-wrap'>
+            <div className='input-wrap'>
+              <label id='genreLabel'>
+                <input
+                  name='genre'
+                  value={genre}
+                  type='text'
+                  onChange={({ target }) => setGenre(target.value)}
+                  onKeyDown={(e) => keyHandlerGenre(e)}
+                />
+                <span>genre: </span>
+              </label>
+            </div>
+
+            <button ref={genreButton} onClick={addGenre} type='button'>
+              <small>add&nbsp;genre</small>
+            </button>
           </div>
-          <button ref={genreButton} onClick={addGenre} type='button'>
-            <small>add&nbsp;genre</small>
-          </button>
           <div id='genres'>
             <span>
               genres:{' '}
