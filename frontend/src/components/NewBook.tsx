@@ -104,7 +104,9 @@ const NewBook = (props: {
                 required
                 onChange={({ target }) => setTitle(target.value)}
               />
-              <span>title: </span>
+              <span>
+                <small>title: </small>
+              </span>
             </label>
           </div>
           <div className='input-wrap'>
@@ -116,7 +118,9 @@ const NewBook = (props: {
                 required
                 onChange={({ target }) => setAuthor(target.value)}
               />
-              <span>author: </span>
+              <span>
+                <small>author: </small>
+              </span>
             </label>
           </div>
           <div className='input-wrap'>
@@ -128,11 +132,13 @@ const NewBook = (props: {
                 value={published}
                 onChange={({ target }) => setPublished(target.value)}
               />
-              <span>published: </span>
+              <span>
+                <small>published: </small>
+              </span>
             </label>
           </div>
           <div className='input-wrap-wrap'>
-            <div className='input-wrap'>
+            <div className='input-wrap genre'>
               <label id='genreLabel'>
                 <input
                   name='genre'
@@ -141,17 +147,19 @@ const NewBook = (props: {
                   onChange={({ target }) => setGenre(target.value)}
                   onKeyDown={(e) => keyHandlerGenre(e)}
                 />
-                <span>genre: </span>
+                <span>
+                  <small>genre: </small>
+                </span>
               </label>
             </div>
 
-            <button ref={genreButton} onClick={addGenre} type='button'>
+            <button ref={genreButton} id='add-genre' onClick={addGenre} type='button'>
               <small>add&nbsp;genre</small>
             </button>
           </div>
           <div id='genres'>
             <span>
-              genres:{' '}
+              <small>genres: </small>
               {genres.map((genre, i) => (
                 <span key={`${genre}${i}`}>
                   <small>{genre} </small>

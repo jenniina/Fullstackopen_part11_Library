@@ -42,7 +42,11 @@ const Book = (props: {
         <Link to={`/`}>Genres: </Link>
         {book.genres.join(', ')}
       </p>
-      {props.me == book.user ? <button onClick={handleDelete}>delete book</button> : ''}
+      {props.token && props.me === book.user ? (
+        <button onClick={handleDelete}>delete book</button>
+      ) : (
+        ''
+      )}
     </div>
   )
 }

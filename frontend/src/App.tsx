@@ -22,6 +22,8 @@ import Author from './components/Author'
 import User from './components/User'
 import NewUser from './components/NewUser'
 import { useScrollbarWidth } from './hooks/useScrollbarWidth'
+import { useTheme, useThemeUpdate } from './hooks/useTheme'
+import ThemeToggle from './components/ThemeToggle'
 
 // function that takes care of manipulating cache
 export const updateCache = (
@@ -118,6 +120,9 @@ const App = () => {
     ['--scrollbar_width' as string]: `${scrollbarWidth}px`,
   }
 
+  const lightTheme = useTheme()
+  const toggleTheme = useThemeUpdate()
+
   if (resultAuthors.loading) {
     return <div>loading...</div>
   }
@@ -157,6 +162,9 @@ const App = () => {
               logout
             </button>
           )}
+        </li>
+        <li>
+          <ThemeToggle lightTheme={lightTheme} toggleTheme={toggleTheme} />
         </li>
       </ul>
       {data?.me ? (
