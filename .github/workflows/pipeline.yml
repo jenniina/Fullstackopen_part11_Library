@@ -33,7 +33,7 @@ jobs:
         with:
           start: npm run server
           command: npm run test:e2e
-          wait-on: 'http://localhost:3001'
+          wait-on: 'http://localhost:4000'
           working-directory: frontend
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI}}
