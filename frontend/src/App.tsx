@@ -60,7 +60,9 @@ const App = () => {
 
   const { data, refetch } = useQuery(ME)
 
-  refetch({ username: data?.me?.username })
+  refetch()
+
+  console.log(data?.me)
 
   const notify = (info: message, seconds: number) => {
     setMessage(info)
