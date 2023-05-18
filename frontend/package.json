@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "server": "cd .. && npm run testmode",
+    "server": "npm run dev && cd .. && npm run testmode",
     "cypress:open": "cross-env NODE_ENV=test cypress open",
     "test:e2e": "cross-env NODE_ENV=test cypress run"
   },
