@@ -118,12 +118,11 @@ const NewBook = (props: {
             </label>
           </div>
           <div className='input-wrap'>
-            <label>
+            <label id='genreLabel'>
               <input
                 name='genre'
                 value={genre}
                 type='text'
-                required
                 onChange={({ target }) => setGenre(target.value)}
               />
               <span>genre: </span>

@@ -227,6 +227,12 @@ form input {
 #addBookForm {
   gap: 3em;
 }
+.input-wrap:has(#genreLabel) {
+  margin-top: 2em;
+}
+#genreLabel {
+  margin-top: 0.35em;
+}
 #addBookForm #genres {
   display: flex;
   justify-content: space-between;
