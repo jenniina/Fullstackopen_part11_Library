@@ -230,7 +230,7 @@ form input {
 .input-wrap:has(#genreLabel) {
   margin-top: 2em;
 }
-#genreLabel {
+.input-wrap label {
   margin-top: 0.35em;
 }
 #addBookForm #genres {

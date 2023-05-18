@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { KeyboardEvent, useEffect, useRef, useState } from 'react'
 import { useMutation, useQuery } from '@apollo/client'
 import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS, ALL_USERS, ME } from '../queries'
 import { message } from '../interfaces'
@@ -16,7 +16,11 @@ const NewBook = (props: {
   const [genres, setGenres] = useState<string[]>([])
   const [userId, setUser] = useState('')
 
+  const genreButton = useRef<HTMLButtonElement>(null)
+
   const user = useQuery(ME)
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     setUser(user?.data?.me?.id)
@@ -70,8 +74,18 @@ const NewBook = (props: {
 
   const clearGenres = () => {
     setGenres([])
+    props.notify({ error: false, message: `Cleared genres list` }, 10)
   }
-  const navigate = useNavigate()
+  const keyHandlerGenre = (e: KeyboardEvent<HTMLInputElement>) => {
+    switch (e.code) {
+      case 'Enter':
+      case 'Tab':
+        e.preventDefault()
+        genreButton.current?.click()
+        addGenre()
+        props.notify({ error: false, message: `Added ${genre} to genres list` }, 10)
+    }
+  }
 
   if (!props.token) {
     setTimeout(() => navigate('/login'), 1000)
@@ -124,11 +138,12 @@ const NewBook = (props: {
                 value={genre}
                 type='text'
                 onChange={({ target }) => setGenre(target.value)}
+                onKeyDown={(e) => keyHandlerGenre(e)}
               />
               <span>genre: </span>
             </label>
           </div>
-          <button onClick={addGenre} type='button'>
+          <button ref={genreButton} onClick={addGenre} type='button'>
             <small>add&nbsp;genre</small>
           </button>
           <div id='genres'>

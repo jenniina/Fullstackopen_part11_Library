@@ -34,7 +34,7 @@ const Notify = (props: messageProps) => {
           outlineOffset: '-3px',
         }}
       >
-        <strong>{props.info.message}</strong>
+        <strong aria-live='polite'>{props.info.message}</strong>
       </span>
     </div>
   )
