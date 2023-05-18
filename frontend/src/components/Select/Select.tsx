@@ -269,7 +269,7 @@ export function Select({
                 id={`${id}-${option.label?.replace(/\s+/g, '-').toLowerCase()}`}
                 type='checkbox'
                 className='screen-reader-text'
-                value={option?.label}
+                value={option?.label ? option?.label : ''}
                 name={`${id}-${option.label
                   ?.replace(/\s+/g, '-')
                   .toLowerCase()}-${index}`}
