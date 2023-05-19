@@ -61,9 +61,19 @@ const resolvers = {
     //allUsers: async () => await User.find({}).populate('books'),
     allUsers: async (root, args) => {
       if (args.id) {
-        return User.find({ id: args.id }).populate('books').exec()
+        return User.find({ id: args.id })
+          .populate({
+            path: 'books',
+            select: 'id title author',
+            populate: [{ path: 'author' }],
+          })
+          .exec()
       }
-      return User.find({}).populate('books')
+      return User.find({}).populate({
+        path: 'books',
+        select: 'id title author',
+        populate: [{ path: 'author' }],
+      })
     },
     findAuthor: async (root) => await Author.findOne({ name: root.name }),
     findUser: async (root) => await User.findById(root),

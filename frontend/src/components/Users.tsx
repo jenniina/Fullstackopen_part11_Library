@@ -15,19 +15,23 @@ const Users = (props: {
 
   const navigate = useNavigate()
 
+  const heading = 'Users'
+
   if (!props.token) {
     setTimeout(() => navigate('/login'), 1000)
     return <div>Please log in</div>
   } else
     return (
       <div>
-        <h1>Users</h1>
+        <h1>
+          <span data-text={heading}>{heading}</span>
+        </h1>
         <table>
           <tbody>
             <tr>
-              <th>username</th>
-              <th>favorite genre</th>
-              <th>books added</th>
+              <th>Username</th>
+              <th>Favorite genre</th>
+              <th>Books added</th>
             </tr>
             {sortedByBookAmount?.map((u: userProps) => (
               <tr key={u.username}>

@@ -16,25 +16,31 @@ const Books = (props: { books: booksProps[]; token: string | null }) => {
 
   const filteredBooks = books?.filter((book) => book.genres.includes(favorite))
 
+  const heading = 'Recommendations'
+
   if (!props.token) {
     setTimeout(() => navigate('/login'), 1000)
     return <div>Please log in</div>
   } else
     return (
       <div>
-        <h2>Recommendations</h2>
+        <h1>
+          <span data-text={heading}>{heading}</span>
+        </h1>
         <p>
-          Books in your favorite genre:{' '}
+          Books in your favorite genre
           <span style={{ display: 'block' }}>
-            <em>{favorite}</em>
+            <big>
+              <em>{favorite}</em>
+            </big>
           </span>
         </p>
         <table>
           <tbody>
             <tr>
-              <th>title</th>
-              <th>author</th>
-              <th>published</th>
+              <th>Title</th>
+              <th>Author</th>
+              <th>Published</th>
             </tr>
             {filteredBooks.map((a: booksProps) => (
               <tr key={a.title}>

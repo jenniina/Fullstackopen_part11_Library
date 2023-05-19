@@ -16,12 +16,14 @@ const Notify = (props: messageProps) => {
               position: 'fixed',
               left: 0,
               width: '100%',
+              zIndex: '999',
             }
           : {
               color: 'black',
               position: 'fixed',
               left: 0,
               width: '100%',
+              zIndex: '999',
             }
       }
     >

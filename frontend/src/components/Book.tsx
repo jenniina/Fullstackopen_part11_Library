@@ -8,7 +8,7 @@ const Book = (props: {
   book: booksProps
   token: string | null
   notify: ({ error, message }: message, seconds: number) => void
-  me: userProps['id']
+  me: userProps
 }) => {
   const book = props.book
 
@@ -27,22 +27,27 @@ const Book = (props: {
   })
 
   const handleDelete = () => {
-    navigate('/')
+    navigate('/books')
     deleteBook({ variables: { id: book.id } })
   }
 
   return (
-    <div>
+    <div className='page-book smaller-title'>
       <h1>{book.title}</h1>
       <p>
         Author: <Link to={`/authors/${book.author.id}`}>{book.author.name}</Link>
       </p>
-      <p>Published: {book.published}</p>
       <p>
-        <Link to={`/`}>Genres: </Link>
+        Published:{' '}
+        {book.published && book.published < 0
+          ? `${Math.abs(book.published)} BC`
+          : book.published}
+      </p>
+      <p>
+        <Link to={`/books`}>Genres: </Link>
         {book.genres.join(', ')}
       </p>
-      {props.token && props.me === book.user ? (
+      {props.token && props.me?.id === book.user ? (
         <button onClick={handleDelete}>delete book</button>
       ) : (
         ''

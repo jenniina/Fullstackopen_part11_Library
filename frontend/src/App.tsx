@@ -24,6 +24,10 @@ import NewUser from './components/NewUser'
 import { useScrollbarWidth } from './hooks/useScrollbarWidth'
 import { useTheme, useThemeUpdate } from './hooks/useTheme'
 import ThemeToggle from './components/ThemeToggle'
+import Welcome from './components/Welcome'
+import Exit from './components/Exit'
+import useMediaQuery from './hooks/useMediaQuery'
+import useWindowSize from './hooks/useWindowSize'
 
 // function that takes care of manipulating cache
 export const updateCache = (
@@ -49,6 +53,8 @@ export const updateCache = (
 
 export const LIRARY_TOKEN = 'library_token'
 
+export const tester = '64673513aaa627ac7b5a37ec'
+
 const App = () => {
   const client = useApolloClient()
 
@@ -61,8 +67,6 @@ const App = () => {
   const resultUsers = useQuery(ALL_USERS)
 
   const { data, refetch } = useQuery(ME)
-
-  refetch()
 
   const notify = (info: message, seconds: number) => {
     setMessage(info)
@@ -123,6 +127,8 @@ const App = () => {
   const lightTheme = useTheme()
   const toggleTheme = useThemeUpdate()
 
+  const { windowHeight, windowWidth } = useWindowSize()
+
   if (resultAuthors.loading) {
     return <div>loading...</div>
   }
@@ -132,9 +138,15 @@ const App = () => {
 
   return (
     <div style={style}>
-      <ul className='main-navigation'>
+      <ul className={`main-navigation ${windowWidth < 800 ? 'small-screen' : ''}`}>
         <li>
-          <NavLink to='/'>Books</NavLink>
+          <NavLink to='/exit'>&laquo;&nbsp;Exit</NavLink>
+        </li>
+        <li>
+          <NavLink to='/'>Welcome</NavLink>
+        </li>
+        <li>
+          <NavLink to='/books'>Books</NavLink>
         </li>
         <li>
           <NavLink to='authors'>Authors</NavLink>
@@ -179,6 +191,11 @@ const App = () => {
       <Notify info={message} />
       <div className='main-container'>
         <Routes>
+          <Route path='/exit' element={<Exit />} />
+          <Route
+            path='/'
+            element={<Welcome notify={notify} token={token} me={data?.me} />}
+          />
           <Route
             path='/authors'
             element={
@@ -186,6 +203,7 @@ const App = () => {
                 authors={resultAuthors?.data?.allAuthors}
                 notify={notify}
                 token={token}
+                me={data?.me}
               />
             }
           />
@@ -197,25 +215,32 @@ const App = () => {
           />
           <Route
             path='/users/:id'
-            element={<User user={user} notify={notify} token={token} me={data?.me?.id} />}
+            element={<User user={user} notify={notify} token={token} me={data?.me} />}
           />
-          <Route path='/' element={<Books />} />
+
+          <Route path='/books' element={<Books />} />
           <Route
             path='/books/:id'
-            element={<Book book={book} token={token} notify={notify} me={data?.me?.id} />}
+            element={<Book book={book} token={token} notify={notify} me={data?.me} />}
           />
           <Route path='/authors/:id' element={<Author author={author} />} />
-          <Route path='/addBook' element={<NewBook notify={notify} token={token} />} />
+          <Route
+            path='/addBook'
+            element={<NewBook notify={notify} token={token} me={data?.me} />}
+          />
           <Route
             path='/recommended'
             element={<Recommended books={resultBooks?.data?.allBooks} token={token} />}
           />
           <Route
             path='/login'
-            element={<FormLogin notify={notify} setToken={setToken} />}
+            element={<FormLogin notify={notify} setToken={setToken} token={token} />}
           />
           {/* Uncomment the following line to get new user page: */}
-          {/* <Route path='/setuser' element={<NewUser notify={notify} />} /> */}
+          <Route
+            path='/setuser'
+            element={<NewUser notify={notify} setToken={setToken} />}
+          />
         </Routes>
       </div>
     </div>

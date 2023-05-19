@@ -3,12 +3,13 @@ import { userProps, message } from '../interfaces'
 import { ALL_USERS, EDIT_USER, ME } from '../queries'
 import { useMutation } from '@apollo/client'
 import { useState } from 'react'
+import { tester } from '../App'
 
 const User = (props: {
   user: userProps
   notify: ({ error, message }: message, seconds: number) => void
   token: string | null
-  me: userProps['id']
+  me: userProps
 }) => {
   const user = props.user
 
@@ -33,10 +34,19 @@ const User = (props: {
   const handleGenreChange = (e: React.FormEvent) => {
     e.preventDefault()
     if (!genre) props.notify({ error: true, message: 'Please enter a genre' }, 10)
+    else if (props.me?.id === tester)
+      props.notify(
+        {
+          error: true,
+          message:
+            'Unfortunately, Tester may not change the settings! Please request a real account from the admin',
+        },
+        10
+      )
     else if (
       window.confirm(`Are you sure you want to change your favorite genre to ${genre}?`)
     ) {
-      editUser({ variables: { id: props.me, setGenre: genre } })
+      editUser({ variables: { id: props.me?.id, setGenre: genre } })
       setGenre('')
     }
   }
@@ -44,10 +54,19 @@ const User = (props: {
   const handleUsernameChange = (e: React.FormEvent) => {
     e.preventDefault()
     if (!username) props.notify({ error: true, message: 'Please enter a username' }, 10)
+    else if (props.me?.id === tester)
+      props.notify(
+        {
+          error: true,
+          message:
+            'Unfortunately, Tester may not change the settings! Please request a real account from the admin',
+        },
+        10
+      )
     else if (
       window.confirm(`Are you sure you want to change your username to ${username}?`)
     ) {
-      editUser({ variables: { id: props.me, setUsername: username } })
+      editUser({ variables: { id: props.me?.id, setUsername: username } })
       setUsername('')
     }
   }
@@ -57,22 +76,36 @@ const User = (props: {
     if (!password) props.notify({ error: true, message: 'Please enter a password' }, 10)
     else if (password !== passwordConfirm)
       props.notify({ error: true, message: 'Passwords do not match!' }, 10)
+    else if (props.me?.id === tester)
+      props.notify(
+        {
+          error: true,
+          message:
+            'Unfortunately, Tester may not change the settings! Please request a real account from the admin',
+        },
+        10
+      )
     else if (window.confirm(`Are you sure you want to change your password?`)) {
-      editUser({ variables: { id: props.me, setPassword: password } })
+      editUser({ variables: { id: props.me?.id, setPassword: password } })
       setPassword('')
       setPasswordConfirm('')
     }
   }
+
+  const heading = user?.username
+
   if (!props.token) {
     setTimeout(() => navigate('/login'), 1000)
     return <div>Please log in</div>
   } else
     return (
       <div>
-        <h1>{user?.username}</h1>
+        <h1>
+          <span data-text={heading}>{heading}</span>
+        </h1>
 
         <p>
-          <span>favorite genre: </span>
+          <span>Favorite genre: </span>
           <span>
             <em>{user?.favoriteGenre}</em>
           </span>
@@ -80,7 +113,7 @@ const User = (props: {
         {user?.books.length === 0 || user?.books === undefined ? (
           <>
             <p>No books added yet!</p>
-            {user.id === props.me ? (
+            {user.id === props.me?.id ? (
               <p>
                 <Link to='/addBook'>Add a book</Link>
               </p>
@@ -92,16 +125,22 @@ const User = (props: {
           <table>
             <tbody>
               <tr>
-                <th>books added</th>
+                <th>Books added</th>
+                <th>Author</th>
               </tr>
 
               {user?.books
                 ?.slice()
                 .sort((a, b) => a.title.localeCompare(b.title))
                 .map((book) => (
-                  <tr key={book.id}>
+                  <tr key={book?.id}>
                     <td>
-                      <Link to={`/books/${book.id}`}>{book.title}</Link>
+                      <Link to={`/books/${book?.id}`}>{book?.title}</Link>
+                    </td>
+                    <td>
+                      <Link to={`/authors/${book?.author?.id}`}>
+                        {book?.author?.name}
+                      </Link>
                     </td>
                   </tr>
                 ))}
@@ -109,7 +148,7 @@ const User = (props: {
           </table>
         )}
 
-        {user?.id === props.me ? (
+        {user?.id === props.me?.id ? (
           <>
             <h2>Settings</h2>
             <div className='forms-wrap'>
@@ -125,7 +164,9 @@ const User = (props: {
                         type='text'
                         onChange={({ target }) => setGenre(target.value)}
                       />
-                      <span>Change favorite genre</span>
+                      <span>
+                        <small>Change favorite genre</small>
+                      </span>
                     </label>
                   </div>
                   <button type='submit'>change&nbsp;genre</button>
@@ -142,7 +183,9 @@ const User = (props: {
                         value={username}
                         onChange={({ target }) => setUsername(target.value)}
                       />
-                      <span>Change username</span>
+                      <span>
+                        <small>Change username</small>
+                      </span>
                     </label>
                   </div>
                   <button type='submit'>change&nbsp;username</button>
@@ -161,7 +204,9 @@ const User = (props: {
                         type='password'
                         onChange={({ target }) => setPassword(target.value)}
                       />
-                      <span>Change password</span>
+                      <span>
+                        <small>Change password</small>
+                      </span>
                     </label>
                   </div>
                   <div className='input-wrap'>
@@ -173,7 +218,9 @@ const User = (props: {
                         type='password'
                         onChange={({ target }) => setPasswordConfirm(target.value)}
                       />
-                      <span>Confirm password</span>
+                      <span>
+                        <small>Confirm password</small>
+                      </span>
                     </label>
                   </div>
                   <button type='submit'>change&nbsp;password</button>

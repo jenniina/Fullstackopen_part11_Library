@@ -33,6 +33,7 @@ const Books = () => {
     refetch({ genre: genre })
   }, [genre])
 
+  const heading = 'Books'
   if (loading || loading) {
     return <div>loading...</div>
   }
@@ -41,7 +42,10 @@ const Books = () => {
   }
   return (
     <div>
-      <h1>Books</h1>
+      <h1>
+        <span data-text={heading}>{heading}</span>
+      </h1>
+      <p>You may filter the books by pressing one of the buttons below:</p>
       <div className='genresButtons'>
         <button onClick={() => setGenre('')}>all genres</button>
         {genres
@@ -55,9 +59,9 @@ const Books = () => {
       <table>
         <tbody>
           <tr>
-            <th>title</th>
-            <th>author</th>
-            <th>published</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Published</th>
           </tr>
           {books?.map((a: booksProps) => (
             <tr key={a.title}>
@@ -67,7 +71,11 @@ const Books = () => {
               <td>
                 <Link to={`/authors/${a.author.id}`}>{a.author.name}</Link>
               </td>
-              <td>{a.published}</td>
+              <td>
+                {a.published && a.published < 0
+                  ? `${Math.abs(a.published)} BC`
+                  : a.published}
+              </td>
             </tr>
           ))}
         </tbody>

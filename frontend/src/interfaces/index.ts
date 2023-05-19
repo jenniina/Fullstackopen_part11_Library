@@ -15,6 +15,10 @@ export interface userProps {
         {
           title: booksProps['title']
           id: booksProps['id']
+          author: {
+            name: string
+            id: string
+          }
         }
       ]
     | []
@@ -33,4 +37,8 @@ export interface authorProps {
   born?: number
   bookCount: number
   id?: string
+}
+
+export interface RefObject<T> {
+  readonly current: T
 }

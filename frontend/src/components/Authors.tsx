@@ -1,14 +1,16 @@
 import { useMutation } from '@apollo/client'
-import { authorProps, message } from '../interfaces'
+import { authorProps, message, userProps } from '../interfaces'
 import { useEffect, useRef, useState } from 'react'
 import { EDIT_BORN, ALL_AUTHORS, DELETE_AUTHOR } from '../queries'
 import { Link } from 'react-router-dom'
 import { Select, SelectOption } from './Select/Select'
+import { tester } from '../App'
 
 const Authors = (props: {
   authors: authorProps[]
   notify: ({ error, message }: message, seconds: number) => void
   token: string | null
+  me: userProps
 }) => {
   const [name1, setName1] = useState<SelectOption | undefined>({
     label: 'Choose one',
@@ -113,6 +115,10 @@ const Authors = (props: {
       props.notify({ error: true, message: 'Please choose an author' }, 5)
     else if (!born)
       props.notify({ error: true, message: 'Please fill in the birth year field' }, 5)
+    else if (Number(born) > 2023)
+      props.notify({ error: true, message: 'Please try an earlier year' }, 5)
+    else if (Number(born) < -5000)
+      props.notify({ error: true, message: 'Please try a later year' }, 5)
     else if (window.confirm(`Add birthdate: ${born}?`)) {
       editAuthorBornYear({ variables: { name: name1?.label, setBornTo: Number(born) } })
       addRef.current?.reset()
@@ -131,15 +137,23 @@ const Authors = (props: {
     }
   }
 
+  const heading = 'Authors'
+
   return (
     <div>
-      <h1>Authors</h1>
+      <h1>
+        <span data-text={heading}>{heading}</span>
+      </h1>
+      <p>
+        It may be wise to take the birth years listed here with a grain of salt, as anyone
+        who is logged in may change them! Even <em>Tester.</em>
+      </p>
       <table>
         <tbody>
           <tr>
-            <th>author</th>
-            <th>born</th>
-            <th>books</th>
+            <th>Author</th>
+            <th>Born</th>
+            <th>Books</th>
           </tr>
           {authors
             ?.slice()
@@ -149,7 +163,7 @@ const Authors = (props: {
                 <td>
                   <Link to={`/authors/${a.id}`}>{a.name}</Link>
                 </td>
-                <td>{a.born}</td>
+                <td>{a.born && a.born < 0 ? `${Math.abs(a.born)} BC` : a.born}</td>
                 <td>{a.bookCount}</td>
               </tr>
             ))}

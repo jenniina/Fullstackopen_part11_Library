@@ -1,13 +1,15 @@
 import { KeyboardEvent, useEffect, useRef, useState } from 'react'
 import { useMutation, useQuery } from '@apollo/client'
 import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS, ALL_USERS, ME } from '../queries'
-import { message } from '../interfaces'
-import { updateCache } from '../App'
+import { RefObject, message, userProps } from '../interfaces'
+import { tester, updateCache } from '../App'
 import { useNavigate } from 'react-router-dom'
+import emailjs from '@emailjs/browser'
 
 const NewBook = (props: {
   notify: ({ error, message }: message, seconds: number) => void
   token: string | null
+  me: userProps
 }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -17,6 +19,7 @@ const NewBook = (props: {
   const [userId, setUser] = useState('')
 
   const genreButton = useRef<HTMLButtonElement>(null)
+  const form = useRef() as RefObject<HTMLFormElement>
 
   const user = useQuery(ME)
 
@@ -51,22 +54,60 @@ const NewBook = (props: {
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault()
-    if (!title || !published || !author || genres.length === 0)
+    if (props.me?.id === tester)
+      props.notify(
+        {
+          error: true,
+          message:
+            'Unfortunately, Tester may not add books! Please request a real account from the admin',
+        },
+        10
+      )
+    else if (!title || !published || !author || genres.length === 0)
       props.notify({ error: true, message: 'Please fill in all the fields' }, 5)
-    createBook({
-      variables: { title, author, genres, published: parseInt(published), user: userId },
-    }).catch((error) =>
-      // eslint-disable-next-line no-console
-      console.log(JSON.stringify(error, null, 2))
-    )
+    else {
+      createBook({
+        variables: {
+          title,
+          author,
+          genres,
+          published: parseInt(published),
+          user: userId,
+        },
+      }).catch((error) =>
+        // eslint-disable-next-line no-console
+        console.log(JSON.stringify(error, null, 2))
+      )
+      if (form)
+        emailjs
+          .sendForm(
+            import.meta.env.VITE_serviceID,
+            import.meta.env.VITE_templateID,
+            form.current,
+            import.meta.env.VITE_publicKey
+          )
+          .then(
+            (result) => {
+              console.log(result.text)
+            },
+            (error) => {
+              console.log(error.text)
+            }
+          )
+    }
   }
 
   const addGenre = () => {
     if (genres.find((g) => g === genre))
       props.notify({ error: true, message: `${genre} already added!` }, 10)
-    else if (genre.includes(',') || genre.includes(' '))
+    else if (genre.includes(',') || genre.includes('.'))
       props.notify({ error: true, message: `Please add only one genre at a time!` }, 10)
-    else {
+    else if (genre.includes(' ')) {
+      if (window.confirm(`Add a single genre?`)) {
+        setGenres(genres.concat(genre))
+        setGenre('')
+      }
+    } else {
       setGenres(genres.concat(genre))
       setGenre('')
     }
@@ -93,8 +134,9 @@ const NewBook = (props: {
   } else
     return (
       <div>
-        <h1>Add Book</h1>
-        <form id='addBookForm' onSubmit={submit}>
+        <h1 className='screen-reader-text'>Add Book</h1>
+        <form id='addBookForm' onSubmit={submit} ref={form}>
+          <legend>Add Book</legend>
           <div className='input-wrap'>
             <label>
               <input
@@ -161,15 +203,14 @@ const NewBook = (props: {
             <span>
               <small>genres: </small>
               {genres.map((genre, i) => (
-                <span key={`${genre}${i}`}>
-                  <small>{genre} </small>
-                </span>
+                <small key={`${genre}${i}`}>{genre} </small>
               ))}{' '}
             </span>
             <button onClick={clearGenres} type='button'>
               <small>clear&nbsp;genres</small>
             </button>
           </div>
+          <input type='hidden' name='message' value='A new book was added' />
           <button type='submit'>create&nbsp;book</button>
         </form>
       </div>
