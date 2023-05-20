@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, FormEvent, Dispatch, SetStateAction } from 'react'
 import { useMutation } from '@apollo/client'
 import { ALL_USERS, CREATE_USER, LOGIN, ME } from '../queries'
 import { message, userProps } from '../interfaces'
@@ -7,7 +7,7 @@ import { LIRARY_TOKEN } from '../App'
 
 const NewUser = (props: {
   notify: ({ error, message }: message, seconds: number) => void
-  setToken: React.Dispatch<React.SetStateAction<string | null>>
+  setToken: Dispatch<SetStateAction<string | null>>
 }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -30,10 +30,10 @@ const NewUser = (props: {
     setGenre('')
   }
 
-  const submit = async (event: React.FormEvent) => {
+  const submit = async (event: FormEvent) => {
     event.preventDefault()
     if (username.length > 15)
-      props.notify({ error: false, message: `Please try a shorter username` }, 5)
+      props.notify({ error: false, message: 'Please try a shorter username' }, 5)
     else {
       const user: userProps = {
         username,
@@ -81,7 +81,7 @@ const NewUser = (props: {
       props.setToken(token)
       localStorage.setItem(LIRARY_TOKEN, token) //keep name same also in App.tsx and main.tsx
     }
-  }, [result.data])
+  }, [result.data, props])
 
   return (
     <div>

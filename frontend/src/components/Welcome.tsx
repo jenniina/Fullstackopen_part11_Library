@@ -1,8 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom'
-import { userProps, message, RefObject } from '../interfaces'
-import { ALL_USERS, EDIT_USER, ME } from '../queries'
-import { useMutation } from '@apollo/client'
-import { useRef, useState } from 'react'
+import { userProps, message } from '../interfaces'
 import Contact from './Contact'
 import { tester } from '../App'
 
@@ -11,7 +7,7 @@ const Welcome = (props: {
   token: string | null
   me: userProps
 }) => {
-  const heading = `Welcome`
+  const heading = 'Welcome'
 
   return (
     <div className='page-welcome'>
@@ -63,74 +59,183 @@ const Welcome = (props: {
         <a href='https://fullstackopen.com/en/part8'>Part 8</a> of the{' '}
         <a href='https://fullstackopen.com/en/'>Fullstack Open</a> course offered by{' '}
         <a href='https://www.helsinki.fi/en'>the University of Helsinki.</a> I developed
-        the app further in <a href='https://fullstackopen.com/en/part11'>Part 11</a> and
-        edited it to fit in a little better with the appearance of my{' '}
-        <a href='https://jenniina.fi/react'>React sub-site.</a>
+        the app further in <a href='https://fullstackopen.com/en/part11'>Part 11</a>,
+        added new features and edited it to fit in a little better with the appearance of
+        my <a href='https://jenniina.fi/react'>React sub-site.</a>
       </p>
       <p>
         <a href='https://github.com/jenniina/Fullstackopen_part11_Library/'>
           Github Repository
         </a>
       </p>
-      <h3>Languages and dependencies</h3>
-      <h4>Backend</h4>
-      <ul>
-        <li>
-          <a href='https://graphql.org/'>GraphQL</a>
-        </li>
-        <li>
-          <a href='https://www.apollographql.com/docs/apollo-server/'>Apollo Server</a>
-        </li>
-        <li>
-          <a href='https://www.apollographql.com/docs/react/get-started/'>
-            Apollo Client
-          </a>
-        </li>
-        <li>JavaScript</li>
-        <li>mongoose</li>
-        <li>mongoose-unique-validator</li>
-        <li>
-          <a href='http://expressjs.com/'>express</a>
-        </li>
-        <li>
-          <a href='https://github.com/motdotla/dotenv#readme'>dotenv</a>
-        </li>
-        <li>
-          <a href='https://github.com/expressjs/cors#readme'>cors</a>
-        </li>
-        <li>jsonwebtoken</li>
-        <li>
-          <a href='https://github.com/websockets/ws'>ws: websocket client</a>
-        </li>
-        <li>
-          <a href='https://github.com/enisdenjo/graphql-ws#readme'>graphql-ws</a>
-        </li>
-        <li>
-          <a href='https://github.com/apollostack/graphql-subscriptions#readme'>
-            graphql-subscriptions
-          </a>
-        </li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-      </ul>
-      <h4>Frontend</h4>
-      <ul>
-        <li>
-          <a href='https://www.apollographql.com/docs/react/get-started/'>
-            Apollo Client
-          </a>
-        </li>
-        <li>React</li>
-        <li>TypeScript</li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-      </ul>
+      <h3>Backend</h3>
+      <div className='flex'>
+        <div>
+          <label htmlFor='dep-backend'>Dependencies:</label>
+          <ul id='dep-backend'>
+            <li>
+              <a href='https://graphql.org/'>GraphQL</a>
+            </li>
+            <li>
+              <a href='https://github.com/ardatan/graphql-tools#readme'>
+                @graphql-tools/schema
+              </a>
+            </li>
+            <li>
+              <a href='https://www.apollographql.com/docs/apollo-server/'>
+                Apollo Server
+              </a>
+            </li>
+            <li>
+              <a href='https://github.com/apollographql/apollo-server#readme'>
+                apollo-server-core
+              </a>
+            </li>
+            <li>
+              <a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript'>
+                JavaScript
+              </a>
+            </li>
+            <li>
+              <a href='https://mongoosejs.com'>mongoose</a>
+            </li>
+            <li>
+              <a href='https://github.com/blakehaswell/mongoose-unique-validator#readme'>
+                mongoose-unique-validator
+              </a>
+            </li>
+            <li>
+              <a href='http://expressjs.com/'>express</a>
+            </li>
+            <li>
+              <a href='https://github.com/motdotla/dotenv#readme'>dotenv</a>
+            </li>
+            <li>
+              <a href='https://github.com/expressjs/cors#readme'>cors</a>
+            </li>
+            <li>
+              <a href='https://github.com/auth0/node-jsonwebtoken#readme'>jsonwebtoken</a>
+            </li>
+            <li>
+              <a href='https://github.com/dcodeIO/bcrypt.js#readme'>bcryptjs</a>
+            </li>
+            <li>
+              <a href='https://github.com/websockets/ws'>ws: websocket client</a>
+            </li>
+            <li>
+              <a href='https://github.com/enisdenjo/graphql-ws#readme'>graphql-ws</a>
+            </li>
+            <li>
+              <a href='https://github.com/apollostack/graphql-subscriptions#readme'>
+                graphql-subscriptions
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <label htmlFor='dev-backend'>Dev-dependencies:</label>
+
+          <ul id='dev-backend'>
+            <li>
+              <a href='https://nodemon.io'>nodemon</a>
+            </li>
+            <li>
+              <a href='https://github.com/kentcdodds/cross-env#readme'>cross-env</a>
+            </li>
+            <li>
+              <a href='https://eslint.org'>eslint</a>
+            </li>
+            <li>
+              <a href='https://github.com/cypress-io/eslint-plugin-cypress#readme'>
+                eslint-plugin-cypress
+              </a>
+            </li>
+            <li>
+              <a href='https://github.com/aminya/eslint-plugin-yaml#readme'>
+                eslint-plugin-yaml
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <h3>Frontend</h3>
+      <div className='flex'>
+        <div>
+          <label htmlFor='dep-frontend'>Dependencies:</label>
+          <ul id='dep-frontend'>
+            <li>
+              <a href='https://www.apollographql.com/docs/react/get-started/'>
+                Apollo Client
+              </a>
+            </li>
+            <li>
+              <a href='https://react.dev/'>React</a>
+            </li>
+            <li>
+              <a href='https://vitejs.dev/guide/why.html'>Vite</a>
+            </li>
+            <li>
+              <a href='https://reactjs.org/'>react-dom</a>
+            </li>
+            <li>
+              <a href='https://github.com/react-icons/react-icons#readme'>react-icons</a>
+            </li>
+            <li>
+              <a href='https://github.com/remix-run/react-router#readme'>
+                react-router-dom
+              </a>
+            </li>
+            <li>
+              <a href='https://www.emailjs.com'>emailjs</a>
+            </li>
+            <li>
+              <a href='https://github.com/uuidjs/uuid#readme'>uuid</a>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <label htmlFor='dev-frontend'>Dev-dependencies:</label>
+          <ul id='dev-frontend'>
+            <li>
+              <a href='https://github.com/vitest-dev/vitest#readme'>vitest</a>
+            </li>
+            <li>
+              <a href='https://github.com/bahmutov/start-server-and-test#readme'>
+                start-server-and-test
+              </a>
+            </li>
+            <li>
+              <a href='https://github.com/cypress-io/cypress'>cypress</a>
+            </li>
+            <li>
+              <a href='https://eslint.org'>eslint</a>
+            </li>
+            <li>
+              <a href='https://github.com/facebook/create-react-app#readme'>
+                eslint-config-react-app
+              </a>
+            </li>
+            <li>
+              <a href='https://www.typescriptlang.org/'>TypeScript</a>
+            </li>
+            <li>
+              <a href='https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/react'>
+                @types/react
+              </a>
+            </li>
+            <li>
+              <a href='https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/react-dom'>
+                @types/react-dom
+              </a>
+            </li>
+            <li>
+              <a href='https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#readme'>
+                @vitejs/plugin-react
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
       <h2>Contact me</h2>
       <Contact notify={props.notify} />
     </div>

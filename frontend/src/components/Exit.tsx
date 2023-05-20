@@ -1,20 +1,21 @@
-import { Link, NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
+import { CSSProperties } from 'react'
 import useMediaQuery from '../hooks/useMediaQuery'
-import { RiHomeSmileLine, RiReactjsLine } from 'react-icons/ri'
+import { RiHomeSmileLine } from 'react-icons/ri'
 import { FaReact } from 'react-icons/fa'
 import { RiArrowGoBackFill } from 'react-icons/ri'
 
 const Exit = () => {
   const mediaIsLarge = useMediaQuery('(min-width: 400px)')
 
-  const itemStyleSmall: React.CSSProperties = {
+  const itemStyleSmall: CSSProperties = {
     paddingTop: '2em',
     display: 'flex',
     flexFlow: 'column wrap',
     justifyContent: 'space-evenly',
     gap: '2em',
   }
-  const itemStyleLarge: React.CSSProperties = {
+  const itemStyleLarge: CSSProperties = {
     paddingTop: '2em',
     display: 'flex',
     flexFlow: 'row wrap',

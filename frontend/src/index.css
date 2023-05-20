@@ -278,6 +278,11 @@ form {
   outline: 1px solid hsl(0, 0%, 0%, 0.5);
   outline-offset: -1px;
 }
+form:has(legend) {
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
 @media (min-width: 400px) {
   form {
     margin: var(--padding) 0;
@@ -618,11 +623,15 @@ h1:hover span:after {
 .page-welcome {
   max-width: 700px;
 }
-.page-welcome ul {
-  width: max-content;
-  max-width: 400px;
+.page-welcome .flex {
   text-align: left;
+  gap: 20px;
   margin: 0 auto;
+  justify-content: space-around;
+}
+.page-welcome ul {
+  max-width: 290px;
+  text-align: left;
 }
 .page-exit abbr[title] {
   text-decoration: none;

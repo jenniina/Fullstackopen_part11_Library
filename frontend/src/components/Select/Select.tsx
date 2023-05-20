@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, MouseEvent as ReactMouseEvent } from 'react'
 import styles from './select.module.css'
 // import { v4 as uuidv4 } from 'uuid'
 
@@ -47,7 +47,7 @@ export function Select({
   const containerRef = useRef<HTMLDivElement>(null)
   const ariaLive = useRef<HTMLLabelElement>(null)
 
-  function clearOptions(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  function clearOptions(e: ReactMouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault()
     return multiple ? onChange([]) : onChange(options[0])
   }
@@ -81,56 +81,60 @@ export function Select({
 
   useEffect(() => {
     const keyHandler = (e: KeyboardEvent) => {
-      if (e.target !== containerRef.current) return
+      const containerRefCurrent = containerRef.current
+      if (e.target !== containerRefCurrent) return
       switch (e.code) {
-        case 'Enter':
-        case 'Space':
-          e.preventDefault()
-          if (isOpen) selectOption(options[highlightedIndex])
-          else setIsOpen(true)
-          break
-        case 'ArrowUp':
-        case 'ArrowDown': {
-          e.preventDefault()
-          if (!isOpen) {
-            setIsOpen(true)
-            break
-          }
-          const newValue = highlightedIndex + (e.code === 'ArrowDown' ? 1 : -1)
-          if (newValue >= 0 && newValue < options.length) {
-            setHighlightedIndex(newValue)
-          }
+      case 'Enter':
+      case 'Space':
+        e.preventDefault()
+        if (isOpen) selectOption(options[highlightedIndex])
+        else setIsOpen(true)
+        break
+      case 'ArrowUp':
+      case 'ArrowDown': {
+        e.preventDefault()
+        if (!isOpen) {
+          setIsOpen(true)
           break
         }
-        case 'Escape':
-          e.preventDefault()
-          setIsOpen(false)
-          containerRef.current?.blur()
-          break
-        case 'Tab':
-          break
-        default:
-          e.preventDefault()
-          clearTimeout(debounceTimeout)
-          searchTerm += e.key
-          debounceTimeout = setTimeout(() => {
-            searchTerm = ''
-          }, 600)
-          const searchedOption = options.find((option: SelectOption) => {
-            return option?.label?.toLowerCase().startsWith(searchTerm)
-          })
+        const newValue = highlightedIndex + (e.code === 'ArrowDown' ? 1 : -1)
+        if (newValue >= 0 && newValue < options.length) {
+          setHighlightedIndex(newValue)
+        }
+        break
+      }
+      case 'Escape':
+        e.preventDefault()
+        setIsOpen(false)
+        containerRefCurrent?.blur()
+        break
+      case 'Tab':
+        break
+      default: {
+        e.preventDefault()
+        clearTimeout(debounceTimeout)
+        searchTerm += e.key
+        debounceTimeout = setTimeout(() => {
+          searchTerm = ''
+        }, 600)
+        const searchedOption = options.find((option: SelectOption) => {
+          return option?.label?.toLowerCase().startsWith(searchTerm)
+        })
 
-          if (searchedOption) {
-            //selectOption(options[options.indexOf(searchedOption)])
-            setHighlightedIndex(options.indexOf(searchedOption))
-          }
+        if (searchedOption) {
+          //selectOption(options[options.indexOf(searchedOption)])
+          setHighlightedIndex(options.indexOf(searchedOption))
+        }
+      }
       }
     }
-    containerRef.current?.addEventListener('keydown', keyHandler)
+    const containerRefCurrent = containerRef.current
+    containerRefCurrent?.addEventListener('keydown', keyHandler)
 
     return () => {
-      containerRef.current?.removeEventListener('keydown', keyHandler)
+      containerRefCurrent?.removeEventListener('keydown', keyHandler)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, highlightedIndex, options])
 
   return (
@@ -170,55 +174,55 @@ export function Select({
         <span className={styles.value}>
           {multiple
             ? value.map((v) => (
-                <button
-                  type='button'
-                  key={v.value}
-                  onClick={(e) => {
-                    e.stopPropagation()
+              <button
+                type='button'
+                key={v.value}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  selectOption(v)
+                }}
+                onKeyUp={(e) => {
+                  switch (e.code) {
+                  case 'Enter':
+                  case 'Space':
+                    e.preventDefault()
+                    setIsOpen(false)
                     selectOption(v)
-                  }}
-                  onKeyUp={(e) => {
-                    switch (e.code) {
-                      case 'Enter':
-                      case 'Space':
-                        e.preventDefault()
-                        setIsOpen(false)
-                        selectOption(v)
-                        if (ariaLive.current)
-                          ariaLive.current.textContent = `removed ${v.label}`
-                        setTimeout(() => {
-                          if (ariaLive.current) ariaLive.current.textContent = ''
-                        }, 500)
-                        if (containerRef.current) containerRef.current.focus()
-                        break
-                      case 'ArrowUp':
-                      case 'ArrowDown': {
-                        e.preventDefault()
-                        if (!isOpen) {
-                          setIsOpen(true)
-                          break
-                        }
-                        break
-                      }
-                      case 'Escape':
-                        e.preventDefault()
-                        setIsOpen(false)
-                        containerRef.current?.blur()
-                        break
-                      case 'Tab':
-                        break
-                      default:
+                    if (ariaLive.current)
+                      ariaLive.current.textContent = `removed ${v.label}`
+                    setTimeout(() => {
+                      if (ariaLive.current) ariaLive.current.textContent = ''
+                    }, 500)
+                    if (containerRef.current) containerRef.current.focus()
+                    break
+                  case 'ArrowUp':
+                  case 'ArrowDown': {
+                    e.preventDefault()
+                    if (!isOpen) {
+                      setIsOpen(true)
+                      break
                     }
-                  }}
-                  className={styles['option-btn']}
-                >
-                  {v?.label}
-                  <span aria-hidden='true' className={`${styles['remove-btn']}`}>
+                    break
+                  }
+                  case 'Escape':
+                    e.preventDefault()
+                    setIsOpen(false)
+                    containerRef.current?.blur()
+                    break
+                  case 'Tab':
+                    break
+                  default:
+                  }
+                }}
+                className={styles['option-btn']}
+              >
+                {v?.label}
+                <span aria-hidden='true' className={`${styles['remove-btn']}`}>
                     &times;
-                  </span>
-                  <span className='screen-reader-text'>remove</span>
-                </button>
-              ))
+                </span>
+                <span className='screen-reader-text'>remove</span>
+              </button>
+            ))
             : value?.label}
         </span>
         {multiple ? (

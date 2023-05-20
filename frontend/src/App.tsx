@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, CSSProperties } from 'react'
 import Notify from './components/Notify'
 import Authors from './components/Authors'
 import Books from './components/Books'
@@ -26,7 +26,6 @@ import { useTheme, useThemeUpdate } from './hooks/useTheme'
 import ThemeToggle from './components/ThemeToggle'
 import Welcome from './components/Welcome'
 import Exit from './components/Exit'
-import useMediaQuery from './hooks/useMediaQuery'
 import useWindowSize from './hooks/useWindowSize'
 
 // function that takes care of manipulating cache
@@ -66,7 +65,7 @@ const App = () => {
   const resultBooks = useQuery(ALL_BOOKS)
   const resultUsers = useQuery(ALL_USERS)
 
-  const { data, refetch } = useQuery(ME)
+  const { data } = useQuery(ME)
 
   const notify = (info: message, seconds: number) => {
     setMessage(info)
@@ -102,32 +101,32 @@ const App = () => {
 
   const book = matchBook
     ? resultBooks?.data?.allBooks?.find(
-        (book: booksProps) => book.id === matchBook.params.id
-      )
+      (book: booksProps) => book.id === matchBook.params.id
+    )
     : null
 
   const author: authorProps = matchAuthor
     ? resultAuthors?.data?.allAuthors?.find(
-        (author: authorProps) => author.id === matchAuthor.params.id
-      )
+      (author: authorProps) => author.id === matchAuthor.params.id
+    )
     : null
 
   const user: userProps = matchUser
     ? resultUsers?.data?.allUsers?.find(
-        (user: userProps) => user.id === matchUser.params.id
-      )
+      (user: userProps) => user.id === matchUser.params.id
+    )
     : null
 
   const scrollbarWidth = useScrollbarWidth()
 
-  const style: React.CSSProperties = {
+  const style: CSSProperties = {
     ['--scrollbar_width' as string]: `${scrollbarWidth}px`,
   }
 
   const lightTheme = useTheme()
   const toggleTheme = useThemeUpdate()
 
-  const { windowHeight, windowWidth } = useWindowSize()
+  const { windowWidth } = useWindowSize()
 
   if (resultAuthors.loading) {
     return <div>loading...</div>

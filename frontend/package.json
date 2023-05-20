@@ -10,27 +10,31 @@
     "server": "cd .. && npm run testmode",
     "server-and-test": "start-server-and-test dev http://localhost:5173 test:e2e",
     "cypress:open": "cross-env NODE_ENV=test cypress open",
-    "test:e2e": "cross-env NODE_ENV=test cypress run"
+    "test:e2e": "cross-env NODE_ENV=test cypress run",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@apollo/client": "^3.7.12",
     "@emailjs/browser": "^3.11.0",
-    "cypress": "^12.12.0",
     "graphql": "^16.6.0",
     "graphql-ws": "^5.12.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",
     "react-router-dom": "^6.10.0",
-    "start-server-and-test": "^2.0.0",
-    "uuid": "^9.0.0",
-    "vitest": "^0.31.0"
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "@vitejs/plugin-react": "^3.1.0",
+    "cypress": "^12.12.0",
+    "eslint": "^8.41.0",
+    "eslint-config-react-app": "^7.0.1",
+    "start-server-and-test": "^2.0.0",
     "typescript": "^4.9.3",
-    "vite": "^4.2.0"
+    "vite": "^4.2.0",
+    "vite-plugin-eslint": "^1.8.1",
+    "vitest": "^0.31.1"
   }
 }

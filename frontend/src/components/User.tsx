@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { userProps, message } from '../interfaces'
 import { ALL_USERS, EDIT_USER, ME } from '../queries'
 import { useMutation } from '@apollo/client'
-import { useState } from 'react'
+import { useState, FormEvent } from 'react'
 import { tester } from '../App'
 
 const User = (props: {
@@ -31,7 +31,7 @@ const User = (props: {
     },
   })
 
-  const handleGenreChange = (e: React.FormEvent) => {
+  const handleGenreChange = (e: FormEvent) => {
     e.preventDefault()
     if (!genre) props.notify({ error: true, message: 'Please enter a genre' }, 10)
     else if (props.me?.id === tester)
@@ -51,7 +51,7 @@ const User = (props: {
     }
   }
 
-  const handleUsernameChange = (e: React.FormEvent) => {
+  const handleUsernameChange = (e: FormEvent) => {
     e.preventDefault()
     if (!username) props.notify({ error: true, message: 'Please enter a username' }, 10)
     else if (props.me?.id === tester)
@@ -71,7 +71,7 @@ const User = (props: {
     }
   }
 
-  const handlePasswordChange = (e: React.FormEvent) => {
+  const handlePasswordChange = (e: FormEvent) => {
     e.preventDefault()
     if (!password) props.notify({ error: true, message: 'Please enter a password' }, 10)
     else if (password !== passwordConfirm)
@@ -85,7 +85,7 @@ const User = (props: {
         },
         10
       )
-    else if (window.confirm(`Are you sure you want to change your password?`)) {
+    else if (window.confirm('Are you sure you want to change your password?')) {
       editUser({ variables: { id: props.me?.id, setPassword: password } })
       setPassword('')
       setPasswordConfirm('')

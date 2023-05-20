@@ -1,4 +1,4 @@
-import { KeyboardEvent, useEffect, useRef, useState } from 'react'
+import { KeyboardEvent, useEffect, useRef, useState, FormEvent } from 'react'
 import { useMutation, useQuery } from '@apollo/client'
 import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS, ALL_USERS, ME } from '../queries'
 import { RefObject, message, userProps } from '../interfaces'
@@ -52,7 +52,7 @@ const NewBook = (props: {
     setGenre('')
   }
 
-  const submit = async (event: React.FormEvent) => {
+  const submit = async (event: FormEvent) => {
     event.preventDefault()
     if (props.me?.id === tester)
       props.notify(
@@ -88,9 +88,11 @@ const NewBook = (props: {
           )
           .then(
             (result) => {
+              // eslint-disable-next-line no-console
               console.log(result.text)
             },
             (error) => {
+              // eslint-disable-next-line no-console
               console.log(error.text)
             }
           )
@@ -101,9 +103,9 @@ const NewBook = (props: {
     if (genres.find((g) => g === genre))
       props.notify({ error: true, message: `${genre} already added!` }, 10)
     else if (genre.includes(',') || genre.includes('.'))
-      props.notify({ error: true, message: `Please add only one genre at a time!` }, 10)
+      props.notify({ error: true, message: 'Please add only one genre at a time!' }, 10)
     else if (genre.includes(' ')) {
-      if (window.confirm(`Add a single genre?`)) {
+      if (window.confirm('Add a single genre?')) {
         setGenres(genres.concat(genre))
         setGenre('')
       }
@@ -115,16 +117,16 @@ const NewBook = (props: {
 
   const clearGenres = () => {
     setGenres([])
-    props.notify({ error: false, message: `Cleared genres list` }, 10)
+    props.notify({ error: false, message: 'Cleared genres list' }, 10)
   }
   const keyHandlerGenre = (e: KeyboardEvent<HTMLInputElement>) => {
     switch (e.code) {
-      case 'Enter':
-      case 'Tab':
-        e.preventDefault()
-        genreButton.current?.click()
-        addGenre()
-        props.notify({ error: false, message: `Added ${genre} to genres list` }, 10)
+    case 'Enter':
+    case 'Tab':
+      e.preventDefault()
+      genreButton.current?.click()
+      addGenre()
+      props.notify({ error: false, message: `Added ${genre} to genres list` }, 10)
     }
   }
 

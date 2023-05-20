@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client'
 import { booksProps } from '../interfaces'
 import { useEffect, useState } from 'react'
-import { FILTER_BOOKS, ALL_BOOKS } from '../queries'
+import { FILTER_BOOKS } from '../queries'
 import { Link } from 'react-router-dom'
 
 const Books = () => {
@@ -31,7 +31,7 @@ const Books = () => {
 
   useEffect(() => {
     refetch({ genre: genre })
-  }, [genre])
+  }, [genre, refetch])
 
   const heading = 'Books'
   if (loading || loading) {

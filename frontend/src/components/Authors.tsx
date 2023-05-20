@@ -1,10 +1,9 @@
 import { useMutation } from '@apollo/client'
 import { authorProps, message, userProps } from '../interfaces'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, FormEvent, useMemo } from 'react'
 import { EDIT_BORN, ALL_AUTHORS, DELETE_AUTHOR } from '../queries'
 import { Link } from 'react-router-dom'
 import { Select, SelectOption } from './Select/Select'
-import { tester } from '../App'
 
 const Authors = (props: {
   authors: authorProps[]
@@ -40,16 +39,18 @@ const Authors = (props: {
   //   value: value,
   // }))
 
-  let authorsWithoutBornObjects: SelectOption[] = [
-    {
-      label: chooseOne,
-      value: 'nothing chosen',
-    },
-  ]
-  let authorsWithoutBornObjectsHasRun = false
+  let authorsWithoutBornObjects: SelectOption[] = useMemo(
+    () => [
+      {
+        label: chooseOne,
+        value: 'nothing chosen',
+      },
+    ],
+    []
+  )
 
   useEffect(() => {
-    if (!authorsWithoutBornObjectsHasRun) {
+    if (authorsWithoutBornObjects.length < authorsWithoutBorn.length) {
       for (let object in authorsWithoutBorn) {
         authorsWithoutBornObjects.push({
           label: authorsWithoutBorn[object],
@@ -57,23 +58,24 @@ const Authors = (props: {
         })
       }
     }
-    authorsWithoutBornObjectsHasRun = true
-  }, [authorsWithoutBorn])
+  }, [authorsWithoutBorn, authorsWithoutBornObjects])
 
   const authorsWithBorn = authors
     ?.map((a) => (!a.born ? null : `${a.name}: ${a.born}`))
     .filter((a) => a !== null)
 
-  let authorsWITHBornObjects: SelectOption[] = [
-    {
-      label: chooseOne,
-      value: 'nothing chosen',
-    },
-  ]
-  let authorsWITHBornObjectsHasRun = false
+  let authorsWITHBornObjects: SelectOption[] = useMemo(
+    () => [
+      {
+        label: chooseOne,
+        value: 'nothing chosen',
+      },
+    ],
+    []
+  )
 
   useEffect(() => {
-    if (!authorsWITHBornObjectsHasRun) {
+    if (authorsWITHBornObjects.length < authorsWithBorn.length) {
       for (let object in authorsWithBorn) {
         authorsWITHBornObjects.push({
           label: authorsWithBorn[object],
@@ -81,8 +83,7 @@ const Authors = (props: {
         })
       }
     }
-    authorsWITHBornObjectsHasRun = true
-  }, [authorsWithoutBorn])
+  }, [authorsWithBorn, authorsWITHBornObjects])
 
   const [editAuthorBornYear] = useMutation(EDIT_BORN, {
     refetchQueries: [{ query: ALL_AUTHORS }],
@@ -107,9 +108,9 @@ const Authors = (props: {
       (author: authorProps, _i: number) => author.bookCount === 0
     )
     if (noBooks) deleteAuthor({ variables: { name: noBooks?.name } })
-  }, [])
+  }, [authors, deleteAuthor])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     if (name1?.label === chooseOne)
       props.notify({ error: true, message: 'Please choose an author' }, 5)
@@ -125,7 +126,7 @@ const Authors = (props: {
     }
   }
 
-  const handleSubmit2 = (e: React.FormEvent) => {
+  const handleSubmit2 = (e: FormEvent) => {
     e.preventDefault()
     if (name2?.label === chooseOne)
       props.notify({ error: true, message: 'Please choose an author' }, 5)

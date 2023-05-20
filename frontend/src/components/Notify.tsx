@@ -12,19 +12,19 @@ const Notify = (props: messageProps) => {
       style={
         props.info.error === true
           ? {
-              color: 'red',
-              position: 'fixed',
-              left: 0,
-              width: '100%',
-              zIndex: '999',
-            }
+            color: 'red',
+            position: 'fixed',
+            left: 0,
+            width: '100%',
+            zIndex: '999',
+          }
           : {
-              color: 'black',
-              position: 'fixed',
-              left: 0,
-              width: '100%',
-              zIndex: '999',
-            }
+            color: 'black',
+            position: 'fixed',
+            left: 0,
+            width: '100%',
+            zIndex: '999',
+          }
       }
     >
       <span

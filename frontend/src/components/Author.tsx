@@ -11,7 +11,7 @@ const Author = (props: { author: authorProps }) => {
 
   useEffect(() => {
     refetch({ author: author?.name })
-  }, [data])
+  }, [data, author?.name, refetch])
 
   return (
     <div className='page-author smaller-title'>

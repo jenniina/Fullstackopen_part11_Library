@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import { useRef, FormEvent } from 'react'
 import Accordion from './Accordion'
 import emailjs from '@emailjs/browser'
 import { RefObject, message } from '../interfaces'
@@ -11,7 +11,7 @@ function Contact(props: contactProps) {
 
   const form = useRef() as RefObject<HTMLFormElement>
 
-  const submit = async (event: React.FormEvent) => {
+  const submit = async (event: FormEvent) => {
     event.preventDefault()
     if (form)
       emailjs
@@ -23,11 +23,13 @@ function Contact(props: contactProps) {
         )
         .then(
           (result) => {
+            // eslint-disable-next-line no-console
             console.log(result.text)
             props.notify({ error: false, message: 'Thank you for your message!' }, 10)
             form.current?.reset()
           },
           (error) => {
+            // eslint-disable-next-line no-console
             console.log(error.message)
             props.notify(
               { error: true, message: 'There was an error sending the message!' },

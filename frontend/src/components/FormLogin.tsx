@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { ApolloQueryResult, useMutation } from '@apollo/client'
+import { useState, useEffect, FormEvent, Dispatch, SetStateAction } from 'react'
+import { useMutation } from '@apollo/client'
 import { LOGIN, ME } from '../queries'
 import { message } from '../interfaces'
 import { useNavigate } from 'react-router-dom'
@@ -7,7 +7,7 @@ import { LIRARY_TOKEN } from '../App'
 
 interface loginProps {
   notify: (info: message, seconds: number) => void
-  setToken: React.Dispatch<React.SetStateAction<string | null>>
+  setToken: Dispatch<SetStateAction<string | null>>
   token: string | null
 }
 const FormLogin = ({ notify, setToken, token }: loginProps) => {
@@ -30,9 +30,9 @@ const FormLogin = ({ notify, setToken, token }: loginProps) => {
       setToken(token)
       localStorage.setItem(LIRARY_TOKEN, token) //keep name same also in App.tsx and main.tsx
     }
-  }, [result.data])
+  }, [result.data, setToken])
 
-  const submit = async (event: React.FormEvent) => {
+  const submit = async (event: FormEvent) => {
     event.preventDefault()
 
     login({ variables: { username, password } })
