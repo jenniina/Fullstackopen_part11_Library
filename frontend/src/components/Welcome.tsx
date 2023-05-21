@@ -236,7 +236,7 @@ const Welcome = (props: {
           </ul>
         </div>
       </div>
-      <h2>Contact me</h2>
+      <h2>Get in touch</h2>
       <Contact notify={props.notify} />
     </div>
   )
