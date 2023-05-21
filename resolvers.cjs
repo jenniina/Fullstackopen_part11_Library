@@ -8,6 +8,7 @@ const { PubSub } = require('graphql-subscriptions')
 const pubsub = new PubSub()
 const bcrypt = require('bcryptjs')
 
+const tester = '64673513aaa627ac7b5a37ec'
 const resolvers = {
   Query: {
     bookCount: () => Book.collection.countDocuments(),
@@ -92,7 +93,7 @@ const resolvers = {
   Mutation: {
     createBook: async (_root, args, context) => {
       const currentUser = context.currentUser
-      if (!currentUser) {
+      if (!currentUser || currentUser.id === tester) {
         throw new AuthenticationError('Please log in')
       }
       const book = await Book.findOne({ title: args.title })
@@ -175,7 +176,7 @@ const resolvers = {
     },
     editUser: async (_root, args, context) => {
       const currentUser = context.currentUser
-      if (!currentUser) {
+      if (!currentUser || currentUser.id === tester) {
         throw new AuthenticationError('Please log in')
       }
       if (args.setGenre)
@@ -187,7 +188,11 @@ const resolvers = {
         await User.findByIdAndUpdate(args.id, { passwordHash: passwordHashh })
       }
     },
-    createUser: async (_root, args) => {
+    createUser: async (_root, args, context) => {
+      const currentUser = context.currentUser
+      if (!currentUser || currentUser.id === tester) {
+        throw new AuthenticationError('Please log in')
+      }
       const user = await User.findOne({ id: args.username })
       const passwordHashh = await bcrypt.hash(args.passwordHash, 10)
       const newUser = new User({
@@ -229,7 +234,11 @@ const resolvers = {
 
       return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
     },
-    deleteUser: async (_root, args) => {
+    deleteUser: async (_root, args, context) => {
+      const currentUser = context.currentUser
+      if (!currentUser || currentUser.id === tester) {
+        throw new AuthenticationError('Please log in')
+      }
       await User.deleteOne({ username: args.username }).catch(function (error) {
         // eslint-disable-next-line no-console
         console.log(JSON.stringify(error, null, 2)) // Failure
@@ -237,6 +246,9 @@ const resolvers = {
     },
     deleteBook: async (_root, args, context) => {
       const currentUser = context.currentUser
+      if (!currentUser || currentUser.id === tester) {
+        throw new AuthenticationError('Please log in')
+      }
       if (args.id)
         await Book.deleteOne({ _id: args.id }).catch(function (error) {
           // eslint-disable-next-line no-console
@@ -257,7 +269,11 @@ const resolvers = {
         console.log(JSON.stringify(error, null, 2)) // Failure
       })
     },
-    deleteAuthor: async (_root, args) => {
+    deleteAuthor: async (_root, args, context) => {
+      const currentUser = context.currentUser
+      if (!currentUser || currentUser.id === tester) {
+        throw new AuthenticationError('Please log in')
+      }
       await Author.deleteOne({ name: args.name }).catch(function (error) {
         // eslint-disable-next-line no-console
         console.log(JSON.stringify(error, null, 2)) // Failure
