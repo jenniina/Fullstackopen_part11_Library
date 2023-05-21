@@ -68,6 +68,16 @@ const Welcome = (props: {
           Github Repository
         </a>
       </p>
+      <h3>CI/CD</h3>
+      <p>
+        I used <a href='https://github.com/features/actions'>GitHub Actions</a> to set up
+        the deployment pipeline.
+      </p>
+      <h4>Why is the site so slow?</h4>
+      <p>
+        The web service is hosted at a <a href='https://render.com/'>Render.com</a> for
+        free, with 512 MB RAM 0.1 CPU, hence requiring a modicum of patience to browse.
+      </p>
       <h3>Backend</h3>
       <div className='flex'>
         <div>

@@ -489,7 +489,7 @@ ul.main-navigation .active::before {
 
 h1 {
   font-size: clamp(var(--title-XL), 6vw, var(--title-XXXL));
-  color: var(--color-primary-17);
+  color: var(--color-primary-16);
   position: relative;
 }
 .smaller-title h1 {
@@ -497,12 +497,15 @@ h1 {
 }
 h2 {
   font-size: var(--title-L);
+  color: var(--color-primary-17);
 }
 h3 {
   font-size: var(--title-M);
+  color: var(--color-primary-18);
 }
 h4 {
   font-size: var(--title-S);
+  color: var(--color-primary-19);
 }
 h5 {
   font-size: var(--title-XS);
