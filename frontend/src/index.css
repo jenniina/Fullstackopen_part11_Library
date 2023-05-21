@@ -522,6 +522,8 @@ th {
   font-family: var(--title-family);
   letter-spacing: calc(var(--letter-spacing) / 2);
   font-weight: 600;
+  margin-block-start: 1.5em;
+  margin-block-end: 0.5em;
 }
 
 h1 span:before {
