@@ -1,9 +1,9 @@
-import React, { useContext, createContext, useEffect } from 'react'
+import { useContext, createContext, useEffect, ReactPortal, EffectCallback } from 'react'
 import useMediaQuery from './useMediaQuery'
 import useLocalStorage from './useStorage'
 
 const ThemeContext = createContext(true)
-const ThemeUpdateContext = createContext<React.EffectCallback | undefined>(undefined)
+const ThemeUpdateContext = createContext<EffectCallback | undefined>(undefined)
 
 export function useTheme() {
   return useContext(ThemeContext)
@@ -13,7 +13,7 @@ export function useThemeUpdate() {
   return useContext(ThemeUpdateContext)
 }
 
-export function ThemeProvider({ children }: React.ReactPortal) {
+export function ThemeProvider({ children }: ReactPortal) {
   const prefersLight = useMediaQuery('(prefers-color-scheme: light)')
 
   const [lightTheme, setLightTheme] = useLocalStorage(

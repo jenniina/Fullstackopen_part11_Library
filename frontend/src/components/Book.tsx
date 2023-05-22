@@ -2,13 +2,14 @@ import { Link, useNavigate } from 'react-router-dom'
 import { booksProps, message, userProps } from '../interfaces'
 import { useMutation } from '@apollo/client'
 import { ALL_AUTHORS, ALL_BOOKS, ALL_USERS, DELETE_BOOK } from '../queries'
-import { updateCache } from '../App'
+import { Dispatch, SetStateAction } from 'react'
 
 const Book = (props: {
   book: booksProps
   token: string | null
   notify: ({ error, message }: message, seconds: number) => void
-  me: userProps['id']
+  me: userProps
+  setGenre: Dispatch<SetStateAction<string>>
 }) => {
   const book = props.book
 
@@ -27,26 +28,35 @@ const Book = (props: {
   })
 
   const handleDelete = () => {
-    navigate('/')
-    deleteBook({ variables: { id: book.id } })
+    if (window.confirm('Are you sure you want to delete this book?')) {
+      navigate('/books')
+      deleteBook({ variables: { id: book.id } })
+    }
+  }
+
+  const handleGenre = (genre: string) => {
+    props.setGenre(genre)
+    navigate('/books')
   }
 
   return (
-    <div>
+    <div className="page-book smaller-title">
       <h1>{book.title}</h1>
       <p>
         Author: <Link to={`/authors/${book.author.id}`}>{book.author.name}</Link>
       </p>
-      <p>Published: {book.published}</p>
-      <p>
-        <Link to={`/`}>Genres: </Link>
-        {book.genres.join(', ')}
-      </p>
-      {props.token && props.me === book.user ? (
-        <button onClick={handleDelete}>delete book</button>
-      ) : (
-        ''
-      )}
+      <p>Published: {book.published && book.published < 0 ? `${Math.abs(book.published)} BC` : book.published}</p>
+      <div>
+        <h2>Genres:</h2>
+        {book.genres.map((genre) => {
+          return (
+            <button key={genre} onClick={() => handleGenre(genre)}>
+              {genre}
+            </button>
+          )
+        })}
+      </div>
+      {props.token && props.me?.id === book.user ? <button onClick={handleDelete}>delete book</button> : ''}
     </div>
   )
 }

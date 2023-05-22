@@ -1,27 +1,27 @@
 import { useQuery } from '@apollo/client'
 import { booksProps } from '../interfaces'
-import { useEffect, useState } from 'react'
-import { FILTER_BOOKS, ALL_BOOKS } from '../queries'
+import { Dispatch, SetStateAction, useEffect } from 'react'
+import { FILTER_BOOKS } from '../queries'
 import { Link } from 'react-router-dom'
 
-const Books = () => {
-  const [genre, setGenre] = useState<string>('')
-
+interface BookProps {
+  genre: string
+  setGenre: Dispatch<SetStateAction<string>>
+}
+const Books = ({ genre, setGenre }: BookProps) => {
   const { data, loading, error, refetch } = useQuery(FILTER_BOOKS)
 
-  const books = data?.allBooks
-    ?.slice()
-    .sort(function (a: { title: string }, b: { title: string }) {
-      let aTitle = a.title.toLowerCase()
-      let bTitle = b.title.toLowerCase()
-      if (aTitle > bTitle) {
-        return 1
-      } else if (aTitle < bTitle) {
-        return -1
-      } else {
-        return 0
-      }
-    })
+  const books = data?.allBooks?.slice().sort(function (a: { title: string }, b: { title: string }) {
+    let aTitle = a.title.toLowerCase()
+    let bTitle = b.title.toLowerCase()
+    if (aTitle > bTitle) {
+      return 1
+    } else if (aTitle < bTitle) {
+      return -1
+    } else {
+      return 0
+    }
+  })
 
   let genres = Array.prototype.concat.apply(
     [],
@@ -31,8 +31,9 @@ const Books = () => {
 
   useEffect(() => {
     refetch({ genre: genre })
-  }, [genre])
+  }, [genre, refetch])
 
+  const heading = 'Books'
   if (loading || loading) {
     return <div>loading...</div>
   }
@@ -41,9 +42,16 @@ const Books = () => {
   }
   return (
     <div>
-      <h1>Books</h1>
-      <div className='genresButtons'>
-        <button onClick={() => setGenre('')}>all genres</button>
+      <h1>
+        <span data-text={heading}>{heading}</span>
+      </h1>
+      <p>You may filter the books by pressing one of the buttons below:</p>
+      <div className="genresButtons">
+        <div>
+          <button onClick={() => setGenre('')}>
+            <big>all genres</big>
+          </button>
+        </div>
         {genres
           ?.sort((a, b) => a.localeCompare(b))
           .map((genre) => (
@@ -55,9 +63,9 @@ const Books = () => {
       <table>
         <tbody>
           <tr>
-            <th>title</th>
-            <th>author</th>
-            <th>published</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Published</th>
           </tr>
           {books?.map((a: booksProps) => (
             <tr key={a.title}>
@@ -67,7 +75,7 @@ const Books = () => {
               <td>
                 <Link to={`/authors/${a.author.id}`}>{a.author.name}</Link>
               </td>
-              <td>{a.published}</td>
+              <td>{a.published && a.published < 0 ? `${Math.abs(a.published)} BC` : a.published}</td>
             </tr>
           ))}
         </tbody>

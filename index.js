@@ -60,8 +60,9 @@ const start = async () => {
   app.get('/health', (_req, res) => {
     res.send('ok')
   })
+  app.use('/', express.static('build'))
   app.use(
-    '/',
+    '/gql',
     cors(),
     express.json(),
     expressMiddleware(server, {
@@ -75,10 +76,13 @@ const start = async () => {
       },
     })
   )
+  app.get('*', (_req, res) => {
+    res.sendFile(__dirname + '/frontend/build/index.html')
+  })
   const PORT = process.env.PORT || 4000
   httpServer.listen(PORT, () =>
     // eslint-disable-next-line no-console
-    console.log(`Server is now running on http://localhost:${PORT}`)
+    console.log(`Server is now running on port ${PORT}`)
   )
 }
 start()

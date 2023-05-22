@@ -10,18 +10,19 @@ const Author = (props: { author: authorProps }) => {
   const { data, refetch } = useQuery(GET_BOOKS_OF_AUTHOR)
 
   useEffect(() => {
-    refetch({ author: author.name })
-  }, [data])
+    refetch({ author: author?.name })
+  }, [data, author?.name, refetch])
 
   return (
-    <div>
-      <h1>{author.name}</h1>
-      <p>Born: {author.born}</p>
-      <p>Books: {author.bookCount}</p>
-      <h2>Books by {author.name}</h2>
+    <div className='page-author smaller-title'>
+      <h1>{author?.name}</h1>
+      <p>Author</p>
+      {author?.born ? <p>Born: {author?.born}</p> : ''}
+      <p>Books added: {author?.bookCount}</p>
+      <h2>Books by {author?.name}</h2>
       {data?.allBooks?.map((book: { id: string; title: string }) => (
-        <ul key={book.id}>
-          <li style={{ listStyle: 'none' }}>
+        <ul key={book.id} className='no-list'>
+          <li>
             <Link to={`/books/${book.id}`}>{book.title}</Link>
           </li>
         </ul>

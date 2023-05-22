@@ -1,13 +1,15 @@
-import { KeyboardEvent, useEffect, useRef, useState } from 'react'
+import { KeyboardEvent, useEffect, useRef, useState, FormEvent } from 'react'
 import { useMutation, useQuery } from '@apollo/client'
 import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS, ALL_USERS, ME } from '../queries'
-import { message } from '../interfaces'
-import { updateCache } from '../App'
+import { RefObject, message, userProps } from '../interfaces'
+import { tester, updateCache } from '../App'
 import { useNavigate } from 'react-router-dom'
+import emailjs from '@emailjs/browser'
 
 const NewBook = (props: {
   notify: ({ error, message }: message, seconds: number) => void
   token: string | null
+  me: userProps
 }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -17,6 +19,7 @@ const NewBook = (props: {
   const [userId, setUser] = useState('')
 
   const genreButton = useRef<HTMLButtonElement>(null)
+  const form = useRef() as RefObject<HTMLFormElement>
 
   const user = useQuery(ME)
 
@@ -27,16 +30,19 @@ const NewBook = (props: {
   }, [user])
 
   const [createBook] = useMutation(ADD_BOOK, {
-    refetchQueries: [
-      { query: ALL_BOOKS },
-      { query: ALL_AUTHORS },
-      { query: ME },
-      { query: ALL_USERS },
-    ],
+    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }, { query: ME }, { query: ALL_USERS }],
     update: (cache, response) => {
       updateCache(cache, { query: ALL_BOOKS }, response.data.createBook)
     },
+    onError: (error) => {
+      //console.log(JSON.stringify(error, null, 2))
+      props.notify({ error: true, message: error.message }, 10)
+    },
     onCompleted: () => {
+      props.notify(
+        { error: false, message: `${title} by ${props.me?.username} added, in the genres: ${genres.join(', ')}` },
+        6
+      )
       zero()
     },
   })
@@ -49,24 +55,62 @@ const NewBook = (props: {
     setGenre('')
   }
 
-  const submit = async (event: React.FormEvent) => {
+  const submit = async (event: FormEvent) => {
     event.preventDefault()
-    if (!title || !published || !author || genres.length === 0)
+    if (props.me?.id === tester)
+      props.notify(
+        {
+          error: true,
+          message: 'Unfortunately, Tester may not add books! Please request a real account from the admin',
+        },
+        10
+      )
+    else if (!title || !published || !author || genres.length === 0)
       props.notify({ error: true, message: 'Please fill in all the fields' }, 5)
-    createBook({
-      variables: { title, author, genres, published: parseInt(published), user: userId },
-    }).catch((error) =>
-      // eslint-disable-next-line no-console
-      console.log(JSON.stringify(error, null, 2))
-    )
+    else {
+      createBook({
+        variables: {
+          title,
+          author,
+          genres,
+          published: parseInt(published),
+          user: userId,
+        },
+      }).catch((error) =>
+        // eslint-disable-next-line no-console
+        console.log(JSON.stringify(error, null, 2))
+      )
+      if (form && (props.me?.username !== 'Ano' || props.me?.username !== undefined))
+        emailjs
+          .sendForm(
+            import.meta.env.VITE_serviceID,
+            import.meta.env.VITE_templateID,
+            form.current,
+            import.meta.env.VITE_publicKey
+          )
+          .then(
+            (result) => {
+              // eslint-disable-next-line no-console
+              console.log(result.text)
+            },
+            (error) => {
+              // eslint-disable-next-line no-console
+              console.log(error.text)
+            }
+          )
+    }
   }
 
   const addGenre = () => {
-    if (genres.find((g) => g === genre))
-      props.notify({ error: true, message: `${genre} already added!` }, 10)
-    else if (genre.includes(',') || genre.includes(' '))
-      props.notify({ error: true, message: `Please add only one genre at a time!` }, 10)
-    else {
+    if (genres.find((g) => g === genre)) props.notify({ error: true, message: `${genre} already added!` }, 10)
+    else if (genre.includes(',') || genre.includes('.'))
+      props.notify({ error: true, message: 'Please add only one genre at a time!' }, 10)
+    else if (genre.includes(' ')) {
+      if (window.confirm('Add a single genre?')) {
+        setGenres(genres.concat(genre))
+        setGenre('')
+      }
+    } else {
       setGenres(genres.concat(genre))
       setGenre('')
     }
@@ -74,33 +118,34 @@ const NewBook = (props: {
 
   const clearGenres = () => {
     setGenres([])
-    props.notify({ error: false, message: `Cleared genres list` }, 10)
+    props.notify({ error: false, message: 'Cleared genres list' }, 10)
   }
   const keyHandlerGenre = (e: KeyboardEvent<HTMLInputElement>) => {
     switch (e.code) {
-      case 'Enter':
-      case 'Tab':
-        e.preventDefault()
-        genreButton.current?.click()
-        addGenre()
-        props.notify({ error: false, message: `Added ${genre} to genres list` }, 10)
+    case 'Enter':
+    case 'Tab':
+      e.preventDefault()
+      genreButton.current?.click()
+      addGenre()
+      props.notify({ error: false, message: `Added ${genre} to genres list` }, 10)
     }
   }
 
   if (!props.token) {
     setTimeout(() => navigate('/login'), 1000)
     return <div>Please log in</div>
-  } else
+  } else {
     return (
       <div>
-        <h1>Add Book</h1>
-        <form id='addBookForm' onSubmit={submit}>
-          <div className='input-wrap'>
+        <h1 className="screen-reader-text">Add Book</h1>
+        <form id="addBookForm" onSubmit={submit} ref={form}>
+          <legend>Add Book</legend>
+          <div className="input-wrap">
             <label>
               <input
-                name='title'
+                name="title"
                 value={title}
-                type='text'
+                type="text"
                 required
                 onChange={({ target }) => setTitle(target.value)}
               />
@@ -109,12 +154,12 @@ const NewBook = (props: {
               </span>
             </label>
           </div>
-          <div className='input-wrap'>
+          <div className="input-wrap">
             <label>
               <input
-                name='author'
+                name="author"
                 value={author}
-                type='text'
+                type="text"
                 required
                 onChange={({ target }) => setAuthor(target.value)}
               />
@@ -123,11 +168,11 @@ const NewBook = (props: {
               </span>
             </label>
           </div>
-          <div className='input-wrap'>
+          <div className="input-wrap">
             <label>
               <input
-                type='number'
-                name='published'
+                type="number"
+                name="published"
                 required
                 value={published}
                 onChange={({ target }) => setPublished(target.value)}
@@ -137,13 +182,13 @@ const NewBook = (props: {
               </span>
             </label>
           </div>
-          <div className='input-wrap-wrap'>
-            <div className='input-wrap genre'>
-              <label id='genreLabel'>
+          <div className="input-wrap-wrap">
+            <div className="input-wrap genre">
+              <label id="genreLabel">
                 <input
-                  name='genre'
+                  name="genre"
                   value={genre}
-                  type='text'
+                  type="text"
                   onChange={({ target }) => setGenre(target.value)}
                   onKeyDown={(e) => keyHandlerGenre(e)}
                 />
@@ -153,27 +198,27 @@ const NewBook = (props: {
               </label>
             </div>
 
-            <button ref={genreButton} id='add-genre' onClick={addGenre} type='button'>
+            <button ref={genreButton} id="add-genre" onClick={addGenre} type="button">
               <small>add&nbsp;genre</small>
             </button>
           </div>
-          <div id='genres'>
+          <div id="genres">
             <span>
               <small>genres: </small>
               {genres.map((genre, i) => (
-                <span key={`${genre}${i}`}>
-                  <small>{genre} </small>
-                </span>
+                <small key={`${genre}${i}`}>{genre} </small>
               ))}{' '}
             </span>
-            <button onClick={clearGenres} type='button'>
+            <button onClick={clearGenres} type="button">
               <small>clear&nbsp;genres</small>
             </button>
           </div>
-          <button type='submit'>create&nbsp;book</button>
+          <input type="hidden" name="message" value={`A new book was added: ${title} by ${props.me?.username}`} />
+          <button type="submit">create&nbsp;book</button>
         </form>
       </div>
     )
+  }
 }
 
 export default NewBook

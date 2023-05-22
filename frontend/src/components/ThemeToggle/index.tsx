@@ -1,8 +1,8 @@
 import styles from './themetoggle.module.css'
-
+import { EffectCallback } from 'react'
 interface toggleProps {
   lightTheme: boolean
-  toggleTheme: React.EffectCallback | undefined
+  toggleTheme: EffectCallback | undefined
 }
 function ThemeToggle({ lightTheme, toggleTheme }: toggleProps) {
   return (

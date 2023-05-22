@@ -2,13 +2,15 @@ import { Link, useNavigate } from 'react-router-dom'
 import { userProps, message } from '../interfaces'
 import { ALL_USERS, EDIT_USER, ME } from '../queries'
 import { useMutation } from '@apollo/client'
-import { useState } from 'react'
+import { useState, FormEvent, Dispatch, SetStateAction } from 'react'
+import { tester } from '../App'
 
 const User = (props: {
   user: userProps
   notify: ({ error, message }: message, seconds: number) => void
   token: string | null
-  me: userProps['id']
+  me: userProps
+  setGenre: Dispatch<SetStateAction<string>>
 }) => {
   const user = props.user
 
@@ -30,59 +32,96 @@ const User = (props: {
     },
   })
 
-  const handleGenreChange = (e: React.FormEvent) => {
+  const handleGenreChange = (e: FormEvent) => {
     e.preventDefault()
     if (!genre) props.notify({ error: true, message: 'Please enter a genre' }, 10)
-    else if (
-      window.confirm(`Are you sure you want to change your favorite genre to ${genre}?`)
-    ) {
-      editUser({ variables: { id: props.me, setGenre: genre } })
+    else if (props.me?.id === tester)
+      props.notify(
+        {
+          error: true,
+          message: 'Unfortunately, Tester may not change the settings! Please request a real account from the admin',
+        },
+        10
+      )
+    else if (window.confirm(`Are you sure you want to change your favorite genre to ${genre}?`)) {
+      editUser({ variables: { id: props.me?.id, setGenre: genre } })
       setGenre('')
     }
   }
 
-  const handleUsernameChange = (e: React.FormEvent) => {
+  const handleUsernameChange = (e: FormEvent) => {
     e.preventDefault()
     if (!username) props.notify({ error: true, message: 'Please enter a username' }, 10)
-    else if (
-      window.confirm(`Are you sure you want to change your username to ${username}?`)
-    ) {
-      editUser({ variables: { id: props.me, setUsername: username } })
+    else if (props.me?.id === tester)
+      props.notify(
+        {
+          error: true,
+          message: 'Unfortunately, Tester may not change the settings! Please request a real account from the admin',
+        },
+        10
+      )
+    else if (window.confirm(`Are you sure you want to change your username to ${username}?`)) {
+      editUser({ variables: { id: props.me?.id, setUsername: username } })
       setUsername('')
     }
   }
 
-  const handlePasswordChange = (e: React.FormEvent) => {
+  const handlePasswordChange = (e: FormEvent) => {
     e.preventDefault()
     if (!password) props.notify({ error: true, message: 'Please enter a password' }, 10)
-    else if (password !== passwordConfirm)
-      props.notify({ error: true, message: 'Passwords do not match!' }, 10)
-    else if (window.confirm(`Are you sure you want to change your password?`)) {
-      editUser({ variables: { id: props.me, setPassword: password } })
+    else if (password !== passwordConfirm) props.notify({ error: true, message: 'Passwords do not match!' }, 10)
+    else if (props.me?.id === tester)
+      props.notify(
+        {
+          error: true,
+          message: 'Unfortunately, Tester may not change the settings! Please request a real account from the admin',
+        },
+        10
+      )
+    else if (window.confirm('Are you sure you want to change your password?')) {
+      editUser({ variables: { id: props.me?.id, setPassword: password } })
       setPassword('')
       setPasswordConfirm('')
     }
   }
+
+  const handleGenreRedirect = (genre: string) => {
+    props.setGenre(genre)
+    navigate('/books')
+  }
+
+  const heading = user?.username
+
   if (!props.token) {
     setTimeout(() => navigate('/login'), 1000)
     return <div>Please log in</div>
   } else
     return (
       <div>
-        <h1>{user?.username}</h1>
+        <h1>
+          <span data-text={heading}>{heading}</span>
+        </h1>
 
         <p>
-          <span>favorite genre: </span>
+          <span>Favorite genre: </span>
           <span>
-            <em>{user?.favoriteGenre}</em>
+            {props.me?.id === user?.id ? (
+              <Link to={'/recommended'}>
+                <em>{user?.favoriteGenre}</em>
+              </Link>
+            ) : (
+              <button className="link-btn" onClick={() => handleGenreRedirect(user?.favoriteGenre)}>
+                <em>{user?.favoriteGenre}</em>
+              </button>
+            )}
           </span>
         </p>
         {user?.books.length === 0 || user?.books === undefined ? (
           <>
             <p>No books added yet!</p>
-            {user.id === props.me ? (
+            {user?.id === props.me?.id && user?.id !== tester ? (
               <p>
-                <Link to='/addBook'>Add a book</Link>
+                <Link to="/addBook">Add a book</Link>
               </p>
             ) : (
               ''
@@ -92,16 +131,20 @@ const User = (props: {
           <table>
             <tbody>
               <tr>
-                <th>books added</th>
+                <th>Books added</th>
+                <th>Author</th>
               </tr>
 
               {user?.books
                 ?.slice()
                 .sort((a, b) => a.title.localeCompare(b.title))
                 .map((book) => (
-                  <tr key={book.id}>
+                  <tr key={book?.id}>
                     <td>
-                      <Link to={`/books/${book.id}`}>{book.title}</Link>
+                      <Link to={`/books/${book?.id}`}>{book?.title}</Link>
+                    </td>
+                    <td>
+                      <Link to={`/authors/${book?.author?.id}`}>{book?.author?.name}</Link>
                     </td>
                   </tr>
                 ))}
@@ -109,74 +152,82 @@ const User = (props: {
           </table>
         )}
 
-        {user?.id === props.me ? (
+        {user?.id === props.me?.id ? (
           <>
             <h2>Settings</h2>
-            <div className='forms-wrap'>
+            <div className="forms-wrap">
               <div>
-                <form className='form-user' onSubmit={handleGenreChange}>
+                <form className="form-user" onSubmit={handleGenreChange}>
                   <legend>Change favorite genre</legend>
-                  <div className='input-wrap'>
-                    <label htmlFor='genreInput'>
+                  <div className="input-wrap">
+                    <label htmlFor="genreInput">
                       <input
-                        id='genreInput'
+                        id="genreInput"
                         value={genre}
                         required
-                        type='text'
+                        type="text"
                         onChange={({ target }) => setGenre(target.value)}
                       />
-                      <span>Change favorite genre</span>
+                      <span>
+                        <small>Change favorite genre</small>
+                      </span>
                     </label>
                   </div>
-                  <button type='submit'>change&nbsp;genre</button>
+                  <button type="submit">change&nbsp;genre</button>
                 </form>
 
-                <form className='form-user' onSubmit={handleUsernameChange}>
+                <form className="form-user" onSubmit={handleUsernameChange}>
                   <legend>Change username</legend>
-                  <div className='input-wrap'>
-                    <label htmlFor='usernameInput'>
+                  <div className="input-wrap">
+                    <label htmlFor="usernameInput">
                       <input
-                        id='usernameInput'
+                        id="usernameInput"
                         required
-                        type='text'
+                        type="text"
                         value={username}
                         onChange={({ target }) => setUsername(target.value)}
                       />
-                      <span>Change username</span>
+                      <span>
+                        <small>Change username</small>
+                      </span>
                     </label>
                   </div>
-                  <button type='submit'>change&nbsp;username</button>
+                  <button type="submit">change&nbsp;username</button>
                 </form>
               </div>
               <div>
-                <form className='form-user' onSubmit={handlePasswordChange}>
+                <form className="form-user" onSubmit={handlePasswordChange}>
                   <legend>Change password</legend>
 
-                  <div className='input-wrap'>
-                    <label htmlFor='passwordInput'>
+                  <div className="input-wrap">
+                    <label htmlFor="passwordInput">
                       <input
-                        id='passwordInput'
+                        id="passwordInput"
                         value={password}
                         required
-                        type='password'
+                        type="password"
                         onChange={({ target }) => setPassword(target.value)}
                       />
-                      <span>Change password</span>
+                      <span>
+                        <small>Change password</small>
+                      </span>
                     </label>
                   </div>
-                  <div className='input-wrap'>
-                    <label htmlFor='passwordInputConfirm'>
+                  <div className="input-wrap">
+                    <label htmlFor="passwordInputConfirm">
                       <input
-                        id='passwordInputConfirm'
+                        id="passwordInputConfirm"
                         value={passwordConfirm}
                         required
-                        type='password'
+                        type="password"
                         onChange={({ target }) => setPasswordConfirm(target.value)}
                       />
-                      <span>Confirm password</span>
+                      <span>
+                        <small>Confirm password</small>
+                      </span>
                     </label>
                   </div>
-                  <button type='submit'>change&nbsp;password</button>
+                  <button type="submit">change password</button>
                 </form>
               </div>
             </div>

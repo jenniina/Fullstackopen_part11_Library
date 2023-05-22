@@ -1,6 +1,6 @@
-import { useCallback, useState, useEffect } from 'react'
+import { useCallback, useState, useEffect, Dispatch, SetStateAction } from 'react'
 
-type ReturnType<T> = [T, React.Dispatch<React.SetStateAction<T>>, () => void]
+type ReturnType<T> = [T, Dispatch<SetStateAction<T>>, () => void]
 
 export default function useLocalStorage<T>(key: string, defaultValue: T) {
   return useStorage(key, defaultValue, window.localStorage)
@@ -33,7 +33,7 @@ function useStorage<T>(
 
   const remove = useCallback(() => {
     return storageObject.removeItem(key)
-  }, [])
+  }, [key, storageObject])
 
   return [value, setValue, remove]
 }

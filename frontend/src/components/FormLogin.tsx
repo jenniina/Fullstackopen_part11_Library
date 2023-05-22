@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, FormEvent, Dispatch, SetStateAction } from 'react'
 import { useMutation } from '@apollo/client'
 import { LOGIN, ME } from '../queries'
 import { message } from '../interfaces'
@@ -7,9 +7,10 @@ import { LIRARY_TOKEN } from '../App'
 
 interface loginProps {
   notify: (info: message, seconds: number) => void
-  setToken: React.Dispatch<React.SetStateAction<string | null>>
+  setToken: Dispatch<SetStateAction<string | null>>
+  token: string | null
 }
-const FormLogin = ({ notify, setToken }: loginProps) => {
+const FormLogin = ({ notify, setToken, token }: loginProps) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
@@ -21,11 +22,6 @@ const FormLogin = ({ notify, setToken }: loginProps) => {
       //console.log(JSON.stringify(error, null, 2))
       notify({ error: true, message: error.message }, 10)
     },
-    onCompleted: () => {
-      setTimeout(() => {
-        navigate('/addBook')
-      }, 500)
-    },
   })
 
   useEffect(() => {
@@ -34,48 +30,54 @@ const FormLogin = ({ notify, setToken }: loginProps) => {
       setToken(token)
       localStorage.setItem(LIRARY_TOKEN, token) //keep name same also in App.tsx and main.tsx
     }
-  }, [result.data])
+  }, [result.data, setToken])
 
-  const submit = async (event: React.FormEvent) => {
+  const submit = async (event: FormEvent) => {
     event.preventDefault()
 
-    login({ variables: { username, password } }).catch((error) =>
-      notify({ error: true, message: error.message }, 10)
-    )
+    login({ variables: { username, password } })
+      .then(() => {
+        // window.location.reload()
+      })
+      .catch((error) => notify({ error: true, message: error.message }, 10))
   }
-
-  return (
-    <div>
-      <h1>Login</h1>
-      <form className='form-login' onSubmit={submit}>
-        <div className='input-wrap'>
-          <label>
-            <input
-              name='username'
-              value={username}
-              required
-              type='text'
-              onChange={({ target }) => setUsername(target.value)}
-            />
-            <span>username: </span>
-          </label>
-        </div>
-        <div className='input-wrap'>
-          <label>
-            <input
-              name='password'
-              type='password'
-              required
-              value={password}
-              onChange={({ target }) => setPassword(target.value)}
-            />
-            <span>password: </span>
-          </label>
-        </div>
-        <button type='submit'>login</button>
-      </form>
-    </div>
-  )
+  if (token) {
+    setTimeout(() => navigate('/'), 2000)
+    return <div>Thank you for logging in</div>
+  } else
+    return (
+      <div>
+        <h1 className="screen-reader-text">Login</h1>
+        <form className="form-login" onSubmit={submit}>
+          <legend>Login</legend>
+          <div className="input-wrap">
+            <label>
+              <input
+                name="username"
+                value={username}
+                required
+                type="text"
+                onChange={({ target }) => setUsername(target.value)}
+              />
+              <span>username: </span>
+            </label>
+          </div>
+          <div className="input-wrap">
+            <label>
+              <input
+                name="password"
+                type="password"
+                required
+                value={password}
+                onChange={({ target }) => setPassword(target.value)}
+              />
+              <span>password: </span>
+            </label>
+          </div>
+          <button type="submit">login</button>
+        </form>
+      </div>
+    )
 }
 
 export default FormLogin

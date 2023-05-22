@@ -7,24 +7,24 @@ describe('site', () => {
       return false
     })
 
-    cy.request({
-      method: 'POST',
-      url: 'http://localhost:4000/gql',
-      body: {
-        operationName: 'login',
-        query: `
-        mutation login($username: String!, $password: String!) {
-          login(username: $username, password: $password) {
-            value
-          }
-        }
-          `,
-        variables: {
-          username: 'Ano',
-          password: 'Anonymous',
-        },
-      },
-    })
+    // cy.request({
+    //   method: 'POST',
+    //   url: 'http://localhost:4000/gql',
+    //   body: {
+    //     operationName: 'login',
+    //     query: `
+    //     mutation login($username: String!, $password: String!) {
+    //       login(username: $username, password: $password) {
+    //         value
+    //       }
+    //     }
+    //       `,
+    //     variables: {
+    //       username: 'Ano',
+    //       password: 'Anonymous',
+    //     },
+    //   },
+    // })
   })
 
   it('has a user', () => {
