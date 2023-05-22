@@ -16,13 +16,15 @@ const Welcome = (props: {
       </h1>
       <p>
         Hello
-        <strong>
-          <em>
-            <a href={`/users/${props.me?.id}`} className="no-underline">{`${
-              props.token && props.me ? `, ${props.me?.username}!` : '!'
-            }`}</a>
-          </em>
-        </strong>{' '}
+        {props.token && props.me ? (
+          <strong>
+            <em>
+              , <a href={`/users/${props.me?.id}`}>{`${props.me?.username}!`}</a>
+            </em>
+          </strong>
+        ) : (
+          '!'
+        )}{' '}
         My name is <a href="https://jenniina.fi">Jenniina Laine,</a> a freelance visual designer.
       </p>
 
@@ -39,7 +41,7 @@ const Welcome = (props: {
       </p>
       <p>
         The site contains a list of books and their authors, with individual pages for both, as well as a page for the
-        list of users and individual user pages with their book contributions.
+        list of users and individual user pages with their book contributions. The books list may be filtered by genre.
       </p>
       {!props.me ? (
         <>
