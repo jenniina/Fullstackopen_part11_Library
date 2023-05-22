@@ -45,7 +45,6 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         continue-on-error: true
       - name: start
-        id: start
         run: npm run start
       - name: Deploy backend
         id: deployB
