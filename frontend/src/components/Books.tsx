@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client'
 import { booksProps } from '../interfaces'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect } from 'react'
 import { FILTER_BOOKS } from '../queries'
 import { Link } from 'react-router-dom'
 

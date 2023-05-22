@@ -250,24 +250,25 @@ const resolvers = {
         throw new AuthenticationError('Please log in')
       }
       if (args.id)
-        await Book.deleteOne({ _id: args.id }).catch(function (error) {
-          // eslint-disable-next-line no-console
-          console.log(JSON.stringify(error, null, 2)) // Failure
-        })
+        await Book.deleteOne({ _id: args.id })
+          .then(() =>
+            User.updateOne(
+              { _id: currentUser._id },
+              {
+                $pullAll: {
+                  books: args.id,
+                },
+              }
+            )
+          )
+          .catch(function (error) {
+            // eslint-disable-next-line no-console
+            console.log(JSON.stringify(error, null, 2)) // Failure
+          })
+      //for cypress:
       if (args.title) {
         await Book.findOneAndDelete({ title: args.title })
       }
-      await User.updateOne(
-        { _id: currentUser._id },
-        {
-          $pullAll: {
-            books: args.id,
-          },
-        }
-      ).catch(function (error) {
-        // eslint-disable-next-line no-console
-        console.log(JSON.stringify(error, null, 2)) // Failure
-      })
     },
     deleteAuthor: async (_root, args, context) => {
       const currentUser = context.currentUser

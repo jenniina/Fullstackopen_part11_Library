@@ -7,6 +7,8 @@
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "testmode": "cross-env NODE_ENV=test nodemon index.js",
+    "cypress:open": "cross-env NODE_ENV=test cypress open",
+    "test:e2e": "cross-env NODE_ENV=test cypress run",
     "lint": "eslint ."
   },
   "author": "Jenniina Laine",
@@ -17,6 +19,7 @@
     "apollo-server-core": "^3.12.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
+    "cypress": "^12.12.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "graphql": "^16.6.0",

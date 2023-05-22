@@ -30,16 +30,19 @@ const NewBook = (props: {
   }, [user])
 
   const [createBook] = useMutation(ADD_BOOK, {
-    refetchQueries: [
-      { query: ALL_BOOKS },
-      { query: ALL_AUTHORS },
-      { query: ME },
-      { query: ALL_USERS },
-    ],
+    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }, { query: ME }, { query: ALL_USERS }],
     update: (cache, response) => {
       updateCache(cache, { query: ALL_BOOKS }, response.data.createBook)
     },
+    onError: (error) => {
+      //console.log(JSON.stringify(error, null, 2))
+      props.notify({ error: true, message: error.message }, 10)
+    },
     onCompleted: () => {
+      props.notify(
+        { error: false, message: `${title} by ${props.me?.username} added, in the genres: ${genres.join(', ')}` },
+        6
+      )
       zero()
     },
   })
@@ -58,8 +61,7 @@ const NewBook = (props: {
       props.notify(
         {
           error: true,
-          message:
-            'Unfortunately, Tester may not add books! Please request a real account from the admin',
+          message: 'Unfortunately, Tester may not add books! Please request a real account from the admin',
         },
         10
       )
@@ -78,7 +80,7 @@ const NewBook = (props: {
         // eslint-disable-next-line no-console
         console.log(JSON.stringify(error, null, 2))
       )
-      if (form)
+      if (form && (props.me?.username !== 'Ano' || props.me?.username !== undefined))
         emailjs
           .sendForm(
             import.meta.env.VITE_serviceID,
@@ -100,13 +102,9 @@ const NewBook = (props: {
   }
 
   const addGenre = () => {
-    if (genres.find((g) => g === genre))
-      props.notify({ error: true, message: `${genre} already added!` }, 10)
+    if (genres.find((g) => g === genre)) props.notify({ error: true, message: `${genre} already added!` }, 10)
     else if (genre.includes(',') || genre.includes('.'))
-      props.notify(
-        { error: true, message: 'Please add only one genre at a time!' },
-        10
-      )
+      props.notify({ error: true, message: 'Please add only one genre at a time!' }, 10)
     else if (genre.includes(' ')) {
       if (window.confirm('Add a single genre?')) {
         setGenres(genres.concat(genre))
@@ -129,10 +127,7 @@ const NewBook = (props: {
       e.preventDefault()
       genreButton.current?.click()
       addGenre()
-      props.notify(
-        { error: false, message: `Added ${genre} to genres list` },
-        10
-      )
+      props.notify({ error: false, message: `Added ${genre} to genres list` }, 10)
     }
   }
 
@@ -203,12 +198,7 @@ const NewBook = (props: {
               </label>
             </div>
 
-            <button
-              ref={genreButton}
-              id="add-genre"
-              onClick={addGenre}
-              type="button"
-            >
+            <button ref={genreButton} id="add-genre" onClick={addGenre} type="button">
               <small>add&nbsp;genre</small>
             </button>
           </div>
@@ -223,11 +213,7 @@ const NewBook = (props: {
               <small>clear&nbsp;genres</small>
             </button>
           </div>
-          <input
-            type="hidden"
-            name="message"
-            value={`A new book was added: ${title} by ${user?.data?.me?.username}`}
-          />
+          <input type="hidden" name="message" value={`A new book was added: ${title} by ${props.me?.username}`} />
           <button type="submit">create&nbsp;book</button>
         </form>
       </div>

@@ -37,7 +37,7 @@ const FormLogin = ({ notify, setToken, token }: loginProps) => {
 
     login({ variables: { username, password } })
       .then(() => {
-        window.location.reload()
+        // window.location.reload()
       })
       .catch((error) => notify({ error: true, message: error.message }, 10))
   }
@@ -47,26 +47,26 @@ const FormLogin = ({ notify, setToken, token }: loginProps) => {
   } else
     return (
       <div>
-        <h1 className='screen-reader-text'>Login</h1>
-        <form className='form-login' onSubmit={submit}>
+        <h1 className="screen-reader-text">Login</h1>
+        <form className="form-login" onSubmit={submit}>
           <legend>Login</legend>
-          <div className='input-wrap'>
+          <div className="input-wrap">
             <label>
               <input
-                name='username'
+                name="username"
                 value={username}
                 required
-                type='text'
+                type="text"
                 onChange={({ target }) => setUsername(target.value)}
               />
               <span>username: </span>
             </label>
           </div>
-          <div className='input-wrap'>
+          <div className="input-wrap">
             <label>
               <input
-                name='password'
-                type='password'
+                name="password"
+                type="password"
                 required
                 value={password}
                 onChange={({ target }) => setPassword(target.value)}
@@ -74,7 +74,7 @@ const FormLogin = ({ notify, setToken, token }: loginProps) => {
               <span>password: </span>
             </label>
           </div>
-          <button type='submit'>login</button>
+          <button type="submit">login</button>
         </form>
       </div>
     )
