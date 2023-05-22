@@ -38,14 +38,11 @@ const User = (props: {
       props.notify(
         {
           error: true,
-          message:
-            'Unfortunately, Tester may not change the settings! Please request a real account from the admin',
+          message: 'Unfortunately, Tester may not change the settings! Please request a real account from the admin',
         },
         10
       )
-    else if (
-      window.confirm(`Are you sure you want to change your favorite genre to ${genre}?`)
-    ) {
+    else if (window.confirm(`Are you sure you want to change your favorite genre to ${genre}?`)) {
       editUser({ variables: { id: props.me?.id, setGenre: genre } })
       setGenre('')
     }
@@ -58,14 +55,11 @@ const User = (props: {
       props.notify(
         {
           error: true,
-          message:
-            'Unfortunately, Tester may not change the settings! Please request a real account from the admin',
+          message: 'Unfortunately, Tester may not change the settings! Please request a real account from the admin',
         },
         10
       )
-    else if (
-      window.confirm(`Are you sure you want to change your username to ${username}?`)
-    ) {
+    else if (window.confirm(`Are you sure you want to change your username to ${username}?`)) {
       editUser({ variables: { id: props.me?.id, setUsername: username } })
       setUsername('')
     }
@@ -74,14 +68,12 @@ const User = (props: {
   const handlePasswordChange = (e: FormEvent) => {
     e.preventDefault()
     if (!password) props.notify({ error: true, message: 'Please enter a password' }, 10)
-    else if (password !== passwordConfirm)
-      props.notify({ error: true, message: 'Passwords do not match!' }, 10)
+    else if (password !== passwordConfirm) props.notify({ error: true, message: 'Passwords do not match!' }, 10)
     else if (props.me?.id === tester)
       props.notify(
         {
           error: true,
-          message:
-            'Unfortunately, Tester may not change the settings! Please request a real account from the admin',
+          message: 'Unfortunately, Tester may not change the settings! Please request a real account from the admin',
         },
         10
       )
@@ -113,9 +105,9 @@ const User = (props: {
         {user?.books.length === 0 || user?.books === undefined ? (
           <>
             <p>No books added yet!</p>
-            {user.id === props.me?.id ? (
+            {user.id === props.me?.id && user.id !== tester ? (
               <p>
-                <Link to='/addBook'>Add a book</Link>
+                <Link to="/addBook">Add a book</Link>
               </p>
             ) : (
               ''
@@ -138,9 +130,7 @@ const User = (props: {
                       <Link to={`/books/${book?.id}`}>{book?.title}</Link>
                     </td>
                     <td>
-                      <Link to={`/authors/${book?.author?.id}`}>
-                        {book?.author?.name}
-                      </Link>
+                      <Link to={`/authors/${book?.author?.id}`}>{book?.author?.name}</Link>
                     </td>
                   </tr>
                 ))}
@@ -151,17 +141,17 @@ const User = (props: {
         {user?.id === props.me?.id ? (
           <>
             <h2>Settings</h2>
-            <div className='forms-wrap'>
+            <div className="forms-wrap">
               <div>
-                <form className='form-user' onSubmit={handleGenreChange}>
+                <form className="form-user" onSubmit={handleGenreChange}>
                   <legend>Change favorite genre</legend>
-                  <div className='input-wrap'>
-                    <label htmlFor='genreInput'>
+                  <div className="input-wrap">
+                    <label htmlFor="genreInput">
                       <input
-                        id='genreInput'
+                        id="genreInput"
                         value={genre}
                         required
-                        type='text'
+                        type="text"
                         onChange={({ target }) => setGenre(target.value)}
                       />
                       <span>
@@ -169,17 +159,17 @@ const User = (props: {
                       </span>
                     </label>
                   </div>
-                  <button type='submit'>change&nbsp;genre</button>
+                  <button type="submit">change&nbsp;genre</button>
                 </form>
 
-                <form className='form-user' onSubmit={handleUsernameChange}>
+                <form className="form-user" onSubmit={handleUsernameChange}>
                   <legend>Change username</legend>
-                  <div className='input-wrap'>
-                    <label htmlFor='usernameInput'>
+                  <div className="input-wrap">
+                    <label htmlFor="usernameInput">
                       <input
-                        id='usernameInput'
+                        id="usernameInput"
                         required
-                        type='text'
+                        type="text"
                         value={username}
                         onChange={({ target }) => setUsername(target.value)}
                       />
@@ -188,20 +178,20 @@ const User = (props: {
                       </span>
                     </label>
                   </div>
-                  <button type='submit'>change&nbsp;username</button>
+                  <button type="submit">change&nbsp;username</button>
                 </form>
               </div>
               <div>
-                <form className='form-user' onSubmit={handlePasswordChange}>
+                <form className="form-user" onSubmit={handlePasswordChange}>
                   <legend>Change password</legend>
 
-                  <div className='input-wrap'>
-                    <label htmlFor='passwordInput'>
+                  <div className="input-wrap">
+                    <label htmlFor="passwordInput">
                       <input
-                        id='passwordInput'
+                        id="passwordInput"
                         value={password}
                         required
-                        type='password'
+                        type="password"
                         onChange={({ target }) => setPassword(target.value)}
                       />
                       <span>
@@ -209,13 +199,13 @@ const User = (props: {
                       </span>
                     </label>
                   </div>
-                  <div className='input-wrap'>
-                    <label htmlFor='passwordInputConfirm'>
+                  <div className="input-wrap">
+                    <label htmlFor="passwordInputConfirm">
                       <input
-                        id='passwordInputConfirm'
+                        id="passwordInputConfirm"
                         value={passwordConfirm}
                         required
-                        type='password'
+                        type="password"
                         onChange={({ target }) => setPasswordConfirm(target.value)}
                       />
                       <span>
@@ -223,7 +213,7 @@ const User = (props: {
                       </span>
                     </label>
                   </div>
-                  <button type='submit'>change&nbsp;password</button>
+                  <button type="submit">change&nbsp;password</button>
                 </form>
               </div>
             </div>

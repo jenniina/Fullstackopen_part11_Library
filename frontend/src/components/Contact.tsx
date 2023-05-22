@@ -43,7 +43,7 @@ function Contact(props: contactProps) {
     <Accordion className='center' text='contact me' ref={formCommentRef}>
       <form className='form-login' onSubmit={submit} ref={form}>
         <legend>Contact me</legend>
-        <div className='flex'>
+        <div className='flex stretch'>
           <div className='input-wrap'>
             <label>
               <input name='firstname' required type='text' />

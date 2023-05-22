@@ -6,13 +6,7 @@ import NewBook from './components/NewBook'
 import { authorProps, message, userProps } from './interfaces'
 import { ALL_AUTHORS, ALL_BOOKS, ALL_USERS, BOOK_ADDED, ME } from './queries'
 import FormLogin from './components/FormLogin'
-import {
-  ApolloCache,
-  DocumentNode,
-  useApolloClient,
-  useQuery,
-  useSubscription,
-} from '@apollo/client'
+import { ApolloCache, DocumentNode, useApolloClient, useQuery, useSubscription } from '@apollo/client'
 import { Route, Routes, NavLink, useMatch, Link } from 'react-router-dom'
 import Recommended from './components/Recommended'
 import { booksProps } from './interfaces'
@@ -29,11 +23,7 @@ import Exit from './components/Exit'
 import useWindowSize from './hooks/useWindowSize'
 
 // function that takes care of manipulating cache
-export const updateCache = (
-  cache: ApolloCache<any>,
-  query: { query: DocumentNode },
-  addedBook: booksProps
-) => {
+export const updateCache = (cache: ApolloCache<any>, query: { query: DocumentNode }, addedBook: booksProps) => {
   // helper that is used to eliminate saving same person twice
   const uniqByName = (a: booksProps[]) => {
     let seen = new Set()
@@ -80,9 +70,9 @@ const App = () => {
       notify(
         {
           error: false,
-          message: `${addedBook.title} by ${
-            addedBook.author.name
-          } added, in the genres: ${addedBook.genres.join(', ')}`,
+          message: `${addedBook.title} by ${addedBook.author.name} added, in the genres: ${addedBook.genres.join(
+            ', '
+          )}`,
         },
         8
       )
@@ -100,21 +90,15 @@ const App = () => {
   const matchUser = useMatch('/users/:id')
 
   const book = matchBook
-    ? resultBooks?.data?.allBooks?.find(
-      (book: booksProps) => book.id === matchBook.params.id
-    )
+    ? resultBooks?.data?.allBooks?.find((book: booksProps) => book.id === matchBook.params.id)
     : null
 
   const author: authorProps = matchAuthor
-    ? resultAuthors?.data?.allAuthors?.find(
-      (author: authorProps) => author.id === matchAuthor.params.id
-    )
+    ? resultAuthors?.data?.allAuthors?.find((author: authorProps) => author.id === matchAuthor.params.id)
     : null
 
   const user: userProps = matchUser
-    ? resultUsers?.data?.allUsers?.find(
-      (user: userProps) => user.id === matchUser.params.id
-    )
+    ? resultUsers?.data?.allUsers?.find((user: userProps) => user.id === matchUser.params.id)
     : null
 
   const scrollbarWidth = useScrollbarWidth()
@@ -139,37 +123,37 @@ const App = () => {
     <div style={style}>
       <ul className={`main-navigation ${windowWidth < 800 ? 'small-screen' : ''}`}>
         <li>
-          <NavLink to='/exit'>&laquo;&nbsp;Exit</NavLink>
+          <NavLink to="/exit">&laquo;&nbsp;Exit</NavLink>
         </li>
         <li>
-          <NavLink to='/'>Welcome</NavLink>
+          <NavLink to="/">Welcome</NavLink>
         </li>
         <li>
-          <NavLink to='/books'>Books</NavLink>
+          <NavLink to="/books">Books</NavLink>
         </li>
         <li>
-          <NavLink to='authors'>Authors</NavLink>
+          <NavLink to="authors">Authors</NavLink>
         </li>
         {!token ? (
           ''
         ) : (
           <>
             <li>
-              <NavLink to='users'>Users</NavLink>
+              <NavLink to="users">Users</NavLink>
             </li>
             <li>
-              <NavLink to='addBook'>Add Book</NavLink>
+              <NavLink to="addBook">Add Book</NavLink>
             </li>
             <li>
-              <NavLink to='recommended'>Recommended</NavLink>
+              <NavLink to="recommended">Recommended</NavLink>
             </li>
           </>
         )}
         <li>
           {!token ? (
-            <NavLink to='login'>login</NavLink>
+            <NavLink to="login">login</NavLink>
           ) : (
-            <button className='logout' onClick={logout}>
+            <button className="logout" onClick={logout}>
               logout
             </button>
           )}
@@ -181,65 +165,35 @@ const App = () => {
       {data?.me ? (
         <p>
           <small>
-            logged in as <Link to={`/users/${data?.me?.id}`}>{data?.me?.username}</Link>
+            logged in as{' '}
+            <Link to={`/users/${data?.me?.id}`} className="no-underline">
+              {data?.me?.username}
+            </Link>
           </small>
         </p>
       ) : (
         ''
       )}
       <Notify info={message} />
-      <div className='main-container'>
+      <div className="main-container">
         <Routes>
-          <Route path='/exit' element={<Exit />} />
+          <Route path="/exit" element={<Exit />} />
+          <Route path="/" element={<Welcome notify={notify} token={token} me={data?.me} />} />
           <Route
-            path='/'
-            element={<Welcome notify={notify} token={token} me={data?.me} />}
+            path="/authors"
+            element={<Authors authors={resultAuthors?.data?.allAuthors} notify={notify} token={token} me={data?.me} />}
           />
-          <Route
-            path='/authors'
-            element={
-              <Authors
-                authors={resultAuthors?.data?.allAuthors}
-                notify={notify}
-                token={token}
-                me={data?.me}
-              />
-            }
-          />
-          <Route
-            path='/users'
-            element={
-              <Users users={resultUsers?.data?.allUsers} notify={notify} token={token} />
-            }
-          />
-          <Route
-            path='/users/:id'
-            element={<User user={user} notify={notify} token={token} me={data?.me} />}
-          />
+          <Route path="/users" element={<Users users={resultUsers?.data?.allUsers} notify={notify} token={token} />} />
+          <Route path="/users/:id" element={<User user={user} notify={notify} token={token} me={data?.me} />} />
 
-          <Route path='/books' element={<Books />} />
-          <Route
-            path='/books/:id'
-            element={<Book book={book} token={token} notify={notify} me={data?.me} />}
-          />
-          <Route path='/authors/:id' element={<Author author={author} />} />
-          <Route
-            path='/addBook'
-            element={<NewBook notify={notify} token={token} me={data?.me} />}
-          />
-          <Route
-            path='/recommended'
-            element={<Recommended books={resultBooks?.data?.allBooks} token={token} />}
-          />
-          <Route
-            path='/login'
-            element={<FormLogin notify={notify} setToken={setToken} token={token} />}
-          />
+          <Route path="/books" element={<Books />} />
+          <Route path="/books/:id" element={<Book book={book} token={token} notify={notify} me={data?.me} />} />
+          <Route path="/authors/:id" element={<Author author={author} />} />
+          <Route path="/addBook" element={<NewBook notify={notify} token={token} me={data?.me} />} />
+          <Route path="/recommended" element={<Recommended books={resultBooks?.data?.allBooks} token={token} />} />
+          <Route path="/login" element={<FormLogin notify={notify} setToken={setToken} token={token} />} />
           {/* Uncomment the following line to get new user page: */}
-          <Route
-            path='/setuser'
-            element={<NewUser notify={notify} setToken={setToken} />}
-          />
+          <Route path="/setuser" element={<NewUser notify={notify} setToken={setToken} />} />
         </Routes>
       </div>
     </div>
