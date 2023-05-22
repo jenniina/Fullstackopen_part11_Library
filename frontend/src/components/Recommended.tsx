@@ -2,11 +2,22 @@ import { useQuery } from '@apollo/client'
 import { booksProps, userProps } from '../interfaces'
 import { ME } from '../queries'
 import { Link, useNavigate } from 'react-router-dom'
+import { Dispatch, SetStateAction } from 'react'
 
-const Books = (props: { books: booksProps[]; token: string | null; me: userProps }) => {
+const Books = (props: {
+  books: booksProps[]
+  token: string | null
+  me: userProps
+  setGenre: Dispatch<SetStateAction<string>>
+}) => {
   const navigate = useNavigate()
 
   const user = useQuery(ME)
+
+  const handleGenreRedirect = (genre: string) => {
+    props.setGenre(genre)
+    navigate('/books')
+  }
 
   if (user.loading) return <div>loading...</div>
 
@@ -30,11 +41,15 @@ const Books = (props: { books: booksProps[]; token: string | null; me: userProps
         </h1>
         <p>
           Books added by others in your favorite genre
-          <span style={{ display: 'block' }}>
+          <button
+            style={{ display: 'block', margin: '0 auto' }}
+            className="link-btn"
+            onClick={() => handleGenreRedirect(favorite)}
+          >
             <big>
               <em>{favorite}</em>
             </big>
-          </span>
+          </button>
         </p>
         {filteredBooks.length === 0 ? (
           <>

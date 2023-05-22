@@ -68,16 +68,20 @@
 }
 
 a,
-button.logout {
+button.logout,
+button.link-btn {
   font-weight: 700;
   color: var(--color-primary-14);
+  outline-offset: 3px;
 }
-a {
+a,
+button.link-btn {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 a:hover,
-button.logout:hover {
+button.logout:hover,
+button.link-btn:hover {
   color: white;
 }
 
@@ -168,8 +172,12 @@ button + button {
   margin-left: 0.2em;
 }
 button.logout,
-button-logout:hover {
+button.logout:hover,
+button.logout:focus,
+button.link-btn,
+button.link-btn:focus {
   border: 0;
+  border-radius: 0;
   background-color: transparent;
   padding: 0;
   margin: 0;

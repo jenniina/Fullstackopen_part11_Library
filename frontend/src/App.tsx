@@ -196,7 +196,10 @@ const App = () => {
             element={<Authors authors={resultAuthors?.data?.allAuthors} notify={notify} token={token} me={data?.me} />}
           />
           <Route path="/users" element={<Users users={resultUsers?.data?.allUsers} notify={notify} token={token} />} />
-          <Route path="/users/:id" element={<User user={user} notify={notify} token={token} me={data?.me} />} />
+          <Route
+            path="/users/:id"
+            element={<User user={user} notify={notify} token={token} me={data?.me} setGenre={setGenre} />}
+          />
 
           <Route path="/books" element={<Books genre={genre} setGenre={setGenre} />} />
           <Route
@@ -207,7 +210,9 @@ const App = () => {
           <Route path="/addBook" element={<NewBook notify={notify} token={token} me={data?.me} />} />
           <Route
             path="/recommended"
-            element={<Recommended books={resultBooks?.data?.allBooks} token={token} me={data?.me} />}
+            element={
+              <Recommended books={resultBooks?.data?.allBooks} token={token} me={data?.me} setGenre={setGenre} />
+            }
           />
           <Route path="/login" element={<FormLogin notify={notify} setToken={setToken} token={token} />} />
           {/* Uncomment the following line to get new user page: */}

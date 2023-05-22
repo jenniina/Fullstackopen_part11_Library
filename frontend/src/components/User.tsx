@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { userProps, message } from '../interfaces'
 import { ALL_USERS, EDIT_USER, ME } from '../queries'
 import { useMutation } from '@apollo/client'
-import { useState, FormEvent } from 'react'
+import { useState, FormEvent, Dispatch, SetStateAction } from 'react'
 import { tester } from '../App'
 
 const User = (props: {
@@ -10,6 +10,7 @@ const User = (props: {
   notify: ({ error, message }: message, seconds: number) => void
   token: string | null
   me: userProps
+  setGenre: Dispatch<SetStateAction<string>>
 }) => {
   const user = props.user
 
@@ -84,6 +85,11 @@ const User = (props: {
     }
   }
 
+  const handleGenreRedirect = (genre: string) => {
+    props.setGenre(genre)
+    navigate('/books')
+  }
+
   const heading = user?.username
 
   if (!props.token) {
@@ -99,9 +105,15 @@ const User = (props: {
         <p>
           <span>Favorite genre: </span>
           <span>
-            <Link to={'/recommended'}>
-              <em>{user?.favoriteGenre}</em>
-            </Link>
+            {props.me?.id === user?.id ? (
+              <Link to={'/recommended'}>
+                <em>{user?.favoriteGenre}</em>
+              </Link>
+            ) : (
+              <button className="link-btn" onClick={() => handleGenreRedirect(user?.favoriteGenre)}>
+                <em>{user?.favoriteGenre}</em>
+              </button>
+            )}
           </span>
         </p>
         {user?.books.length === 0 || user?.books === undefined ? (
