@@ -39,7 +39,6 @@ jobs:
           command: npm run test:e2e
           wait-on: 'http://localhost:4000'
         env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI}}
           TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI}}
           PORT: ${{ secrets.PORT }}
           # pass GitHub token to detect new build vs re-run build

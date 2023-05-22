@@ -25,12 +25,12 @@ const VITE_BASE_URI = import.meta.env.VITE_BASE_URI
 const VITE_BASE_URI_WS = import.meta.env.VITE_BASE_URI_WS
 
 const httpLink = createHttpLink({
-  uri: VITE_BASE_URI ? VITE_BASE_URI : 'http://localhost:4000/gql',
+  uri: import.meta.env.DEV ? 'http://localhost:4000/gql' : VITE_BASE_URI,
 })
 
 const wsLink = new GraphQLWsLink(
   createClient({
-    url: VITE_BASE_URI_WS ? VITE_BASE_URI_WS : 'ws://localhost:4000/gql',
+    url: import.meta.env.DEV ? 'ws://localhost:4000/gql' : VITE_BASE_URI_WS,
   })
 )
 
