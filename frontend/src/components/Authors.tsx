@@ -28,9 +28,7 @@ const Authors = (props: {
 
   const chooseOne = 'Choose one'
 
-  const authorsWithoutBorn = authors
-    ?.map((a) => (!a.born ? a.name : null))
-    .filter((a) => a !== null)
+  const authorsWithoutBorn = authors?.map((a) => (!a.born ? a.name : null)).filter((a) => a !== null)
 
   // const authorsWithoutBornObjects: SelectOption[] = Object.entries(
   //   authorsWithoutBorn
@@ -60,9 +58,7 @@ const Authors = (props: {
     }
   }, [authorsWithoutBorn, authorsWithoutBornObjects])
 
-  const authorsWithBorn = authors
-    ?.map((a) => (!a.born ? null : `${a.name}: ${a.born}`))
-    .filter((a) => a !== null)
+  const authorsWithBorn = authors?.map((a) => (!a.born ? null : `${a.name}: ${a.born}`)).filter((a) => a !== null)
 
   let authorsWITHBornObjects: SelectOption[] = useMemo(
     () => [
@@ -104,22 +100,16 @@ const Authors = (props: {
   })
   useEffect(() => {
     //Delete authors with no books
-    const noBooks = authors?.find(
-      (author: authorProps, _i: number) => author.bookCount === 0
-    )
+    const noBooks = authors?.find((author: authorProps, _i: number) => author.bookCount === 0)
     if (noBooks) deleteAuthor({ variables: { name: noBooks?.name } })
   }, [authors, deleteAuthor])
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    if (name1?.label === chooseOne)
-      props.notify({ error: true, message: 'Please choose an author' }, 5)
-    else if (!born)
-      props.notify({ error: true, message: 'Please fill in the birth year field' }, 5)
-    else if (Number(born) > 2023)
-      props.notify({ error: true, message: 'Please try an earlier year' }, 5)
-    else if (Number(born) < -5000)
-      props.notify({ error: true, message: 'Please try a later year' }, 5)
+    if (name1?.label === chooseOne) props.notify({ error: true, message: 'Please choose an author' }, 5)
+    else if (!born) props.notify({ error: true, message: 'Please fill in the birth year field' }, 5)
+    else if (Number(born) > 2023) props.notify({ error: true, message: 'Please try an earlier year' }, 5)
+    else if (Number(born) < -5000) props.notify({ error: true, message: 'Please try a later year' }, 5)
     else if (window.confirm(`Add birthdate: ${born}?`)) {
       editAuthorBornYear({ variables: { name: name1?.label, setBornTo: Number(born) } })
       addRef.current?.reset()
@@ -128,10 +118,8 @@ const Authors = (props: {
 
   const handleSubmit2 = (e: FormEvent) => {
     e.preventDefault()
-    if (name2?.label === chooseOne)
-      props.notify({ error: true, message: 'Please choose an author' }, 5)
-    else if (!born2)
-      props.notify({ error: true, message: 'Please fill in the birth year field' }, 5)
+    if (name2?.label === chooseOne) props.notify({ error: true, message: 'Please choose an author' }, 5)
+    else if (!born2) props.notify({ error: true, message: 'Please fill in the birth year field' }, 5)
     else if (window.confirm(`Change birthdate to ${born2}?`)) {
       editAuthorBornYear({ variables: { name: name2?.label, setBornTo: Number(born2) } })
       changeRef.current?.reset()
@@ -146,8 +134,8 @@ const Authors = (props: {
         <span data-text={heading}>{heading}</span>
       </h1>
       <p>
-        It may be wise to take the birth years listed here with a grain of salt, as anyone
-        who is logged in may change them! Even <em>Tester.</em>
+        It may be wise to take the birth years listed here with a grain of salt, as anyone who is logged in may change
+        them! Even <em>Tester.</em>
       </p>
       <table>
         <tbody>
@@ -174,44 +162,43 @@ const Authors = (props: {
         ''
       ) : (
         <>
-          <form ref={addRef} className='form-authors' onSubmit={handleSubmit}>
-            <legend>Add birthyear</legend>
-            <label className='top'>
-              <span className='padding'>Author:</span>
-              <Select
-                id='single'
-                className=''
-                instructions='Please choose an author to add their birth date'
-                hide
-                options={authorsWithoutBornObjects}
-                value={name1}
-                onChange={(e) => {
-                  setName1(e)
-                }}
-              />
-            </label>
-            <div className='input-wrap'>
-              <label>
-                <input
-                  type='number'
-                  name='born'
-                  required
-                  onChange={({ target }) => setBorn(target.value)}
+          {authorsWithoutBorn.length > 1 ? (
+            <form ref={addRef} className="form-authors" onSubmit={handleSubmit}>
+              <legend>Add birthyear</legend>
+              <label className="top">
+                <span className="padding">Author:</span>
+                <Select
+                  id="single"
+                  className=""
+                  instructions="Please choose an author to add their birth date"
+                  hide
+                  options={authorsWithoutBornObjects}
+                  value={name1}
+                  onChange={(e) => {
+                    setName1(e)
+                  }}
                 />
-                <span>Birth Year:</span>
               </label>
-            </div>
-            <button type='submit'>submit</button>
-          </form>
+              <div className="input-wrap">
+                <label>
+                  <input type="number" name="born" required onChange={({ target }) => setBorn(target.value)} />
+                  <span>Birth Year:</span>
+                </label>
+              </div>
+              <button type="submit">submit</button>
+            </form>
+          ) : (
+            ''
+          )}
 
-          <form ref={changeRef} className='form-authors' onSubmit={handleSubmit2}>
+          <form ref={changeRef} className="form-authors" onSubmit={handleSubmit2}>
             <legend>Change birthyear</legend>
-            <label className='top'>
-              <span className='padding'>Author:</span>
+            <label className="top">
+              <span className="padding">Author:</span>
               <Select
-                id='single'
-                className=''
-                instructions='Please choose an author to change their birth date'
+                id="single"
+                className=""
+                instructions="Please choose an author to change their birth date"
                 hide
                 options={authorsWITHBornObjects}
                 value={name2}
@@ -220,18 +207,13 @@ const Authors = (props: {
                 }}
               />
             </label>
-            <div className='input-wrap'>
+            <div className="input-wrap">
               <label>
-                <input
-                  type='number'
-                  name='born'
-                  required
-                  onChange={({ target }) => setBorn2(target.value)}
-                />
+                <input type="number" name="born" required onChange={({ target }) => setBorn2(target.value)} />
                 <span>Birth Year:</span>
               </label>
             </div>
-            <button type='submit'>submit</button>
+            <button type="submit">submit</button>
           </form>
         </>
       )}
