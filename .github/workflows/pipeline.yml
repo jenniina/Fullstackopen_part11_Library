@@ -23,8 +23,8 @@ jobs:
       - name: Lint
         id: lint
         run: npm run lint -- --fix
-      - name: Lint
-        id: lint
+      - name: Lint frontend
+        id: lintfrontend
         run: npm run lint -- --fix
         working-directory: frontend
       - name: build
