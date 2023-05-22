@@ -46,6 +46,7 @@
           var(--typography_ratio) * var(--typography_ratio) * 1rem
       ) * var(--responsive_scale)
   );
+  background-color: black;
 }
 
 @media (min-width: 400px) {
@@ -186,30 +187,22 @@ button:focus-visible {
 .genresButtons button {
   font-size: 0.8em;
 }
+table,
+form {
+  box-shadow: 0 0 3px -1px currentColor;
+}
 table {
   text-align: left;
   margin: 0 0 3em;
   border-collapse: collapse;
   width: 100%;
   position: relative;
+  border-radius: var(--radius-medium) var(--radius-medium) var(--radius-small) var(--radius-small);
 }
 @media (min-width: 400px) {
   table {
     margin: 0 auto 4em;
   }
-}
-table::before {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  top: -1px;
-  right: -1px;
-  bottom: -1px;
-  left: -1px;
-  border: 1px solid currentColor;
-  border-radius: var(--radius-medium) var(--radius-medium) var(--radius-small) var(--radius-small);
-  outline: 1px solid hsl(0, 0%, 0%, 0.5);
-  outline-offset: -1px;
 }
 table p {
   margin: 0;
@@ -250,10 +243,7 @@ form {
   flex-flow: column nowrap;
   padding: 0 calc(var(--padding) * 2) calc(var(--padding) * 1.8);
   margin: 1em 0.2em;
-  border: 1px solid currentColor;
   border-radius: var(--radius-medium) var(--radius-medium) var(--radius-small) var(--radius-small);
-  outline: 1px solid hsl(0, 0%, 0%, 0.5);
-  outline-offset: -1px;
 }
 /* form:has(legend) {
   max-width: 500px;
@@ -825,8 +815,4 @@ body.light {
 }
 .light h1 span:after {
   color: var(--color-primary-13);
-}
-.light table::before,
-.light form {
-  outline: 1px solid hsl(0, 100%, 100%, 0.5);
 }

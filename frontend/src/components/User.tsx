@@ -107,7 +107,7 @@ const User = (props: {
         {user?.books.length === 0 || user?.books === undefined ? (
           <>
             <p>No books added yet!</p>
-            {user.id === props.me?.id && user.id !== tester ? (
+            {user?.id === props.me?.id && user?.id !== tester ? (
               <p>
                 <Link to="/addBook">Add a book</Link>
               </p>
@@ -215,7 +215,7 @@ const User = (props: {
                       </span>
                     </label>
                   </div>
-                  <button type="submit">change&nbsp;password</button>
+                  <button type="submit">change password</button>
                 </form>
               </div>
             </div>
