@@ -7,7 +7,7 @@ import { authorProps, message, userProps } from './interfaces'
 import { ALL_AUTHORS, ALL_BOOKS, ALL_USERS, BOOK_ADDED, ME } from './queries'
 import FormLogin from './components/FormLogin'
 import { ApolloCache, DocumentNode, useApolloClient, useQuery, useSubscription } from '@apollo/client'
-import { Route, Routes, NavLink, useMatch, Link } from 'react-router-dom'
+import { Route, Routes, NavLink, useMatch, Link, useLocation } from 'react-router-dom'
 import Recommended from './components/Recommended'
 import { booksProps } from './interfaces'
 import Users from './components/Users'
@@ -58,6 +58,8 @@ const App = () => {
   const { data } = useQuery(ME)
 
   const [genre, setGenre] = useState<string>('')
+
+  const where = useLocation()
 
   useEffect(() => {
     setGenre('') //reset genres on refresh
@@ -171,10 +173,14 @@ const App = () => {
       {data?.me ? (
         <p>
           <small>
-            logged in as{' '}
-            <Link to={`/users/${data?.me?.id}`} className="no-underline">
-              {data?.me?.username}
-            </Link>
+            logged in as {/* make name non-clickable if already on the user page: */}
+            {where.pathname === `/users/${data?.me?.id}` ? (
+              `${data?.me?.username}`
+            ) : (
+              <Link to={`/users/${data?.me?.id}`} className="no-underline">
+                {data?.me?.username}
+              </Link>
+            )}
           </small>
         </p>
       ) : (
