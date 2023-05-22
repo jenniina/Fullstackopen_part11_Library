@@ -60,7 +60,7 @@ const start = async () => {
   app.get('/health', (_req, res) => {
     res.send('ok')
   })
-  app.use('/', express.static('build'))
+  app.use('/', express.static('frontend/build'))
   app.use(
     '/gql',
     cors(),
