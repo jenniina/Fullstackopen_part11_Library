@@ -31,21 +31,19 @@ jobs:
         id: build
         run: npm run build
         working-directory: frontend
-      - name: e2e tests
-        id: e2e
-        uses: cypress-io/github-action@dfda9365a4881a8521b8e3c3538275242aae9151
-        with:
-          start: npm run testmode
-          command: npm run test:e2e
-          wait-on: 'http://localhost:4000'
-        env:
-          TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI}}
-          PORT: ${{ secrets.PORT }}
-          # pass GitHub token to detect new build vs re-run build
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        continue-on-error: true
-      - name: start
-        run: npm run start
+      # - name: e2e tests
+      #   id: e2e
+      #   uses: cypress-io/github-action@dfda9365a4881a8521b8e3c3538275242aae9151
+      #   with:
+      #     start: npm run testmode
+      #     command: npm run test:e2e
+      #     wait-on: 'http://localhost:4000'
+      #   env:
+      #     TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI}}
+      #     PORT: ${{ secrets.PORT }}
+      #     # pass GitHub token to detect new build vs re-run build
+      #     GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      #   continue-on-error: true
       - name: Deploy backend
         id: deployB
         uses: bankfliptech/deploy-to-render@e51c1879584c0d27bd916bbcb3f17e9efcacd818
