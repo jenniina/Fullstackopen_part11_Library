@@ -190,7 +190,10 @@ const App = () => {
           <Route path="/books/:id" element={<Book book={book} token={token} notify={notify} me={data?.me} />} />
           <Route path="/authors/:id" element={<Author author={author} />} />
           <Route path="/addBook" element={<NewBook notify={notify} token={token} me={data?.me} />} />
-          <Route path="/recommended" element={<Recommended books={resultBooks?.data?.allBooks} token={token} />} />
+          <Route
+            path="/recommended"
+            element={<Recommended books={resultBooks?.data?.allBooks} token={token} me={data?.me} />}
+          />
           <Route path="/login" element={<FormLogin notify={notify} setToken={setToken} token={token} />} />
           {/* Uncomment the following line to get new user page: */}
           <Route path="/setuser" element={<NewUser notify={notify} setToken={setToken} />} />
