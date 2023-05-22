@@ -99,7 +99,9 @@ const User = (props: {
         <p>
           <span>Favorite genre: </span>
           <span>
-            <em>{user?.favoriteGenre}</em>
+            <Link to={'/recommended'}>
+              <em>{user?.favoriteGenre}</em>
+            </Link>
           </span>
         </p>
         {user?.books.length === 0 || user?.books === undefined ? (

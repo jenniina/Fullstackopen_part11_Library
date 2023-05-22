@@ -17,9 +17,6 @@ const Books = (props: { books: booksProps[]; token: string | null; me: userProps
   const filteredBooks1 = books?.filter((book) => book.genres.includes(favorite))
   const filteredBooks = filteredBooks1?.filter((book) => book.user !== props.me.id)
 
-  // eslint-disable-next-line no-console
-  console.log(filteredBooks)
-
   const heading = 'Recommendations'
 
   if (!props.token) {

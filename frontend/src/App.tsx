@@ -1,4 +1,4 @@
-import { useState, CSSProperties } from 'react'
+import { useState, CSSProperties, useEffect } from 'react'
 import Notify from './components/Notify'
 import Authors from './components/Authors'
 import Books from './components/Books'
@@ -56,6 +56,12 @@ const App = () => {
   const resultUsers = useQuery(ALL_USERS)
 
   const { data } = useQuery(ME)
+
+  const [genre, setGenre] = useState<string>('')
+
+  useEffect(() => {
+    setGenre('') //reset genres on refresh
+  }, [])
 
   const notify = (info: message, seconds: number) => {
     setMessage(info)
@@ -186,8 +192,11 @@ const App = () => {
           <Route path="/users" element={<Users users={resultUsers?.data?.allUsers} notify={notify} token={token} />} />
           <Route path="/users/:id" element={<User user={user} notify={notify} token={token} me={data?.me} />} />
 
-          <Route path="/books" element={<Books />} />
-          <Route path="/books/:id" element={<Book book={book} token={token} notify={notify} me={data?.me} />} />
+          <Route path="/books" element={<Books genre={genre} setGenre={setGenre} />} />
+          <Route
+            path="/books/:id"
+            element={<Book book={book} token={token} notify={notify} me={data?.me} setGenre={setGenre} />}
+          />
           <Route path="/authors/:id" element={<Author author={author} />} />
           <Route path="/addBook" element={<NewBook notify={notify} token={token} me={data?.me} />} />
           <Route
