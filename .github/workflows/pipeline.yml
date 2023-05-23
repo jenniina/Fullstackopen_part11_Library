@@ -46,7 +46,8 @@ jobs:
         id: build
         run: npm run build
         env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI}}working-directory: frontend
+          MONGODB_URI: ${{ secrets.MONGODB_URI}}
+        working-directory: frontend
       - name: Deploy backend
         id: deployB
         uses: bankfliptech/deploy-to-render@e51c1879584c0d27bd916bbcb3f17e9efcacd818
