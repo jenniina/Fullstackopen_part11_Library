@@ -36,7 +36,7 @@ jobs:
           start: npm run testmode
           #command: npm run test:e2e
           command: npm run dev:test
-          wait-on: 'http://localhost:5173'
+          wait-on: 'http://[::1]:5173'
         env:
           TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI}}
           PORT: ${{ secrets.PORT }}
