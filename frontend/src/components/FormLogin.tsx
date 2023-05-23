@@ -37,7 +37,7 @@ const FormLogin = ({ notify, setToken, token }: loginProps) => {
 
     login({ variables: { username, password } })
       .then(() => {
-        // window.location.reload()
+        window.location.reload()
       })
       .catch((error) => notify({ error: true, message: error.message }, 10))
   }
@@ -51,7 +51,7 @@ const FormLogin = ({ notify, setToken, token }: loginProps) => {
         <form className="form-login" onSubmit={submit}>
           <legend>Login</legend>
           <div className="input-wrap">
-            <label>
+            <label data-test="username">
               <input
                 name="username"
                 value={username}
@@ -63,7 +63,7 @@ const FormLogin = ({ notify, setToken, token }: loginProps) => {
             </label>
           </div>
           <div className="input-wrap">
-            <label>
+            <label data-test="password">
               <input
                 name="password"
                 type="password"

@@ -137,7 +137,9 @@ const App = () => {
           <NavLink to="/">Welcome</NavLink>
         </li>
         <li>
-          <NavLink to="/books">Books</NavLink>
+          <NavLink to="/books" data-test="Books">
+            Books
+          </NavLink>
         </li>
         <li>
           <NavLink to="authors">Authors</NavLink>
@@ -150,7 +152,9 @@ const App = () => {
               <NavLink to="users">Users</NavLink>
             </li>
             <li>
-              <NavLink to="addBook">Add Book</NavLink>
+              <NavLink to="addBook" data-test="AddBook" className="addbook">
+                Add Book
+              </NavLink>
             </li>
             <li>
               <NavLink to="recommended">Recommended</NavLink>
@@ -159,9 +163,11 @@ const App = () => {
         )}
         <li>
           {!token ? (
-            <NavLink to="login">login</NavLink>
+            <NavLink to="login" data-test="login">
+              login
+            </NavLink>
           ) : (
-            <button className="logout" onClick={logout}>
+            <button className="logout" onClick={logout} data-test="logout">
               logout
             </button>
           )}

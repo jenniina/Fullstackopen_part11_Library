@@ -39,10 +39,7 @@ const NewBook = (props: {
       props.notify({ error: true, message: error.message }, 10)
     },
     onCompleted: () => {
-      props.notify(
-        { error: false, message: `${title} by ${props.me?.username} added, in the genres: ${genres.join(', ')}` },
-        6
-      )
+      props.notify({ error: false, message: `${title} by ${author} added, in the genres: ${genres.join(', ')}` }, 6)
       zero()
     },
   })
@@ -80,24 +77,25 @@ const NewBook = (props: {
         // eslint-disable-next-line no-console
         console.log(JSON.stringify(error, null, 2))
       )
-      if (form && (props.me?.username !== 'Ano' || props.me?.username !== undefined))
-        emailjs
-          .sendForm(
-            import.meta.env.VITE_serviceID,
-            import.meta.env.VITE_templateID,
-            form.current,
-            import.meta.env.VITE_publicKey
-          )
-          .then(
-            (result) => {
-              // eslint-disable-next-line no-console
-              console.log(result.text)
-            },
-            (error) => {
-              // eslint-disable-next-line no-console
-              console.log(error.text)
-            }
-          )
+      // if (form && import.meta.env.PROD && (props.me?.username !== 'Ano' || props.me?.username !== undefined || title !== 'Book by Cypress')) {
+      //   emailjs
+      //     .sendForm(
+      //       import.meta.env.VITE_serviceID,
+      //       import.meta.env.VITE_templateID,
+      //       form.current,
+      //       import.meta.env.VITE_publicKey
+      //     )
+      //     .then(
+      //       (result) => {
+      //         // eslint-disable-next-line no-console
+      //         console.log(result.text)
+      //       },
+      //       (error) => {
+      //         // eslint-disable-next-line no-console
+      //         console.log(error.text)
+      //       }
+      //     )
+      // }
     }
   }
 
@@ -141,7 +139,7 @@ const NewBook = (props: {
         <form id="addBookForm" onSubmit={submit} ref={form}>
           <legend>Add Book</legend>
           <div className="input-wrap">
-            <label>
+            <label data-test="title">
               <input
                 name="title"
                 value={title}
@@ -155,7 +153,7 @@ const NewBook = (props: {
             </label>
           </div>
           <div className="input-wrap">
-            <label>
+            <label data-test="author">
               <input
                 name="author"
                 value={author}
@@ -169,7 +167,7 @@ const NewBook = (props: {
             </label>
           </div>
           <div className="input-wrap">
-            <label>
+            <label data-test="published">
               <input
                 type="number"
                 name="published"
@@ -184,7 +182,7 @@ const NewBook = (props: {
           </div>
           <div className="input-wrap-wrap">
             <div className="input-wrap genre">
-              <label id="genreLabel">
+              <label id="genreLabel" data-test="genreLabel">
                 <input
                   name="genre"
                   value={genre}

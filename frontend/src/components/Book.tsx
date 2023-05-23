@@ -56,7 +56,13 @@ const Book = (props: {
           )
         })}
       </div>
-      {props.token && props.me?.id === book.user ? <button onClick={handleDelete}>delete book</button> : ''}
+      {props.token && props.me?.id === book.user ? (
+        <button onClick={handleDelete} data-test="deleteBook">
+          delete book
+        </button>
+      ) : (
+        ''
+      )}
     </div>
   )
 }
