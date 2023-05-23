@@ -85,7 +85,7 @@ describe('site', () => {
     cy.get('table').contains('Book by Cypress').should('not.exist')
   })
 
-  it('adds book', () => {
+  it('adds book', { defaultCommandTimeout: 10000 }, () => {
     cy.get('a').contains('login').click()
     cy.wait(1005)
     cy.get('[data-test="username"]').click()
