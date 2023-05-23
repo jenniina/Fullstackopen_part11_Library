@@ -11,12 +11,13 @@
     "server": "cd .. && npm run testmode",
     "server-and-test": "start-server-and-test dev http://localhost:5173 test:e2e",
     "cypress:open": "cross-env NODE_ENV=test cypress open",
-    "test:e2e": "cross-env NODE_ENV=test cypress run",
+    "test:e2e": "cross-env NODE_ENV=test cypress run --headed --browser chrome",
     "lint": "eslint ."
   },
   "dependencies": {
     "@apollo/client": "^3.7.12",
     "@emailjs/browser": "^3.11.0",
+    "cypress": "^12.12.0",
     "graphql": "^16.6.0",
     "graphql-ws": "^5.12.1",
     "react": "^18.2.0",
