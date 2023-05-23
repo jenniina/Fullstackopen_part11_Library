@@ -10,6 +10,10 @@ export default defineConfig({
   plugins: [react(), eslint()],
   server: {
     host: true,
+    hmr: {
+      host: 'localhost',
+      protocol: 'ws',
+    },
   },
   test: {
     globals: true,
