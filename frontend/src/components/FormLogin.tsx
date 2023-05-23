@@ -37,7 +37,7 @@ const FormLogin = ({ notify, setToken, token }: loginProps) => {
 
     login({ variables: { username, password } })
       .then(() => {
-        // window.location.reload()
+        window.location.reload()
       })
       .catch((error) => notify({ error: true, message: error.message }, 10))
   }

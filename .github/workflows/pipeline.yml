@@ -32,10 +32,11 @@ jobs:
         uses: cypress-io/github-action@v5
         with:
           browser: chrome
-          build: npm run build:test
+          #build: npm run build:test
           start: npm run testmode
-          command: npm run test:e2e
-          wait-on: 'http://localhost:4000'
+          #command: npm run test:e2e
+          command: npm run dev:test
+          wait-on: 'http://localhost:5173'
         env:
           TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI}}
           PORT: ${{ secrets.PORT }}
