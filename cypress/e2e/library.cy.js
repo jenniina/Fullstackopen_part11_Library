@@ -61,7 +61,7 @@ describe('site', () => {
     cy.get('input[name*="password"]').type('Anonymous')
     cy.get('button[type="submit"]').click()
     cy.wait(4000)
-    cy.get('.main-navigation').should('have.descendants', '.logout')
+    cy.get('.main-navigation').contains('logout')
   })
 
   it('deletes book', { defaultCommandTimeout: 10000 }, () => {
