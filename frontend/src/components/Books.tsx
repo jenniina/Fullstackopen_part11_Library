@@ -60,7 +60,7 @@ const Books = ({ genre, setGenre }: BookProps) => {
             </button>
           ))}
       </div>
-      <table>
+      <table className="tablebooks">
         <tbody>
           <tr>
             <th>Title</th>

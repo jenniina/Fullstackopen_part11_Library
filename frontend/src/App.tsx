@@ -152,7 +152,7 @@ const App = () => {
               <NavLink to="users">Users</NavLink>
             </li>
             <li>
-              <NavLink to="addBook" data-test="Add Book">
+              <NavLink to="addBook" data-test="AddBook" className="addbook">
                 Add Book
               </NavLink>
             </li>

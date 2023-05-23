@@ -50,7 +50,7 @@ describe('site', () => {
 
   it('fetches items', () => {})
 
-  it('logs in', () => {
+  it('logs in', { defaultCommandTimeout: 10000 }, () => {
     cy.get('[data-test="login"]').click()
     cy.wait(1000)
     cy.get('[data-test="username"]').click()
@@ -61,10 +61,10 @@ describe('site', () => {
     cy.get('input[name*="password"]').type('Anonymous')
     cy.get('button[type="submit"]').click()
     cy.wait(4000)
-    cy.contains('logout')
+    cy.get('.main-navigation').should('have.descendants', '.logout')
   })
 
-  it('deletes book', () => {
+  it('deletes book', { defaultCommandTimeout: 10000 }, () => {
     cy.get('a').contains('login').click()
     cy.wait(1005)
     cy.get('[data-test="username"]').click()
@@ -77,12 +77,12 @@ describe('site', () => {
     cy.wait(3000)
     cy.get('[data-test="Books"]').click()
     cy.wait(5000)
-    cy.get('table').contains('Book by Cypress').click()
+    cy.get('.tablebooks').contains('Book by Cypress').click()
     cy.wait(2000)
     cy.get('h1').contains('Book by Cypress')
     cy.get('[data-test="deleteBook"]').click()
     cy.wait(5000)
-    cy.get('table').contains('Book by Cypress').should('not.exist')
+    cy.get('.tablebooks').contains('Book by Cypress').should('not.exist')
   })
 
   it('adds book', { defaultCommandTimeout: 10000 }, () => {
@@ -140,7 +140,7 @@ describe('site', () => {
     // })
 
     cy.wait(5000)
-    cy.get('[data-test="Add Book"]').click()
+    cy.get('.addbook').click()
     cy.wait(2000)
     cy.get('[data-test="title"]').click()
     cy.wait(2005)
@@ -174,7 +174,7 @@ describe('site', () => {
     )
     cy.get('[data-test="Books"]').click()
     cy.wait(5000)
-    cy.get('table').contains('Book by Cypress')
+    cy.get('.tablebooks').contains('Book by Cypress')
     cy.get('.genresButtons').contains('horror')
 
     cy.request({
@@ -216,7 +216,7 @@ describe('site', () => {
 
     cy.get('.main-navigation').contains('Authors').click()
     cy.wait(5000)
-    cy.get('table').contains('Anonymous')
-    cy.get('table').contains('1')
+    cy.get('.tableauthors').contains('Anonymous')
+    cy.get('.tableauthors').contains('1')
   })
 })

@@ -137,7 +137,7 @@ const Authors = (props: {
         It may be wise to take the birth years listed here with a grain of salt, as anyone who is logged in may change
         them! Even <em>Tester.</em>
       </p>
-      <table>
+      <table className="tableauthors">
         <tbody>
           <tr>
             <th>Author</th>
