@@ -61,9 +61,7 @@ describe('site', () => {
     cy.get('input[name*="password"]').type('Anonymous')
     cy.get('button[type="submit"]').click()
     cy.wait(4000)
-    cy.get('.main-navigation').within(() => {
-      cy.get('[data-test="logout"]').contains('logout')
-    })
+    cy.get('[data-test="logout"]').contains('logout')
   })
 
   it('deletes book', () => {
@@ -78,12 +76,12 @@ describe('site', () => {
 
     cy.wait(3000)
     cy.get('[data-test="Books"]').click()
-    cy.wait(4000)
+    cy.wait(2000)
     cy.get('table').contains('Book by Cypress').click()
     cy.wait(2000)
     cy.get('h1').contains('Book by Cypress')
     cy.get('[data-test="deleteBook"]').click()
-    cy.wait(4000)
+    cy.wait(2000)
     cy.get('table').contains('Book by Cypress').should('not.exist')
   })
 
@@ -175,7 +173,7 @@ describe('site', () => {
       'Book by Cypress by Anonymous added, in the genres: crime, design, horror'
     )
     cy.get('[data-test="Books"]').click()
-    cy.wait(4000)
+    cy.wait(3000)
     cy.get('table').contains('Book by Cypress')
     cy.get('.genresButtons').contains('horror')
 
@@ -217,7 +215,7 @@ describe('site', () => {
       .should('have.length', 1)
 
     cy.get('.main-navigation').contains('Authors').click()
-    cy.wait(4000)
+    cy.wait(3000)
     cy.get('table').contains('Anonymous')
     cy.get('table').contains('1')
   })
