@@ -1,0 +1,7 @@
+{
+    "eslint.format.enable": true,
+    "eslint.lintTask.enable": true,
+    "prettier.configPath": ".prettierrc.cjs",
+    "prettier.jsxSingleQuote": true,
+    "prettier.singleQuote": true
+}

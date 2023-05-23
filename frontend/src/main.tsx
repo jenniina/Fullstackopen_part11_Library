@@ -30,7 +30,7 @@ const httpLink = createHttpLink({
 
 const wsLink = new GraphQLWsLink(
   createClient({
-    url: import.meta.env.PROD ? VITE_BASE_URI_WS : 'ws://localhost:4000',
+    url: import.meta.env.PROD ? VITE_BASE_URI_WS : 'ws://localhost:4000/gql',
   })
 )
 
