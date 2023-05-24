@@ -43,6 +43,7 @@ jobs:
           working-directory: frontend
         env:
           MONGODB_URI: ${{ secrets.TEST_MONGODB_URI}}
+          TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI}}
           PORT: ${{ secrets.PORT }}
           # pass GitHub token to detect new build vs re-run build
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
