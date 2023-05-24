@@ -31,7 +31,7 @@ jobs:
         id: e2e
         uses: cypress-io/github-action@v5
         with:
-          config: pageLoadTimeout=100000,baseUrl=http://localhost:5173
+          #config: pageLoadTimeout=100000,baseUrl=http://localhost:5173
           browser: chrome
           headed: true
           #build: npm run build:test
@@ -42,8 +42,8 @@ jobs:
           wait-on: 'http://localhost:5173'
           working-directory: frontend
         env:
-          CYPRESS_TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI}}
-          CYPRESS_PORT: ${{ secrets.PORT }}
+          MONGODB_URI: ${{ secrets.TEST_MONGODB_URI}}
+          PORT: ${{ secrets.PORT }}
           # pass GitHub token to detect new build vs re-run build
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         continue-on-error: true
@@ -69,21 +69,21 @@ jobs:
           serviceId: ${{ secrets.RENDER_LIBRARY_APP_FRONTEND_ID }}
           apiKey: ${{ secrets.RENDER_API_KEY }}
           deployHookURL: ${{ secrets.RENDER_LIBRARY_APP_DEPLOY_HOOK_URL_FRONTEND }}
-      - name: Test Success
-        uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
-        if: success()
-        with:
-          severity: info
-          details: New commit ${{ github.event.commits[0].url }} by ${{ github.event.commits[0].committer.username }}
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      # - name: Test Success
+      #   uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
+      #   if: success()
+      #   with:
+      #     severity: info
+      #     details: New commit ${{ github.event.commits[0].url }} by ${{ github.event.commits[0].committer.username }}
+      #     webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
-      - name: Test Failure
-        uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
-        if: failure()
-        with:
-          severity: error
-          details: Deployment failed! The commit ${{ github.event.commits[0].url }} by ${{ github.event.commits[0].committer.username }} broke something
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      # - name: Test Failure
+      #   uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
+      #   if: failure()
+      #   with:
+      #     severity: error
+      #     details: Deployment failed! The commit ${{ github.event.commits[0].url }} by ${{ github.event.commits[0].committer.username }} broke something
+      #     webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
   tag_release:
     needs: [deployment]
