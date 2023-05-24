@@ -10,7 +10,7 @@
     "build:test": "tsc && vite build --mode testing",
     "preview": "vite preview",
     "server": "cd .. && npm run testmode",
-    "server-and-test": "start-server-and-test npx-dev http://localhost:5173 test:e2e",
+    "server-and-test": "start-server-and-test 'npx vite --host' http://localhost:5173 test:e2e",
     "cypress:open": "cross-env NODE_ENV=test cypress open",
     "test:e2e": "cross-env NODE_ENV=test cypress run --headed --browser chrome",
     "lint": "eslint ."
