@@ -36,7 +36,7 @@ jobs:
           start: npm run server
           #command: npm run test:e2e
           command: npm run server-and-test
-          wait-on: 'http://[::1]:5173'
+          wait-on: 'http://localhost:5173'
           working-directory: frontend
         env:
           TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI}}
