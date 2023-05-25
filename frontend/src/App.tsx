@@ -22,6 +22,7 @@ import Welcome from './components/Welcome'
 import Exit from './components/Exit'
 import useWindowSize from './hooks/useWindowSize'
 
+export const TEST_MONGODB_URI = import.meta.env.VITE_TEST_MONGODB_URI
 // function that takes care of manipulating cache
 export const updateCache = (cache: ApolloCache<any>, query: { query: DocumentNode }, addedBook: booksProps) => {
   // helper that is used to eliminate saving same person twice

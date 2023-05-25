@@ -1,9 +1,15 @@
 import { defineConfig } from 'cypress'
+import { configurePlugin } from 'cypress-mongodb'
+import { TEST_MONGODB_URI } from './src/App'
+/**
+ * @type {Cypress.PluginConfig}
+ */
 
 export default defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
       // implement node event listeners here
+      configurePlugin(on)
     },
   },
   retries: {
@@ -13,5 +19,10 @@ export default defineConfig({
     // Configure retry attempts for `cypress open`
     // Default is 0
     openMode: 1,
+  },
+  env: {
+    mongodb: {
+      uri: TEST_MONGODB_URI,
+    },
   },
 })

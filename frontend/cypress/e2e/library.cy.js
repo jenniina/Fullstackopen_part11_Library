@@ -1,10 +1,10 @@
 /* eslint-disable cypress/no-unnecessary-waiting */
 
-// cy.createCollection('test_collection', { database: 'testLibrary' }) // creates both collection and database
+cy.createCollection('test_collection', { database: 'test_database' }) // creates both collection and database
 
 describe('site', () => {
   beforeEach(function () {
-    cy.visit('http://localhost:4000')
+    cy.visit('http://localhost:5173')
     Cypress.on('uncaught:exception', (_err, _runnable) => {
       return false
     })
@@ -169,9 +169,7 @@ describe('site', () => {
     cy.get('#genres').contains('genres: crime design horror')
     cy.get('button[type="submit"]').click()
     cy.wait(2000)
-    cy.contains(
-      'Book by Cypress by Anonymous added, in the genres: crime, design, horror'
-    )
+    cy.contains('Book by Cypress by Anonymous added, in the genres: crime, design, horror')
     cy.get('[data-test="Books"]').click()
     cy.wait(5000)
     cy.get('.tablebooks').contains('Book by Cypress')
