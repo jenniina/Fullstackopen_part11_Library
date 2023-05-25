@@ -189,10 +189,10 @@ const resolvers = {
       }
     },
     createUser: async (_root, args, context) => {
-      // const currentUser = context.currentUser
-      // if (!currentUser || currentUser.id === tester) {
-      //   throw new AuthenticationError('Please log in')
-      // }
+      const currentUser = context.currentUser
+      if (!currentUser || currentUser.id === tester) {
+        throw new AuthenticationError('Please log in')
+      }
       const user = await User.findOne({ id: args.username })
       const passwordHashh = await bcrypt.hash(args.passwordHash, 10)
       const newUser = new User({
