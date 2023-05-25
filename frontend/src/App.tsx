@@ -223,7 +223,7 @@ const App = () => {
           />
           <Route path="/login" element={<FormLogin notify={notify} setToken={setToken} token={token} />} />
           {/* Uncomment the following line to get new user page: */}
-          <Route path="/setuser" element={<NewUser notify={notify} setToken={setToken} />} />
+          {/* <Route path="/setuser" element={<NewUser notify={notify} setToken={setToken} />} /> */}
         </Routes>
       </div>
     </div>

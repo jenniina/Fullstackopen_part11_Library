@@ -1,5 +1,4 @@
 import { useRef, FormEvent } from 'react'
-import Accordion from './Accordion'
 import emailjs from '@emailjs/browser'
 import { RefObject, message } from '../interfaces'
 
@@ -7,8 +6,6 @@ interface contactProps {
   notify: ({ error, message }: message, seconds: number) => void
 }
 function Contact(props: contactProps) {
-  const formCommentRef = useRef(null)
-
   const form = useRef() as RefObject<HTMLFormElement>
 
   const submit = async (event: FormEvent) => {
@@ -37,45 +34,43 @@ function Contact(props: contactProps) {
   }
 
   return (
-    <Accordion className="center" text="contact me" ref={formCommentRef}>
-      <form className="form-login" onSubmit={submit} ref={form}>
-        <legend>Contact me</legend>
-        <div className="flex stretch">
-          <div className="input-wrap">
-            <label>
-              <input name="firstname" required type="text" />
-              <span>First Name </span>
-            </label>
-          </div>
-
-          <div className="input-wrap">
-            <label>
-              <input name="lastname" required type="text" />
-              <span>Last name </span>
-            </label>
-          </div>
-        </div>
-        <div className="input-wrap">
+    <form className="form-login" onSubmit={submit} ref={form}>
+      <legend>Contact me</legend>
+      <span className="flex stretch">
+        <span className="input-wrap">
           <label>
-            <input name="email" required type="email" />
-            <span>Email </span>
+            <input name="firstname" required type="text" />
+            <span>First Name </span>
           </label>
-        </div>
+        </span>
 
-        <div className="input-wrap">
+        <span className="input-wrap">
           <label>
-            <input name="message-subject" required type="text" />
-            <span>Subject </span>
+            <input name="lastname" required type="text" />
+            <span>Last name </span>
           </label>
-        </div>
-        <label className="message-label">
-          <span>Message: </span>
-          <textarea name="message" required></textarea>
+        </span>
+      </span>
+      <span className="input-wrap">
+        <label>
+          <input name="email" required type="email" />
+          <span>Email </span>
         </label>
+      </span>
 
-        <button type="submit">send&nbsp;message</button>
-      </form>
-    </Accordion>
+      <span className="input-wrap">
+        <label>
+          <input name="message-subject" required type="text" />
+          <span>Subject </span>
+        </label>
+      </span>
+      <label className="message-label">
+        <span>Message: </span>
+        <textarea name="message" required></textarea>
+      </label>
+
+      <button type="submit">send&nbsp;message</button>
+    </form>
   )
 }
 
