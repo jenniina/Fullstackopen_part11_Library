@@ -6,10 +6,10 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
-    "dev:test": "cd frontend && server-and-test",
+    "dev:test": "cd frontend && npx-dev",
     "build": "cd frontend && npm run build",
     "build:test": "cd frontend && npm run build:test",
-    "testmode": "cross-env NODE_ENV=test nodemon index.js",
+    "testmode": "cross-env NODE_ENV=test node index.js",
     "cypress:open": "cross-env NODE_ENV=test cypress open",
     "test:e2e": "cross-env NODE_ENV=test cypress run --headed --browser chrome",
     "lint": "eslint ."
