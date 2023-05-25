@@ -170,7 +170,10 @@ const Welcome = (props: {
         </div>
       </div>
       <h3>Frontend</h3>
-      <p>The frontend is hosted on render.com as a static site.</p>
+      <p>
+        The frontend was originally hosted on render.com as a static site, but is now hosted at the same domain as the
+        backend.
+      </p>
       <div className="flex">
         <div>
           <label htmlFor="dep-frontend">Dependencies:</label>
