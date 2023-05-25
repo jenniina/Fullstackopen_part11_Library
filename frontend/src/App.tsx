@@ -197,7 +197,7 @@ const App = () => {
       <div className="main-container">
         <Routes>
           <Route path="/exit" element={<Exit />} />
-          <Route path="/" element={<Welcome notify={notify} token={token} me={data?.me} />} />
+          <Route path="*" element={<Welcome notify={notify} token={token} me={data?.me} />} />
           <Route
             path="/authors"
             element={<Authors authors={resultAuthors?.data?.allAuthors} notify={notify} token={token} me={data?.me} />}
