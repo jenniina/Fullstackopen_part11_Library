@@ -77,25 +77,25 @@ const NewBook = (props: {
         // eslint-disable-next-line no-console
         console.log(JSON.stringify(error, null, 2))
       )
-      // if (form && import.meta.env.PROD && (props.me?.username !== 'Ano' || title !== 'Book by Cypress')) {
-      //   emailjs
-      //     .sendForm(
-      //       import.meta.env.VITE_serviceID,
-      //       import.meta.env.VITE_templateID,
-      //       form.current,
-      //       import.meta.env.VITE_publicKey
-      //     )
-      //     .then(
-      //       (result) => {
-      //         // eslint-disable-next-line no-console
-      //         console.log(result.text)
-      //       },
-      //       (error) => {
-      //         // eslint-disable-next-line no-console
-      //         console.log(error.text)
-      //       }
-      //     )
-      // }
+      if (form && import.meta.env.PROD && (props.me?.username !== 'Ano' || title !== 'Book by Cypress')) {
+        emailjs
+          .sendForm(
+            import.meta.env.VITE_serviceID,
+            import.meta.env.VITE_templateID,
+            form.current,
+            import.meta.env.VITE_publicKey
+          )
+          .then(
+            (result) => {
+              // eslint-disable-next-line no-console
+              console.log(result.text)
+            },
+            (error) => {
+              // eslint-disable-next-line no-console
+              console.log(error.text)
+            }
+          )
+      }
     }
   }
 
@@ -120,12 +120,12 @@ const NewBook = (props: {
   }
   const keyHandlerGenre = (e: KeyboardEvent<HTMLInputElement>) => {
     switch (e.code) {
-    case 'Enter':
-    case 'Tab':
-      e.preventDefault()
-      genreButton.current?.click()
-      addGenre()
-      props.notify({ error: false, message: `Added ${genre} to genres list` }, 10)
+      case 'Enter':
+      case 'Tab':
+        e.preventDefault()
+        genreButton.current?.click()
+        addGenre()
+        props.notify({ error: false, message: `Added ${genre} to genres list` }, 10)
     }
   }
 
@@ -135,7 +135,7 @@ const NewBook = (props: {
   } else {
     return (
       <div>
-        <h1 className="screen-reader-text">Add Book</h1>
+        <h1 className="screen-reader-text">Add a book to the database</h1>
         <form id="addBookForm" onSubmit={submit} ref={form}>
           <legend>Add Book</legend>
           <div className="input-wrap">
