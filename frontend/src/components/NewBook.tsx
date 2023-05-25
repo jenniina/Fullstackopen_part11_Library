@@ -77,25 +77,25 @@ const NewBook = (props: {
         // eslint-disable-next-line no-console
         console.log(JSON.stringify(error, null, 2))
       )
-      if (form && import.meta.env.PROD && (props.me?.username !== 'Ano' || title !== 'Book by Cypress')) {
-        emailjs
-          .sendForm(
-            import.meta.env.VITE_serviceID,
-            import.meta.env.VITE_templateID,
-            form.current,
-            import.meta.env.VITE_publicKey
-          )
-          .then(
-            (result) => {
-              // eslint-disable-next-line no-console
-              console.log(result.text)
-            },
-            (error) => {
-              // eslint-disable-next-line no-console
-              console.log(error.text)
-            }
-          )
-      }
+      // if (form && import.meta.env.PROD && (props.me?.username !== 'Ano' || title !== 'Book by Cypress')) {
+      //   emailjs
+      //     .sendForm(
+      //       import.meta.env.VITE_serviceID,
+      //       import.meta.env.VITE_templateID,
+      //       form.current,
+      //       import.meta.env.VITE_publicKey
+      //     )
+      //     .then(
+      //       (result) => {
+      //         // eslint-disable-next-line no-console
+      //         console.log(result.text)
+      //       },
+      //       (error) => {
+      //         // eslint-disable-next-line no-console
+      //         console.log(error.text)
+      //       }
+      //     )
+      // }
     }
   }
 
