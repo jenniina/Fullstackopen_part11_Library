@@ -736,7 +736,9 @@ input[type='number'] {
     align-items: flex-end;
   }
 }
-
+.block {
+  display: block;
+}
 .flex {
   display: flex;
   gap: inherit;

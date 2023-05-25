@@ -1,6 +1,7 @@
 import { userProps, message } from '../interfaces'
 import Contact from './Contact'
 import { tester } from '../App'
+import Accordion from './Accordion'
 
 const Welcome = (props: {
   notify: ({ error, message }: message, seconds: number) => void
@@ -27,7 +28,9 @@ const Welcome = (props: {
         )}{' '}
         My name is <a href="https://jenniina.fi">Jenniina Laine,</a> a freelance visual designer.{' '}
       </p>
-      <Contact notify={props.notify} />
+      <Accordion className="center" text="get in touch">
+        <Contact notify={props.notify} />
+      </Accordion>
 
       <h2>About This Site</h2>
       <p>
@@ -73,7 +76,10 @@ const Welcome = (props: {
       {!props.me || props.me.id === tester ? (
         <div style={{ textAlign: 'left' }}>
           If you are a recruiter, hiring manager or potential client who wishes to demo the site with fully working
-          credentials, <Contact notify={props.notify} />
+          credentials,{' '}
+          <Accordion className="center" text="contact me">
+            <Contact notify={props.notify} />
+          </Accordion>
         </div>
       ) : (
         ''
@@ -172,7 +178,7 @@ const Welcome = (props: {
       <h3>Frontend</h3>
       <p>
         The frontend was originally hosted on render.com as a static site, but is now hosted at the same domain as the
-        backend.
+        backend, after some refactoring.
       </p>
       <div className="flex">
         <div>
@@ -236,7 +242,9 @@ const Welcome = (props: {
         </div>
       </div>
       <h2>Get in touch</h2>
-      <Contact notify={props.notify} />
+      <Accordion className="center" text="contact me">
+        <Contact notify={props.notify} />
+      </Accordion>
     </div>
   )
 }
