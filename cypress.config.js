@@ -13,7 +13,8 @@ module.exports = defineConfig({
   },
   env: {
     mongodb: {
-      uri: 'mongodb://localhost:27017',
+      uri: 'mongodb://127.0.0.1:27017',
+      database: 'testLibrary',
     },
   },
 })
