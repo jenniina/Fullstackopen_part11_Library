@@ -65,16 +65,17 @@ jobs:
           VITE_serviceID: ${{ secrets.VITE_SERVICEID}}
           VITE_templateID: ${{ secrets.VITE_TEMPLATEID}}
           VITE_publicKey: ${{ secrets.VITE_PUBLICKEY}}
+        working-directory: frontend
 
-      - name: deployment server to override test server
-        id: deploymentserver
-        run: |
-          npm run start &
-          sleep 10
-          exit 0
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI}}
-          JWT_SECRET: ${{ secrets.JWT_SECRET}}
+      # - name: deployment server to override test server
+      #   id: deploymentserver
+      #   run: |
+      #     npm run start &
+      #     sleep 10
+      #     exit 0
+      #   env:
+      #     MONGODB_URI: ${{ secrets.MONGODB_URI}}
+      #     JWT_SECRET: ${{ secrets.JWT_SECRET}}
 
       - name: Deploy backend
         id: deployB
@@ -85,20 +86,20 @@ jobs:
           apiKey: ${{ secrets.RENDER_API_KEY }}
           deployHookURL: ${{ secrets.RENDER_LIBRARY_APP_DEPLOY_HOOK_URL_BACKEND }}
 
-      - name: Deploy frontend
-        id: deployF
-        uses: bankfliptech/deploy-to-render@e51c1879584c0d27bd916bbcb3f17e9efcacd818
-        if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
-        with:
-          serviceId: ${{ secrets.RENDER_LIBRARY_APP_FRONTEND_ID }}
-          apiKey: ${{ secrets.RENDER_API_KEY }}
-          deployHookURL: ${{ secrets.RENDER_LIBRARY_APP_DEPLOY_HOOK_URL_FRONTEND }}
-        env:
-          VITE_BASE_URI: ${{ secrets.VITE_BASE_URI}}
-          VITE_BASE_URI_WS: ${{ secrets.VITE_BASE_URI_WS}}
-          VITE_serviceID: ${{ secrets.VITE_SERVICEID}}
-          VITE_templateID: ${{ secrets.VITE_TEMPLATEID}}
-          VITE_publicKey: ${{ secrets.VITE_PUBLICKEY}}
+      # - name: Deploy frontend
+      #   id: deployF
+      #   uses: bankfliptech/deploy-to-render@e51c1879584c0d27bd916bbcb3f17e9efcacd818
+      #   if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
+      #   with:
+      #     serviceId: ${{ secrets.RENDER_LIBRARY_APP_FRONTEND_ID }}
+      #     apiKey: ${{ secrets.RENDER_API_KEY }}
+      #     deployHookURL: ${{ secrets.RENDER_LIBRARY_APP_DEPLOY_HOOK_URL_FRONTEND }}
+      #   env:
+      #     VITE_BASE_URI: ${{ secrets.VITE_BASE_URI}}
+      #     VITE_BASE_URI_WS: ${{ secrets.VITE_BASE_URI_WS}}
+      #     VITE_serviceID: ${{ secrets.VITE_SERVICEID}}
+      #     VITE_templateID: ${{ secrets.VITE_TEMPLATEID}}
+      #     VITE_publicKey: ${{ secrets.VITE_PUBLICKEY}}
 
       - name: Test Success
         uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
