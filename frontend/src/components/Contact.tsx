@@ -31,52 +31,49 @@ function Contact(props: contactProps) {
           (error) => {
             // eslint-disable-next-line no-console
             console.log(error.message)
-            props.notify(
-              { error: true, message: 'There was an error sending the message!' },
-              10
-            )
+            props.notify({ error: true, message: 'There was an error sending the message!' }, 10)
           }
         )
   }
 
   return (
-    <Accordion className='center' text='contact me' ref={formCommentRef}>
-      <form className='form-login' onSubmit={submit} ref={form}>
+    <Accordion className="center" text="contact me" ref={formCommentRef}>
+      <form className="form-login" onSubmit={submit} ref={form}>
         <legend>Contact me</legend>
-        <div className='flex stretch'>
-          <div className='input-wrap'>
+        <div className="flex stretch">
+          <div className="input-wrap">
             <label>
-              <input name='firstname' required type='text' />
+              <input name="firstname" required type="text" />
               <span>First Name </span>
             </label>
           </div>
 
-          <div className='input-wrap'>
+          <div className="input-wrap">
             <label>
-              <input name='lastname' required type='text' />
+              <input name="lastname" required type="text" />
               <span>Last name </span>
             </label>
           </div>
         </div>
-        <div className='input-wrap'>
+        <div className="input-wrap">
           <label>
-            <input name='email' required type='email' />
+            <input name="email" required type="email" />
             <span>Email </span>
           </label>
         </div>
 
-        <div className='input-wrap'>
+        <div className="input-wrap">
           <label>
-            <input name='message-subject' required type='text' />
+            <input name="message-subject" required type="text" />
             <span>Subject </span>
           </label>
         </div>
-        <label>
+        <label className="message-label">
           <span>Message: </span>
-          <textarea name='message' required></textarea>
+          <textarea name="message" required></textarea>
         </label>
 
-        <button type='submit'>send&nbsp;message</button>
+        <button type="submit">send&nbsp;message</button>
       </form>
     </Accordion>
   )

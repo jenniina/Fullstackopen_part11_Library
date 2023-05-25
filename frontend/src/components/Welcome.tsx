@@ -25,7 +25,8 @@ const Welcome = (props: {
         ) : (
           '!'
         )}{' '}
-        My name is <a href="https://jenniina.fi">Jenniina Laine,</a> a freelance visual designer.
+        My name is <a href="https://jenniina.fi">Jenniina Laine,</a> a freelance visual designer.{' '}
+        <Contact notify={props.notify} />
       </p>
 
       <h2>About This Site</h2>
