@@ -1,5 +1,7 @@
 /* eslint-disable cypress/no-unnecessary-waiting */
 
+// cy.createCollection('test_collection', { database: 'testLibrary' }) // creates both collection and database
+
 describe('site', () => {
   beforeEach(function () {
     cy.visit('http://localhost:4000')
@@ -48,8 +50,6 @@ describe('site', () => {
       .should('have.length', 1)
   })
 
-  it('fetches items', () => {})
-
   it('logs in', { defaultCommandTimeout: 10000 }, () => {
     cy.get('[data-test="login"]').click()
     cy.wait(1000)
@@ -75,7 +75,7 @@ describe('site', () => {
     cy.get('button[type="submit"]').click()
 
     cy.wait(3000)
-    cy.get('[data-test="Books"]').click()
+    cy.get('a').contains('Books').click()
     cy.wait(5000)
     cy.get('.tablebooks').contains('Book by Cypress').click()
     cy.wait(2000)

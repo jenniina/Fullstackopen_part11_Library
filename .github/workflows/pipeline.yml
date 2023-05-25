@@ -42,6 +42,7 @@ jobs:
           wait-on: 'http://localhost:5173'
           working-directory: frontend
         env:
+          #keeping these the same to avoid accidentally overwriting the main database
           MONGODB_URI: ${{ secrets.TEST_MONGODB_URI}}
           TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI}}
           PORT: ${{ secrets.PORT }}

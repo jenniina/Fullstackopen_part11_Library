@@ -1,5 +1,7 @@
 /* eslint-disable cypress/no-unnecessary-waiting */
 
+cy.createCollection('test_collection', { database: 'test_database' }) // creates both collection and database
+
 describe('site', () => {
   beforeEach(function () {
     cy.visit('http://localhost:5173')
