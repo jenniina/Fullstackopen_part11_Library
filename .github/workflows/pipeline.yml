@@ -90,9 +90,9 @@ jobs:
         env:
           VITE_BASE_URI: ${{ secrets.VITE_BASE_URI}}
           VITE_BASE_URI_WS: ${{ secrets.VITE_BASE_URI_WS}}
-          VITE_serviceID: ${{ secrets.VITE_serviceID}}
-          VITE_templateID: ${{ secrets.VITE_templateID}}
-          VITE_publicKey: ${{ secrets.VITE_publicKey}}
+          VITE_serviceID: ${{ secrets.VITE_SERVICEID}}
+          VITE_templateID: ${{ secrets.VITE_TEMPLATEID}}
+          VITE_publicKey: ${{ secrets.VITE_PUBLICKEY}}
 
       - name: Test Success
         uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
