@@ -5,7 +5,7 @@ module.exports = {
     es2021: true,
     node: true,
   },
-  extends: ['react-app', 'eslint:recommended', 'plugin:cypress/recommended'],
+  extends: ['react-app', 'eslint:recommended'],
   plugins: ['react', 'yaml'],
   overrides: [],
   parserOptions: {

@@ -56,9 +56,9 @@ jobs:
           MONGODB_URI: ${{ secrets.MONGODB_URI}}
           VITE_BASE_URI_WS: ${{ secrets.VITE_BASE_URI_WS}}
           VITE_BASE_URI: ${{ secrets.VITE_BASE_URI}}
-          VITE_serviceID: ${{ secrets.VITE_serviceID}}
-          VITE_templateID: ${{ secrets.VITE_templateID}}
-          VITE_publicKey: ${{ secrets.VITE_publicKey}}
+          VITE_serviceID: ${{ secrets.VITE_SERVICEID}}
+          VITE_templateID: ${{ secrets.VITE_TEMPLATEID}}
+          VITE_publicKey: ${{ secrets.VITE_PUBLICKEY}}
 
       - name: deployment server to override test server
         id: deploymentserver
@@ -87,6 +87,12 @@ jobs:
           serviceId: ${{ secrets.RENDER_LIBRARY_APP_FRONTEND_ID }}
           apiKey: ${{ secrets.RENDER_API_KEY }}
           deployHookURL: ${{ secrets.RENDER_LIBRARY_APP_DEPLOY_HOOK_URL_FRONTEND }}
+        env:
+          VITE_BASE_URI: ${{ secrets.VITE_BASE_URI}}
+          VITE_BASE_URI_WS: ${{ secrets.VITE_BASE_URI_WS}}
+          VITE_serviceID: ${{ secrets.VITE_SERVICEID}}
+          VITE_templateID: ${{ secrets.VITE_TEMPLATEID}}
+          VITE_publicKey: ${{ secrets.VITE_PUBLICKEY}}
 
       - name: Test Success
         uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
