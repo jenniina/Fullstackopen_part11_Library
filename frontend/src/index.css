@@ -283,6 +283,10 @@ form label {
 }
 form label span {
   min-width: 100%;
+  text-align: left;
+}
+form label.message-label {
+  padding-left: 0.5em;
 }
 form select {
   width: 100%;
