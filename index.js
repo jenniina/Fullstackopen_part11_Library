@@ -19,7 +19,7 @@ const typeDefs = require('./schema.cjs')
 const config = require('./utils/config')
 
 mongoose
-  .connect(config.MONGODB_URI ? config.MONGODB_URI : process.env.TEST_MONGODB_URI)
+  .connect(config.MONGODB_URI)
   .then(() => {
     // eslint-disable-next-line no-console
     console.log('connected to MongoDB')

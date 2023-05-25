@@ -50,7 +50,19 @@ jobs:
         run: npm run build
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI}}
-        working-directory: frontend
+          VITE_BASE_URI_WS: ${{ secrets.VITE_BASE_URI_WS}}
+          VITE_BASE_URI: ${{ secrets.VITE_BASE_URI}}
+          VITE_serviceID: ${{ secrets.VITE_serviceID}}
+          VITE_templateID: ${{ secrets.VITE_templateID}}
+          VITE_publicKey: ${{ secrets.VITE_publicKey}}
+      - name: deployment server to override test server
+        id: deploymentserver
+        run: |
+          npm run start &
+          sleep 10
+          exit 0
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI}}
       - name: Deploy backend
         id: deployB
         uses: bankfliptech/deploy-to-render@e51c1879584c0d27bd916bbcb3f17e9efcacd818
