@@ -154,6 +154,9 @@ const Welcome = (props: {
               <a href="https://github.com/kentcdodds/cross-env#readme">cross-env</a>
             </li>
             <li>
+              <a href="https://github.com/cypress-io/cypress">cypress</a>
+            </li>
+            <li>
               <a href="https://eslint.org">eslint</a>
             </li>
             <li>
@@ -202,9 +205,6 @@ const Welcome = (props: {
             </li>
             <li>
               <a href="https://github.com/bahmutov/start-server-and-test#readme">start-server-and-test</a>
-            </li>
-            <li>
-              <a href="https://github.com/cypress-io/cypress">cypress</a>
             </li>
             <li>
               <a href="https://eslint.org">eslint</a>

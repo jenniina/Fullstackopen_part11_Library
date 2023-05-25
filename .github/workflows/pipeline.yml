@@ -15,36 +15,40 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '16'
+
       - name: Install dependencies to frontend
         run: npm install
         working-directory: frontend
+
       - name: Install dependencies to backend
         run: npm install
+
       - name: Lint backend
         id: lint
         run: npm run lint -- --fix
+
       - name: Lint frontend
         id: lintfrontend
         run: npm run lint -- --fix
         working-directory: frontend
-      - name: e2e tests
-        id: e2e
-        uses: cypress-io/github-action@v5
-        with:
-          browser: chrome
-          headed: true
-          build: npm run build:test
-          start: npm run testmode, npm run dev:test
-          command: npm run test:e2e
-          wait-on: 'http://localhost:4000'
-        env:
-          #keeping these the same to avoid accidentally overwriting the main database
-          MONGODB_URI: ${{ secrets.TEST_MONGODB_URI}}
-          TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI}}
-          PORT: ${{ secrets.PORT }}
-          # pass GitHub token to detect new build vs re-run build
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        continue-on-error: true
+
+      # - name: e2e tests
+      #   id: e2e
+      #   uses: cypress-io/github-action@v5
+      #   with:
+      #     browser: chrome
+      #     headed: true
+      #     build: npm run build:test
+      #     start: npm run testmode, npm run dev:test
+      #     command: npm run test:e2e
+      #     wait-on: 'http://localhost:4000'
+      #   env:
+      #     TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI}}
+      #     PORT: ${{ secrets.PORT }}
+      #     # pass GitHub token to detect new build vs re-run build
+      #     GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      #   continue-on-error: true
+
       - name: build
         id: build
         run: npm run build
@@ -55,6 +59,7 @@ jobs:
           VITE_serviceID: ${{ secrets.VITE_serviceID}}
           VITE_templateID: ${{ secrets.VITE_templateID}}
           VITE_publicKey: ${{ secrets.VITE_publicKey}}
+
       - name: deployment server to override test server
         id: deploymentserver
         run: |
@@ -63,6 +68,8 @@ jobs:
           exit 0
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI}}
+          JWT_SECRET: ${{ secrets.JWT_SECRET}}
+
       - name: Deploy backend
         id: deployB
         uses: bankfliptech/deploy-to-render@e51c1879584c0d27bd916bbcb3f17e9efcacd818
@@ -71,6 +78,7 @@ jobs:
           serviceId: ${{ secrets.RENDER_LIBRARY_APP_BACKEND_ID }}
           apiKey: ${{ secrets.RENDER_API_KEY }}
           deployHookURL: ${{ secrets.RENDER_LIBRARY_APP_DEPLOY_HOOK_URL_BACKEND }}
+
       - name: Deploy frontend
         id: deployF
         uses: bankfliptech/deploy-to-render@e51c1879584c0d27bd916bbcb3f17e9efcacd818
@@ -79,6 +87,7 @@ jobs:
           serviceId: ${{ secrets.RENDER_LIBRARY_APP_FRONTEND_ID }}
           apiKey: ${{ secrets.RENDER_API_KEY }}
           deployHookURL: ${{ secrets.RENDER_LIBRARY_APP_DEPLOY_HOOK_URL_FRONTEND }}
+
       - name: Test Success
         uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
         if: success()

@@ -135,7 +135,7 @@ const NewBook = (props: {
   } else {
     return (
       <div>
-        <h1 className="screen-reader-text">Add Book</h1>
+        <h1 className="screen-reader-text">Add a book to the database</h1>
         <form id="addBookForm" onSubmit={submit} ref={form}>
           <legend>Add Book</legend>
           <div className="input-wrap">
