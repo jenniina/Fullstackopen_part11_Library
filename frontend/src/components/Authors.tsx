@@ -6,7 +6,12 @@ import { Link } from 'react-router-dom'
 import { Select, SelectOption } from './Select/Select'
 
 const Authors = (props: {
-  authors: authorProps[]
+  authors: {
+    data: {
+      allAuthors: authorProps[]
+    }
+    loading: boolean
+  }
   notify: ({ error, message }: message, seconds: number) => void
   token: string | null
   me: userProps
@@ -24,7 +29,7 @@ const Authors = (props: {
   const addRef = useRef<HTMLFormElement>(null)
   const changeRef = useRef<HTMLFormElement>(null)
 
-  const authors = props.authors
+  const authors = props.authors?.data?.allAuthors
 
   const chooseOne = 'Choose one'
 
@@ -48,7 +53,7 @@ const Authors = (props: {
   )
 
   useEffect(() => {
-    if (authorsWithoutBornObjects.length < authorsWithoutBorn.length) {
+    if (authorsWithoutBornObjects?.length < authorsWithoutBorn?.length) {
       for (let object in authorsWithoutBorn) {
         authorsWithoutBornObjects.push({
           label: authorsWithoutBorn[object],
@@ -71,7 +76,7 @@ const Authors = (props: {
   )
 
   useEffect(() => {
-    if (authorsWITHBornObjects.length < authorsWithBorn.length) {
+    if (authorsWITHBornObjects?.length < authorsWithBorn?.length) {
       for (let object in authorsWithBorn) {
         authorsWITHBornObjects.push({
           label: authorsWithBorn[object],
@@ -137,32 +142,38 @@ const Authors = (props: {
         It may be wise to take the birth years listed here with a grain of salt, as anyone who is logged in may change
         them! Even <em>Tester.</em>
       </p>
-      <table className="tableauthors">
-        <tbody>
-          <tr>
-            <th>Author</th>
-            <th>Born</th>
-            <th>Books</th>
-          </tr>
-          {authors
-            ?.slice()
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .map((a: authorProps) => (
-              <tr key={a.name}>
-                <td>
-                  <Link to={`/authors/${a.id}`}>{a.name}</Link>
-                </td>
-                <td>{a.born && a.born < 0 ? `${Math.abs(a.born)} BC` : a.born}</td>
-                <td>{a.bookCount}</td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
+      {props.authors?.loading ? (
+        <div>
+          <big>Loading...</big>
+        </div>
+      ) : (
+        <table className="tableauthors">
+          <tbody>
+            <tr>
+              <th>Author</th>
+              <th>Born</th>
+              <th>Books</th>
+            </tr>
+            {authors
+              ?.slice()
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((a: authorProps) => (
+                <tr key={a.name}>
+                  <td>
+                    <Link to={`/authors/${a.id}`}>{a.name}</Link>
+                  </td>
+                  <td>{a.born && a.born < 0 ? `${Math.abs(a.born)} BC` : a.born}</td>
+                  <td>{a.bookCount}</td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      )}{' '}
       {!props.token ? (
         ''
       ) : (
         <>
-          {authorsWithoutBorn.length > 1 ? (
+          {authorsWithoutBorn?.length > 1 ? (
             <form ref={addRef} className="form-authors" onSubmit={handleSubmit}>
               <legend>Add birthyear</legend>
               <label className="top">

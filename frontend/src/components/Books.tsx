@@ -34,54 +34,71 @@ const Books = ({ genre, setGenre }: BookProps) => {
   }, [genre, refetch])
 
   const heading = 'Books'
-  if (loading || loading) {
-    return <div>loading...</div>
-  }
-  if (error || error) {
-    return <div>There was an error</div>
-  }
-  return (
-    <div>
-      <h1>
-        <span data-text={heading}>{heading}</span>
-      </h1>
-      <p>You may filter the books by pressing one of the buttons below:</p>
-      <div className="genresButtons">
-        <div>
-          <button onClick={() => setGenre('')}>
-            <big>all genres</big>
-          </button>
-        </div>
-        {genres
-          ?.sort((a, b) => a.localeCompare(b))
-          .map((genre) => (
-            <button key={genre} onClick={() => setGenre(genre)}>
-              {genre}
-            </button>
-          ))}
+  // if (loading) {
+  //   return (
+  //     <div>
+  //       <big>loading...</big>
+  //     </div>
+  //   )
+  // }
+  if (error) {
+    return (
+      <div>
+        <big>There was an error loading the books</big>
       </div>
-      <table className="tablebooks">
-        <tbody>
-          <tr>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Published</th>
-          </tr>
-          {books?.map((a: booksProps) => (
-            <tr key={a.title}>
-              <td>
-                <Link to={`/books/${a.id}`}>{a.title}</Link>
-              </td>
-              <td>
-                <Link to={`/authors/${a.author.id}`}>{a.author.name}</Link>
-              </td>
-              <td>{a.published && a.published < 0 ? `${Math.abs(a.published)} BC` : a.published}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )
+    )
+  } else
+    return (
+      <div>
+        <h1>
+          <span data-text={heading}>{heading}</span>
+        </h1>
+        {loading ? (
+          <div>
+            <big>loading...</big>
+          </div>
+        ) : (
+          <>
+            <p>You may filter the books by pressing one of the buttons below:</p>
+            <div className="genresButtons">
+              <div>
+                <button onClick={() => setGenre('')}>
+                  <big>all genres</big>
+                </button>
+              </div>
+              {genres
+                ?.sort((a, b) => a.localeCompare(b))
+                .map((genre) => (
+                  <button key={genre} onClick={() => setGenre(genre)}>
+                    {genre}
+                  </button>
+                ))}
+            </div>
+
+            <table className="tablebooks">
+              <tbody>
+                <tr>
+                  <th>Title</th>
+                  <th>Author</th>
+                  <th>Published</th>
+                </tr>
+                {books?.map((a: booksProps) => (
+                  <tr key={a.title}>
+                    <td>
+                      <Link to={`/books/${a.id}`}>{a.title}</Link>
+                    </td>
+                    <td>
+                      <Link to={`/authors/${a.author.id}`}>{a.author.name}</Link>
+                    </td>
+                    <td>{a.published && a.published < 0 ? `${Math.abs(a.published)} BC` : a.published}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </>
+        )}
+      </div>
+    )
 }
 
 export default Books

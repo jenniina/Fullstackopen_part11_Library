@@ -19,14 +19,12 @@ const Books = (props: {
     navigate('/books')
   }
 
-  if (user.loading) return <div>loading...</div>
-
   const favorite = user?.data?.me?.favoriteGenre
 
   const books = props.books
 
-  const filteredBooks1 = books?.filter((book) => book.genres.includes(favorite))
-  const filteredBooks = filteredBooks1?.filter((book) => book.user !== props.me.id)
+  const filteredBooksInGenre = books?.filter((book) => book.genres.includes(favorite))
+  const filteredBooks = filteredBooksInGenre?.filter((book) => book.user !== props.me.id)
 
   const heading = 'Recommendations'
 
@@ -39,46 +37,54 @@ const Books = (props: {
         <h1>
           <span data-text={heading}>{heading}</span>
         </h1>
-        <p>
-          Books added by others in your favorite genre
-          <button
-            style={{ display: 'block', margin: '0 auto' }}
-            className="link-btn"
-            onClick={() => handleGenreRedirect(favorite)}
-          >
-            <big>
-              <em>{favorite}</em>
-            </big>
-          </button>
-        </p>
-        {filteredBooks.length === 0 ? (
-          <>
-            <p>Oh no! No-one else has added any books in your favorite genre, yet!</p>
-            <p>
-              See <Link to={`/users/${props.me?.id}`}>your books</Link>
-            </p>
-          </>
+        {user?.loading ? (
+          <div>
+            <big>loading...</big>
+          </div>
         ) : (
-          <table>
-            <tbody>
-              <tr>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Published</th>
-              </tr>
-              {filteredBooks.map((a: booksProps) => (
-                <tr key={a.title}>
-                  <td>
-                    <Link to={`/books/${a.id}`}>{a.title}</Link>
-                  </td>
-                  <td>
-                    <Link to={`/authors/${a.author.id}`}>{a.author.name}</Link>
-                  </td>
-                  <td>{a.published}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <>
+            <p>
+              Books added by others in your favorite genre
+              <button
+                style={{ display: 'block', margin: '0 auto' }}
+                className="link-btn"
+                onClick={() => handleGenreRedirect(favorite)}
+              >
+                <big>
+                  <em>{favorite}</em>
+                </big>
+              </button>
+            </p>
+            {filteredBooks?.length === 0 ? (
+              <>
+                <p>Oh no! No-one else has added any books in your favorite genre, yet!</p>
+                <p>
+                  See <Link to={`/users/${props.me?.id}`}>your books</Link>
+                </p>
+              </>
+            ) : (
+              <table>
+                <tbody>
+                  <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Published</th>
+                  </tr>
+                  {filteredBooks?.map((a: booksProps) => (
+                    <tr key={a.title}>
+                      <td>
+                        <Link to={`/books/${a.id}`}>{a.title}</Link>
+                      </td>
+                      <td>
+                        <Link to={`/authors/${a.author.id}`}>{a.author.name}</Link>
+                      </td>
+                      <td>{a.published}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </>
         )}
       </div>
     )

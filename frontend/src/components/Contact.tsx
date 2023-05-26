@@ -36,6 +36,7 @@ function Contact(props: contactProps) {
   return (
     <form className="form-login" onSubmit={submit} ref={form}>
       <legend>Contact me</legend>
+
       <span className="flex stretch">
         <span className="input-wrap">
           <label>
@@ -51,6 +52,7 @@ function Contact(props: contactProps) {
           </label>
         </span>
       </span>
+
       <span className="input-wrap">
         <label>
           <input name="email" required type="email" />
@@ -64,10 +66,13 @@ function Contact(props: contactProps) {
           <span>Subject </span>
         </label>
       </span>
+
       <label className="message-label">
         <span>Message: </span>
         <textarea name="message" required></textarea>
       </label>
+
+      <input type="hidden" name="address" value={window.location.href} />
 
       <button type="submit">send&nbsp;message</button>
     </form>
