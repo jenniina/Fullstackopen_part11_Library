@@ -88,7 +88,8 @@ const Welcome = (props: {
       <p>
         I used <a href="https://github.com/features/actions">GitHub Actions</a> to set up the deployment pipeline,
         deploying the Apollo server backend as a <a href="https://render.com/">Render.com</a> web service and the
-        frontend as a static site.
+        frontend as a static site, until I realized that I can use express to serve the static site from the same
+        address.
       </p>
       <p>
         The web service is hosted at Render.com for free, with 512 MB RAM and 0.1 CPU, hence requiring a little patience
