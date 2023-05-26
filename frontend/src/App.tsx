@@ -121,13 +121,6 @@ const App = () => {
 
   const { windowWidth } = useWindowSize()
 
-  if (resultAuthors.loading) {
-    return <div>loading...</div>
-  }
-  if (resultBooks.loading) {
-    return <div>loading...</div>
-  }
-
   return (
     <div style={style}>
       <ul className={`main-navigation ${windowWidth < 800 ? 'small-screen' : ''}`}>
@@ -200,9 +193,9 @@ const App = () => {
           <Route path="*" element={<Welcome notify={notify} token={token} me={data?.me} />} />
           <Route
             path="/authors"
-            element={<Authors authors={resultAuthors?.data?.allAuthors} notify={notify} token={token} me={data?.me} />}
+            element={<Authors authors={resultAuthors} notify={notify} token={token} me={data?.me} />}
           />
-          <Route path="/users" element={<Users users={resultUsers?.data?.allUsers} notify={notify} token={token} />} />
+          <Route path="/users" element={<Users users={resultUsers} notify={notify} token={token} />} />
           <Route
             path="/users/:id"
             element={<User user={user} notify={notify} token={token} me={data?.me} setGenre={setGenre} />}
