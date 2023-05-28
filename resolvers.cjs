@@ -12,7 +12,8 @@ const tester = '64673513aaa627ac7b5a37ec'
 const resolvers = {
   Query: {
     bookCount: () => Book.collection.countDocuments(),
-    allBooks: async (_root, args) => {
+    allBooks: async (root, args) => {
+      const orderBy = args.orderBy
       if (args.author) {
         const author = await Author.findOne({ name: args.author })
         if (author) {
@@ -20,17 +21,27 @@ const resolvers = {
             return await Book.find({
               author: author.id,
               genres: { $in: [args.genre] },
-            }).populate('author')
+            })
+              .sort({ orderBy: args.orderDirection })
+              .populate('author')
           }
-          return await Book.find({ author: author.id }).populate('author')
+          return await Book.find({ author: author.id })
+            .sort({ orderBy: args.orderDirection })
+            .populate('author')
         } else return null
       }
 
       if (args.genre) {
-        return Book.find({ genres: { $in: [args.genre] } }).populate('author')
+        return await Book.find({ genres: { $in: [args.genre] } })
+          .sort({ orderBy: args.orderDirection })
+          .populate('author')
       }
 
-      return Book.find({}).populate('author')
+      if (args.limit) {
+        return Book.find({}).sort({ orderBy: args.orderDirection }).populate('author')
+      }
+
+      return Book.find({}).sort({ orderBy: args.orderDirection }).populate('author')
     },
     findBook: async (_root, args) => {
       if (args.author) {

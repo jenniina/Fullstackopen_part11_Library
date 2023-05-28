@@ -164,6 +164,7 @@ button {
   font-weight: 500;
   font-family: inherit;
   background-color: var(--color-primary-3);
+  color: var(--color-primary-20);
   cursor: pointer;
   transition: border-color 0.25s;
   margin-top: 0.2em;
@@ -171,19 +172,31 @@ button {
 button + button {
   margin-left: 0.2em;
 }
+/*Reset button appearance:*/
 button.logout,
 button.logout:hover,
 button.logout:focus,
 button.link-btn,
-button.link-btn:focus {
+button.link-btn:focus,
+button.reset,
+button.reset:hover,
+button.reset:focus {
   border: 0;
   border-radius: 0;
   background-color: transparent;
   padding: 0;
   margin: 0;
+  outline-offset: 3px;
 }
-button:hover {
+button.reset,
+button.reset:hover,
+button.reset:focus {
+  font-weight: inherit;
+}
+button:hover,
+button.active {
   border-color: var(--color-primary-14);
+  color: var(--color-primary-20);
 }
 button:focus,
 button:focus-visible {
@@ -801,6 +814,10 @@ body.light {
 .light button.logout,
 .light button-logout:hover {
   background-color: transparent;
+}
+.light button.active {
+  color: var(--color-primary-20);
+  font-weight: bold;
 }
 .light .input-wrap.genre::before {
   background-color: var(--color-primary-3);

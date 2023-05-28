@@ -3,7 +3,7 @@ import Notify from './components/Notify'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
-import { authorProps, message, userProps } from './interfaces'
+import { OrderBy, OrderDirection, authorProps, message, userProps } from './interfaces'
 import { ALL_AUTHORS, ALL_BOOKS, ALL_USERS, BOOK_ADDED, ME } from './queries'
 import FormLogin from './components/FormLogin'
 import { ApolloCache, DocumentNode, useApolloClient, useQuery, useSubscription } from '@apollo/client'
@@ -53,7 +53,12 @@ const App = () => {
   const [message, setMessage] = useState<message>()
 
   const resultAuthors = useQuery(ALL_AUTHORS)
-  const resultBooks = useQuery(ALL_BOOKS)
+  const resultBooks = useQuery(ALL_BOOKS, {
+    variables: {
+      orderDirection: OrderDirection.ASC,
+      orderBy: OrderBy.TITLE,
+    },
+  })
   const resultUsers = useQuery(ALL_USERS)
 
   const { data } = useQuery(ME)
@@ -201,7 +206,10 @@ const App = () => {
             element={<User user={user} notify={notify} token={token} me={data?.me} setGenre={setGenre} />}
           />
 
-          <Route path="/books" element={<Books genre={genre} setGenre={setGenre} />} />
+          <Route
+            path="/books"
+            element={<Books genre={genre} setGenre={setGenre} booklist={resultBooks?.data?.allBooks} />}
+          />
           <Route
             path="/books/:id"
             element={<Book book={book} token={token} notify={notify} me={data?.me} setGenre={setGenre} />}

@@ -5,7 +5,7 @@ import './index.css'
 import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink, split } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import { BrowserRouter as Router } from 'react-router-dom'
-import { getMainDefinition } from '@apollo/client/utilities'
+import { getMainDefinition, offsetLimitPagination } from '@apollo/client/utilities'
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { createClient } from 'graphql-ws'
 import { LIRARY_TOKEN } from './App'
@@ -44,8 +44,22 @@ const splitLink = split(
 )
 
 export const client = new ApolloClient({
-  cache: new InMemoryCache(),
-  //link: authLink.concat(httpLink),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          allBooks: {
+            ...offsetLimitPagination(),
+            read(existing, { args }): any {
+              if (args && args.limit !== undefined && args.offset !== undefined) {
+                return existing && existing.slice(args.offset, args.offset + args.limit)
+              }
+            },
+          },
+        },
+      },
+    },
+  }),
   link: splitLink,
 })
 

@@ -33,7 +33,7 @@ type Book {
 
   type Query {
     bookCount: Int!
-    allBooks(author:String, genre:String): [Book!]!
+    allBooks(author:String, genre:String, offset: Int, limit: Int, orderDirection: Int!, orderBy: String!): [Book!]!
     findBook(title: String!):Book
     authorCount: Int!
     allAuthors: [Author!]!
