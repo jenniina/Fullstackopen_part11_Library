@@ -757,6 +757,9 @@ input[type='number'] {
   gap: inherit;
   flex-flow: column nowrap;
 }
+.flex .fourth {
+  flex-basis: 25%;
+}
 @media (min-width: 400px) {
   .flex {
     flex-flow: row nowrap;

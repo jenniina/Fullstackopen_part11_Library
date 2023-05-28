@@ -1,9 +1,11 @@
 import { useMutation } from '@apollo/client'
-import { authorProps, message, userProps } from '../interfaces'
-import { useEffect, useRef, useState, FormEvent, useMemo } from 'react'
+import { OrderBy, OrderDirection, authorProps, message, userProps } from '../interfaces'
+import { useEffect, useRef, useState, FormEvent, useMemo, Dispatch, SetStateAction } from 'react'
 import { EDIT_BORN, ALL_AUTHORS, DELETE_AUTHOR } from '../queries'
 import { Link } from 'react-router-dom'
 import { Select, SelectOption } from './Select/Select'
+import { InView } from 'react-intersection-observer'
+import { TiArrowSortedDown, TiArrowSortedUp } from 'react-icons/ti'
 
 const Authors = (props: {
   authors: {
@@ -15,6 +17,14 @@ const Authors = (props: {
   notify: ({ error, message }: message, seconds: number) => void
   token: string | null
   me: userProps
+  setLimitAuthors: Dispatch<SetStateAction<number>>
+  orderDirectionAuthorsName: OrderDirection
+  orderDirectionAuthorsBookCount: OrderDirection
+  orderDirectionAuthorsBorn: OrderDirection
+  setOrderByAuthors: Dispatch<SetStateAction<OrderBy>>
+  setOrderDirectionAuthorsName: Dispatch<SetStateAction<OrderDirection>>
+  setOrderDirectionAuthorsBookCount: Dispatch<SetStateAction<OrderDirection>>
+  setOrderDirectionAuthorsBorn: Dispatch<SetStateAction<OrderDirection>>
 }) => {
   const [name1, setName1] = useState<SelectOption | undefined>({
     label: 'Choose one',
@@ -54,6 +64,13 @@ const Authors = (props: {
 
   useEffect(() => {
     if (authorsWithoutBornObjects?.length < authorsWithoutBorn?.length) {
+      authorsWithoutBornObjects = [
+        {
+          label: chooseOne,
+          value: 'nothing chosen',
+        },
+      ]
+
       for (let object in authorsWithoutBorn) {
         authorsWithoutBornObjects.push({
           label: authorsWithoutBorn[object],
@@ -61,7 +78,7 @@ const Authors = (props: {
         })
       }
     }
-  }, [authorsWithoutBorn, authorsWithoutBornObjects])
+  }, [authorsWithoutBorn?.length, authorsWithoutBornObjects?.length])
 
   const authorsWithBorn = authors?.map((a) => (!a.born ? null : `${a.name}: ${a.born}`)).filter((a) => a !== null)
 
@@ -77,6 +94,13 @@ const Authors = (props: {
 
   useEffect(() => {
     if (authorsWITHBornObjects?.length < authorsWithBorn?.length) {
+      authorsWITHBornObjects = [
+        {
+          label: chooseOne,
+          value: 'nothing chosen',
+        },
+      ]
+
       for (let object in authorsWithBorn) {
         authorsWITHBornObjects.push({
           label: authorsWithBorn[object],
@@ -84,7 +108,7 @@ const Authors = (props: {
         })
       }
     }
-  }, [authorsWithBorn, authorsWITHBornObjects])
+  }, [authorsWithBorn?.length, authorsWITHBornObjects?.length])
 
   const [editAuthorBornYear] = useMutation(EDIT_BORN, {
     refetchQueries: [{ query: ALL_AUTHORS }],
@@ -131,6 +155,8 @@ const Authors = (props: {
     }
   }
 
+  // eslint-disable-next-line no-console
+
   const heading = 'Authors'
 
   return (
@@ -147,27 +173,72 @@ const Authors = (props: {
           <big>Loading...</big>
         </div>
       ) : (
-        <table className="tableauthors">
-          <tbody>
-            <tr>
-              <th>Author</th>
-              <th>Born</th>
-              <th>Books</th>
-            </tr>
-            {authors
-              ?.slice()
-              .sort((a, b) => a.name.localeCompare(b.name))
-              .map((a: authorProps) => (
-                <tr key={a.name}>
-                  <td>
-                    <Link to={`/authors/${a.id}`}>{a.name}</Link>
-                  </td>
-                  <td>{a.born && a.born < 0 ? `${Math.abs(a.born)} BC` : a.born}</td>
-                  <td>{a.bookCount}</td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
+        <>
+          <table className="tableauthors">
+            <tbody>
+              <tr>
+                <th>
+                  <button
+                    className="reset"
+                    onClick={() => {
+                      props.setOrderByAuthors(OrderBy.NAME)
+                      props.orderDirectionAuthorsName === OrderDirection.ASC
+                        ? props.setOrderDirectionAuthorsName(OrderDirection.DESC)
+                        : props.setOrderDirectionAuthorsName(OrderDirection.ASC)
+                    }}
+                  >
+                    Author{' '}
+                    {props.orderDirectionAuthorsName === OrderDirection.ASC ? (
+                      <TiArrowSortedUp style={{ marginBottom: -2 }} />
+                    ) : (
+                      <TiArrowSortedDown style={{ marginBottom: -2 }} />
+                    )}
+                  </button>
+                </th>
+                <th>
+                  <button
+                    className="reset"
+                    onClick={() => {
+                      props.setOrderByAuthors(OrderBy.BORN)
+                      props.orderDirectionAuthorsBorn === OrderDirection.ASC
+                        ? props.setOrderDirectionAuthorsBorn(OrderDirection.DESC)
+                        : props.setOrderDirectionAuthorsBorn(OrderDirection.ASC)
+                    }}
+                  >
+                    Born{' '}
+                    {props.orderDirectionAuthorsBorn === OrderDirection.ASC ? (
+                      <TiArrowSortedUp style={{ marginBottom: -2 }} />
+                    ) : (
+                      <TiArrowSortedDown style={{ marginBottom: -2 }} />
+                    )}
+                  </button>
+                </th>
+                <th>Books</th>
+              </tr>
+              {authors
+                ?.slice()
+                //.sort((a, b) => a.name.localeCompare(b.name))
+                .map((a: authorProps) => (
+                  <tr key={a.name}>
+                    <td>
+                      <Link to={`/authors/${a.id}`}>{a.name}</Link>
+                    </td>
+                    <td>{a.born && a.born < 0 ? `${Math.abs(a.born)} BC` : a.born}</td>
+                    <td>{a.bookCount}</td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+          {authors && (
+            <InView
+              onChange={async (inView) => {
+                if (inView) {
+                  props.setLimitAuthors((prev) => prev + 6)
+                }
+              }}
+            />
+          )}
+        </>
       )}{' '}
       {!props.token ? (
         ''

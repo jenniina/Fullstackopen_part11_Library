@@ -56,6 +56,14 @@ export const client = new ApolloClient({
               }
             },
           },
+          allAuthors: {
+            ...offsetLimitPagination(),
+            read(existing, { args }): any {
+              if (args && args.limit !== undefined && args.offset !== undefined) {
+                return existing && existing.slice(args.offset, args.offset + args.limit)
+              }
+            },
+          },
         },
       },
     },

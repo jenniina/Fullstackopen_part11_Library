@@ -73,7 +73,7 @@ describe('site function', () => {
 
   it('adds and deletes book', { defaultCommandTimeout: 10000 }, () => {
     cy.dropCollection('books', { database: 'test', failSilently: true }).then((res) => {
-      cy.log(res) // prints 'Collection dropped'
+      cy.log(res)
     })
 
     cy.get('a').contains('login').click()

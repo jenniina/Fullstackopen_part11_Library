@@ -13,6 +13,7 @@ const NewBook = (props: {
 }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
+  const [surname, setAuthorSurname] = useState('')
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState<string[]>([])
@@ -35,7 +36,8 @@ const NewBook = (props: {
       updateCache(cache, { query: ALL_BOOKS }, response.data.createBook)
     },
     onError: (error) => {
-      //console.log(JSON.stringify(error, null, 2))
+      //eslint-disable-next-line no-console
+      console.log(JSON.stringify(error, null, 2))
       props.notify({ error: true, message: error.message }, 10)
     },
     onCompleted: () => {
@@ -48,6 +50,7 @@ const NewBook = (props: {
     setTitle('')
     setPublished('')
     setAuthor('')
+    setAuthorSurname('')
     setGenres([])
     setGenre('')
   }
@@ -62,21 +65,30 @@ const NewBook = (props: {
         },
         10
       )
-    else if (!title || !published || !author || genres.length === 0)
-      props.notify({ error: true, message: 'Please fill in all the fields' }, 5)
-    else {
+    else if (title.length < 5) props.notify({ error: true, message: 'Title too short' }, 10)
+    else if (author.split(' ').splice(-1)[0] !== surname) {
+      props.notify(
+        {
+          error: true,
+          message: 'Looks like the last name in FULL NAME doesn\'t match the LAST NAME',
+        },
+        10
+      )
+    } else {
       createBook({
         variables: {
           title,
           author,
+          surname,
           genres,
           published: parseInt(published),
           user: userId,
         },
-      }).catch((error) =>
+      }).catch((error) => {
         // eslint-disable-next-line no-console
         console.log(JSON.stringify(error, null, 2))
-      )
+        props.notify({ error: true, message: error.message }, 10)
+      })
       if (form && import.meta.env.PROD && (props.me?.username !== 'Ano' || title !== 'Book by Cypress')) {
         emailjs
           .sendForm(
@@ -138,47 +150,65 @@ const NewBook = (props: {
         <h1 className="screen-reader-text">Add a book to the database</h1>
         <form id="addBookForm" onSubmit={submit} ref={form}>
           <legend>Add Book</legend>
-          <div className="input-wrap">
-            <label data-test="title">
-              <input
-                name="title"
-                value={title}
-                type="text"
-                required
-                onChange={({ target }) => setTitle(target.value)}
-              />
-              <span>
-                <small>title: </small>
-              </span>
-            </label>
+          <div className="flex">
+            <div className="input-wrap">
+              <label data-test="title">
+                <input
+                  name="title"
+                  value={title}
+                  type="text"
+                  required
+                  onChange={({ target }) => setTitle(target.value)}
+                />
+                <span>
+                  <small>title: </small>
+                </span>
+              </label>
+            </div>
+            <div className="input-wrap fourth">
+              <label data-test="published">
+                <input
+                  type="number"
+                  name="published"
+                  required
+                  value={published}
+                  onChange={({ target }) => setPublished(target.value)}
+                />
+                <span>
+                  <small>published: </small>
+                </span>
+              </label>
+            </div>
           </div>
-          <div className="input-wrap">
-            <label data-test="author">
-              <input
-                name="author"
-                value={author}
-                type="text"
-                required
-                onChange={({ target }) => setAuthor(target.value)}
-              />
-              <span>
-                <small>author: </small>
-              </span>
-            </label>
-          </div>
-          <div className="input-wrap">
-            <label data-test="published">
-              <input
-                type="number"
-                name="published"
-                required
-                value={published}
-                onChange={({ target }) => setPublished(target.value)}
-              />
-              <span>
-                <small>published: </small>
-              </span>
-            </label>
+          <div className="flex">
+            <div className="input-wrap">
+              <label data-test="author">
+                <input
+                  name="author"
+                  value={author}
+                  type="text"
+                  required
+                  onChange={({ target }) => setAuthor(target.value)}
+                />
+                <span>
+                  <small>author (FULL NAME): </small>
+                </span>
+              </label>
+            </div>
+            <div className="input-wrap fourth">
+              <label data-test="author-surname">
+                <input
+                  name="surname"
+                  value={surname}
+                  type="text"
+                  required
+                  onChange={({ target }) => setAuthorSurname(target.value)}
+                />
+                <span>
+                  <small>author (LAST NAME): </small>
+                </span>
+              </label>
+            </div>
           </div>
           <div className="input-wrap-wrap">
             <div className="input-wrap genre">

@@ -15,8 +15,9 @@ const BOOK_DETAILS = gql`
 `
 
 export const ALL_AUTHORS = gql`
-  query allAuthors {
-    allAuthors {
+  query allAuthors($offset: Int, $limit: Int, $orderDirection: Int!, $orderBy: String!) {
+    allAuthors(offset: $offset, limit: $limit, orderDirection: $orderDirection, orderBy: $orderBy) {
+      surname
       name
       born
       bookCount
@@ -44,16 +45,16 @@ export const ALL_USERS = gql`
 `
 
 export const ALL_BOOKS = gql`
-  query allBooks($orderDirection: Int!, $offset: Int, $limit: Int) {
-    allBooks(orderDirection: $orderDirection, offset: $offset, limit: $limit) {
+  query allBooks($orderDirection: Int!, $orderBy: String!, $offset: Int, $limit: Int) {
+    allBooks(orderDirection: $orderDirection, orderBy: $orderBy, offset: $offset, limit: $limit) {
       ...BookDetails
     }
   }
   ${BOOK_DETAILS}
 `
 export const FILTER_BOOKS = gql`
-  query allBooks($orderDirection: Int!, $genre: String, $offset: Int, $limit: Int) {
-    allBooks(orderDirection: $orderDirection, genre: $genre, offset: $offset, limit: $limit) {
+  query allBooks($orderDirection: Int!, $orderBy: String!, $genre: String, $offset: Int, $limit: Int) {
+    allBooks(orderDirection: $orderDirection, orderBy: $orderBy, genre: $genre, offset: $offset, limit: $limit) {
       ...BookDetails
     }
   }
@@ -83,8 +84,15 @@ export const GET_BOOKS_OF_AUTHOR = gql`
   ${BOOK_DETAILS}
 `
 export const ADD_BOOK = gql`
-  mutation createBook($title: String!, $author: String!, $published: Int!, $genres: [String!]!, $user: ID) {
-    createBook(title: $title, author: $author, published: $published, user: $user, genres: $genres) {
+  mutation createBook(
+    $title: String!
+    $author: String!
+    $surname: String!
+    $published: Int!
+    $genres: [String!]!
+    $user: ID
+  ) {
+    createBook(title: $title, author: $author, surname: $surname, published: $published, user: $user, genres: $genres) {
       ...BookDetails
     }
   }

@@ -55,6 +55,10 @@ const Books = ({ genre, setGenre, booklist }: BookProps) => {
     refetch({ orderDirection })
   }, [orderDirection, refetch])
 
+  useEffect(() => {
+    refetch({ orderBy })
+  }, [orderBy, refetch])
+
   const heading = 'Books'
 
   if (error) {

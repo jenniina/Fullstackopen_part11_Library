@@ -12,36 +12,80 @@ const tester = '64673513aaa627ac7b5a37ec'
 const resolvers = {
   Query: {
     bookCount: () => Book.collection.countDocuments(),
-    allBooks: async (root, args) => {
-      const orderBy = args.orderBy
+    allBooks: async (_root, args) => {
+      const orderBy = args.orderBy || 'title'
+      const orderDirection = args.orderDirection || 1
       if (args.author) {
         const author = await Author.findOne({ name: args.author })
         if (author) {
-          if (args.genre) {
+          if (args.genre && orderBy === 'title') {
             return await Book.find({
               author: author.id,
               genres: { $in: [args.genre] },
             })
-              .sort({ orderBy: args.orderDirection })
+              .sort({ title: orderDirection })
               .populate('author')
-          }
-          return await Book.find({ author: author.id })
-            .sort({ orderBy: args.orderDirection })
-            .populate('author')
+          } else if (orderBy) {
+            return await Book.find({
+              author: author.id,
+              genres: { $in: [args.genre] },
+            })
+              .sort(
+                orderBy === 'name'
+                  ? { name: orderDirection }
+                  : { published: orderDirection }
+              )
+              .populate('author')
+          } else
+            return await Book.find({ author: author.id })
+              .sort(
+                orderBy === 'title'
+                  ? { title: orderDirection }
+                  : { author: orderDirection }
+              )
+              .populate('author')
         } else return null
       }
 
       if (args.genre) {
-        return await Book.find({ genres: { $in: [args.genre] } })
-          .sort({ orderBy: args.orderDirection })
-          .populate('author')
+        if (orderBy === 'title') {
+          return await Book.find({ genres: { $in: [args.genre] } })
+            .sort({ title: orderDirection })
+            .populate('author')
+        } else {
+          return await Book.find({ genres: { $in: [args.genre] } })
+            .sort(
+              orderBy === 'name'
+                ? { name: orderDirection }
+                : { published: orderDirection }
+            )
+            .populate('author')
+        }
       }
 
       if (args.limit) {
-        return Book.find({}).sort({ orderBy: args.orderDirection }).populate('author')
+        if (orderBy === 'title') {
+          return Book.find({}).sort({ title: orderDirection }).populate('author')
+        } else {
+          return Book.find({})
+            .sort(
+              orderBy === 'name'
+                ? { name: orderDirection }
+                : { published: orderDirection }
+            )
+            .populate('author')
+        }
       }
 
-      return Book.find({}).sort({ orderBy: args.orderDirection }).populate('author')
+      if (orderBy === 'title') {
+        return Book.find({}).sort({ title: orderDirection }).populate('author')
+      } else {
+        return Book.find({})
+          .sort(
+            orderBy === 'name' ? { name: orderDirection } : { published: orderDirection }
+          )
+          .populate('author')
+      }
     },
     findBook: async (_root, args) => {
       if (args.author) {
@@ -69,9 +113,24 @@ const resolvers = {
     },
 
     authorCount: () => Author.collection.countDocuments(),
-    allAuthors: async () => await Author.find({}).populate('bookCount'),
+    allAuthors: async (_root, args) => {
+      const orderBy = args.orderBy || 'surname'
+      const orderDirection = args.orderDirection || 1
+      if (orderBy === 'surname') {
+        return await Author.find({})
+          .sort({ surname: orderDirection })
+          .populate('bookCount')
+      } else if (orderBy === 'born') {
+        return await Author.find({}).sort({ born: orderDirection }).populate('bookCount')
+      } else return await Author.find({}).populate('bookCount')
+      // else {
+      //   return await Author.find({})
+      //     .populate('bookCount')
+      //     .sort({ bookCount: orderDirection })
+      // }
+    },
     //allUsers: async () => await User.find({}).populate('books'),
-    allUsers: async (root, args) => {
+    allUsers: async (_root, args) => {
       if (args.id) {
         return User.find({ id: args.id })
           .populate({
@@ -127,7 +186,7 @@ const resolvers = {
       }
 
       if (!author) {
-        const newAuthor = new Author({ name: args.author })
+        const newAuthor = new Author({ name: args.author, surname: args.surname })
         try {
           await newAuthor.save()
         } catch (error) {

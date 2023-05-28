@@ -50,7 +50,8 @@ export enum OrderDirection {
 
 export enum OrderBy {
   TITLE = 'title',
-  AUTHOR = 'author',
+  NAME = 'surname',
   PUBLISHED = 'published',
   BORN = 'born',
+  BOOKCOUNT = 'bookCount',
 }
