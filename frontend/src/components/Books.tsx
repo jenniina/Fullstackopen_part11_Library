@@ -12,7 +12,7 @@ interface BookProps {
   booklist: booksProps[]
 }
 const Books = ({ genre, setGenre, booklist }: BookProps) => {
-  const [limit, setLimit] = useState(6)
+  const [limit, setLimit] = useState(15)
   const [orderDirection, setOrderDirection] = useState<OrderDirection>(OrderDirection.ASC)
   const [orderBy, setOrderBy] = useState<OrderBooksBy>(OrderBooksBy.TITLE)
   const [currentGenre, setCurrentGenre] = useState(genre)
@@ -48,16 +48,8 @@ const Books = ({ genre, setGenre, booklist }: BookProps) => {
   genres = [...new Set(genres)]
 
   useEffect(() => {
-    refetch({ genre })
-  }, [genre, refetch])
-
-  useEffect(() => {
-    refetch({ orderDirection })
-  }, [orderDirection, refetch])
-
-  useEffect(() => {
-    refetch({ orderBy })
-  }, [orderBy, refetch])
+    refetch({ genre, orderDirection, orderBy })
+  }, [genre, orderDirection, orderBy, refetch])
 
   const heading = 'Books'
 
