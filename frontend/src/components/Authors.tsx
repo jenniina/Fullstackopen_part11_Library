@@ -1,11 +1,11 @@
 import { useMutation } from '@apollo/client'
-import { OrderBy, OrderDirection, authorProps, message, userProps } from '../interfaces'
+import { OrderAuthorsBy, OrderDirection, authorProps, message, userProps } from '../interfaces'
 import { useEffect, useRef, useState, FormEvent, useMemo, Dispatch, SetStateAction } from 'react'
 import { EDIT_BORN, ALL_AUTHORS, DELETE_AUTHOR } from '../queries'
 import { Link } from 'react-router-dom'
 import { Select, SelectOption } from './Select/Select'
 import { InView } from 'react-intersection-observer'
-import { TiArrowSortedDown, TiArrowSortedUp } from 'react-icons/ti'
+import { FaSort, FaSortDown, FaSortUp } from 'react-icons/fa'
 
 const Authors = (props: {
   authors: {
@@ -19,11 +19,10 @@ const Authors = (props: {
   me: userProps
   setLimitAuthors: Dispatch<SetStateAction<number>>
   orderDirectionAuthorsName: OrderDirection
-  orderDirectionAuthorsBookCount: OrderDirection
   orderDirectionAuthorsBorn: OrderDirection
-  setOrderByAuthors: Dispatch<SetStateAction<OrderBy>>
+  orderByAuthors: OrderAuthorsBy
+  setOrderByAuthors: Dispatch<SetStateAction<OrderAuthorsBy>>
   setOrderDirectionAuthorsName: Dispatch<SetStateAction<OrderDirection>>
-  setOrderDirectionAuthorsBookCount: Dispatch<SetStateAction<OrderDirection>>
   setOrderDirectionAuthorsBorn: Dispatch<SetStateAction<OrderDirection>>
 }) => {
   const [name1, setName1] = useState<SelectOption | undefined>({
@@ -39,7 +38,17 @@ const Authors = (props: {
   const addRef = useRef<HTMLFormElement>(null)
   const changeRef = useRef<HTMLFormElement>(null)
 
-  const authors = props.authors?.data?.allAuthors
+  const [orderByBookCount, setOrderByBookCount] = useState<Boolean>(false)
+  const [orderByBookCountASC, setOrderByBookCountASC] = useState<Boolean>(true)
+  const [orderDirectionAuthorsBookCount, setOrderDirectionAuthorsBookCount] = useState<OrderDirection>(
+    OrderDirection.ASC
+  )
+
+  const authors = !orderByBookCount
+    ? props.authors?.data?.allAuthors
+    : props.authors?.data?.allAuthors
+        ?.slice()
+        .sort((a, b) => (orderByBookCountASC ? b.bookCount - a.bookCount : a.bookCount - b.bookCount))
 
   const chooseOne = 'Choose one'
 
@@ -181,17 +190,22 @@ const Authors = (props: {
                   <button
                     className="reset"
                     onClick={() => {
-                      props.setOrderByAuthors(OrderBy.NAME)
+                      setOrderByBookCount(false)
+                      props.setOrderByAuthors(OrderAuthorsBy.NAME)
                       props.orderDirectionAuthorsName === OrderDirection.ASC
                         ? props.setOrderDirectionAuthorsName(OrderDirection.DESC)
                         : props.setOrderDirectionAuthorsName(OrderDirection.ASC)
                     }}
                   >
                     Author{' '}
-                    {props.orderDirectionAuthorsName === OrderDirection.ASC ? (
-                      <TiArrowSortedUp style={{ marginBottom: -2 }} />
+                    {props.orderByAuthors === OrderAuthorsBy.NAME ? (
+                      props.orderDirectionAuthorsName === OrderDirection.ASC ? (
+                        <FaSortUp style={{ marginBottom: -2 }} />
+                      ) : (
+                        <FaSortDown style={{ marginBottom: -2 }} />
+                      )
                     ) : (
-                      <TiArrowSortedDown style={{ marginBottom: -2 }} />
+                      <FaSort style={{ marginBottom: -2 }} />
                     )}
                   </button>
                 </th>
@@ -199,34 +213,59 @@ const Authors = (props: {
                   <button
                     className="reset"
                     onClick={() => {
-                      props.setOrderByAuthors(OrderBy.BORN)
+                      setOrderByBookCount(false)
+                      props.setOrderByAuthors(OrderAuthorsBy.BORN)
                       props.orderDirectionAuthorsBorn === OrderDirection.ASC
                         ? props.setOrderDirectionAuthorsBorn(OrderDirection.DESC)
                         : props.setOrderDirectionAuthorsBorn(OrderDirection.ASC)
                     }}
                   >
                     Born{' '}
-                    {props.orderDirectionAuthorsBorn === OrderDirection.ASC ? (
-                      <TiArrowSortedUp style={{ marginBottom: -2 }} />
+                    {props.orderByAuthors === OrderAuthorsBy.BORN ? (
+                      props.orderDirectionAuthorsBorn === OrderDirection.ASC ? (
+                        <FaSortUp style={{ marginBottom: -2 }} />
+                      ) : (
+                        <FaSortDown style={{ marginBottom: -2 }} />
+                      )
                     ) : (
-                      <TiArrowSortedDown style={{ marginBottom: -2 }} />
+                      <FaSort style={{ marginBottom: -2 }} />
                     )}
                   </button>
                 </th>
-                <th>Books</th>
+                <th>
+                  <button
+                    className="reset"
+                    onClick={() => {
+                      setOrderByBookCount(true)
+                      props.setOrderByAuthors(OrderAuthorsBy.BOOKS)
+                      setOrderByBookCountASC((prev) => !prev)
+                      orderDirectionAuthorsBookCount === OrderDirection.ASC
+                        ? setOrderDirectionAuthorsBookCount(OrderDirection.DESC)
+                        : setOrderDirectionAuthorsBookCount(OrderDirection.ASC)
+                    }}
+                  >
+                    Books{' '}
+                    {props.orderByAuthors === OrderAuthorsBy.BOOKS ? (
+                      orderDirectionAuthorsBookCount === OrderDirection.ASC ? (
+                        <FaSortUp style={{ marginBottom: -2 }} />
+                      ) : (
+                        <FaSortDown style={{ marginBottom: -2 }} />
+                      )
+                    ) : (
+                      <FaSort style={{ marginBottom: -2 }} />
+                    )}
+                  </button>
+                </th>
               </tr>
-              {authors
-                ?.slice()
-                //.sort((a, b) => a.name.localeCompare(b.name))
-                .map((a: authorProps) => (
-                  <tr key={a.name}>
-                    <td>
-                      <Link to={`/authors/${a.id}`}>{a.name}</Link>
-                    </td>
-                    <td>{a.born && a.born < 0 ? `${Math.abs(a.born)} BC` : a.born}</td>
-                    <td>{a.bookCount}</td>
-                  </tr>
-                ))}
+              {authors?.slice().map((a: authorProps) => (
+                <tr key={a.name}>
+                  <td>
+                    <Link to={`/authors/${a.id}`}>{a.name}</Link>
+                  </td>
+                  <td>{a.born && a.born < 0 ? `${Math.abs(a.born)} BC` : a.born}</td>
+                  <td>{a.bookCount}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
           {authors && (

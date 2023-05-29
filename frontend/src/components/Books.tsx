@@ -1,10 +1,10 @@
 import { useQuery } from '@apollo/client'
-import { OrderBy, OrderDirection, booksProps } from '../interfaces'
+import { OrderAuthorsBy, OrderBooksBy, OrderDirection, booksProps } from '../interfaces'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { FILTER_BOOKS } from '../queries'
 import FeedBooks from './FeedBooks'
 import { InView } from 'react-intersection-observer'
-import { TiArrowSortedUp, TiArrowSortedDown } from 'react-icons/ti'
+import { FaSortUp, FaSortDown, FaSort } from 'react-icons/fa'
 
 interface BookProps {
   genre: string
@@ -14,8 +14,11 @@ interface BookProps {
 const Books = ({ genre, setGenre, booklist }: BookProps) => {
   const [limit, setLimit] = useState(6)
   const [orderDirection, setOrderDirection] = useState<OrderDirection>(OrderDirection.ASC)
-  const [orderBy, setOrderBy] = useState<OrderBy>(OrderBy.TITLE)
+  const [orderBy, setOrderBy] = useState<OrderBooksBy>(OrderBooksBy.TITLE)
   const [currentGenre, setCurrentGenre] = useState(genre)
+
+  const [orderByAuthor, setOrderByAuthor] = useState<Boolean>(false)
+  const [orderByAuthorASC, setOrderByAuthorASC] = useState<Boolean>(true)
 
   const { data, loading, error, refetch } = useQuery(FILTER_BOOKS, {
     variables: {
@@ -28,18 +31,15 @@ const Books = ({ genre, setGenre, booklist }: BookProps) => {
   })
   // eslint-disable-next-line no-console
 
-  const books = data?.allBooks?.slice()
-  // .sort(function (a: { title: string }, b: { title: string }) {
-  //   let aTitle = a.title.toLowerCase()
-  //   let bTitle = b.title.toLowerCase()
-  //   if (aTitle > bTitle) {
-  //     return 1
-  //   } else if (aTitle < bTitle) {
-  //     return -1
-  //   } else {
-  //     return 0
-  //   }
-  // })
+  const books = !orderByAuthor
+    ? data?.allBooks
+    : data?.allBooks
+        ?.slice()
+        .sort((a: { author: { surname: string } }, b: { author: { surname: string } }) =>
+          orderByAuthorASC
+            ? a.author.surname.localeCompare(b.author.surname)
+            : b.author.surname.localeCompare(a.author.surname)
+        )
 
   let genres = Array.prototype.concat.apply(
     [],
@@ -116,21 +116,73 @@ const Books = ({ genre, setGenre, booklist }: BookProps) => {
                     <button
                       className="reset"
                       onClick={() => {
+                        setOrderByAuthor(false)
+                        setOrderBy(OrderBooksBy.TITLE)
                         orderDirection === OrderDirection.ASC
                           ? setOrderDirection(OrderDirection.DESC)
                           : setOrderDirection(OrderDirection.ASC)
                       }}
                     >
                       Title{' '}
-                      {orderDirection === OrderDirection.ASC ? (
-                        <TiArrowSortedUp style={{ marginBottom: -2 }} />
+                      {orderBy === OrderBooksBy.TITLE ? (
+                        orderDirection === OrderDirection.ASC ? (
+                          <FaSortUp style={{ marginBottom: -2 }} />
+                        ) : (
+                          <FaSortDown style={{ marginBottom: -2 }} />
+                        )
                       ) : (
-                        <TiArrowSortedDown style={{ marginBottom: -2 }} />
+                        <FaSort style={{ marginBottom: -2 }} />
                       )}
                     </button>
                   </th>
-                  <th>Author</th>
-                  <th>Published</th>
+                  <th>
+                    <button
+                      className="reset"
+                      onClick={() => {
+                        setOrderByAuthor(true)
+                        setOrderBy(OrderBooksBy.AUTHOR)
+                        setOrderByAuthorASC((prev) => !prev)
+                        setOrderBy(OrderBooksBy.AUTHOR)
+                        orderDirection === OrderDirection.ASC
+                          ? setOrderDirection(OrderDirection.DESC)
+                          : setOrderDirection(OrderDirection.ASC)
+                      }}
+                    >
+                      Author{' '}
+                      {orderBy === OrderBooksBy.AUTHOR ? (
+                        orderDirection === OrderDirection.ASC ? (
+                          <FaSortUp style={{ marginBottom: -2 }} />
+                        ) : (
+                          <FaSortDown style={{ marginBottom: -2 }} />
+                        )
+                      ) : (
+                        <FaSort style={{ marginBottom: -2 }} />
+                      )}
+                    </button>
+                  </th>
+                  <th>
+                    <button
+                      className="reset"
+                      onClick={() => {
+                        setOrderByAuthor(false)
+                        setOrderBy(OrderBooksBy.PUBLISHED)
+                        orderDirection === OrderDirection.ASC
+                          ? setOrderDirection(OrderDirection.DESC)
+                          : setOrderDirection(OrderDirection.ASC)
+                      }}
+                    >
+                      Published{' '}
+                      {orderBy === OrderBooksBy.PUBLISHED ? (
+                        orderDirection === OrderDirection.ASC ? (
+                          <FaSortUp style={{ marginBottom: -2 }} />
+                        ) : (
+                          <FaSortDown style={{ marginBottom: -2 }} />
+                        )
+                      ) : (
+                        <FaSort style={{ marginBottom: -2 }} />
+                      )}
+                    </button>
+                  </th>
                 </tr>
                 {books?.map((a: booksProps) => (
                   <FeedBooks key={a.title} a={a} />

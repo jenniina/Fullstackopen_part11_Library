@@ -1,5 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { userProps, message } from '../interfaces'
+import { userProps, message, OrderDirection, OrderUsersBy } from '../interfaces'
+import { Dispatch, SetStateAction, useState } from 'react'
+import { FaSortDown, FaSortUp, FaSort } from 'react-icons/fa'
 
 const Users = (props: {
   users: {
@@ -10,13 +12,20 @@ const Users = (props: {
   }
   notify: ({ error, message }: message, seconds: number) => void
   token: string | null
+  orderByUsers: OrderUsersBy
+  setOrderByUsers: Dispatch<SetStateAction<OrderUsersBy>>
+  orderDirectionUsers: OrderDirection
+  setOrderDirectionUsers: Dispatch<SetStateAction<OrderDirection>>
 }) => {
-  const users = props.users?.data?.allUsers
+  const [orderByBookCount, setOrderByBookCount] = useState<Boolean>(true)
+  const [orderByBookCountASC, setOrderByBookCountASC] = useState<Boolean>(true)
+  const [orderDirectionUsersBookCount, setOrderDirectionUsersBookCount] = useState<OrderDirection>(OrderDirection.ASC)
 
-  const sortedByBookAmount = users
-    ?.slice()
-    .sort((a, b) => b.books.length - a.books.length)
-    .map((user) => user)
+  const users = !orderByBookCount
+    ? props.users?.data?.allUsers
+    : props.users?.data?.allUsers
+        ?.slice()
+        .sort((a, b) => (orderByBookCountASC ? b.books.length - a.books.length : a.books.length - b.books.length))
 
   const navigate = useNavigate()
 
@@ -40,11 +49,78 @@ const Users = (props: {
         <table>
           <tbody>
             <tr>
-              <th>Username</th>
-              <th>Favorite genre</th>
-              <th>Books added</th>
+              <th>
+                <button
+                  className="reset"
+                  onClick={() => {
+                    setOrderByBookCount(false)
+                    props.setOrderByUsers(OrderUsersBy.USERNAME)
+                    props.orderDirectionUsers === OrderDirection.ASC
+                      ? props.setOrderDirectionUsers(OrderDirection.DESC)
+                      : props.setOrderDirectionUsers(OrderDirection.ASC)
+                  }}
+                >
+                  Username{' '}
+                  {props.orderByUsers === OrderUsersBy.USERNAME ? (
+                    props.orderDirectionUsers === OrderDirection.ASC ? (
+                      <FaSortUp style={{ marginBottom: -2 }} />
+                    ) : (
+                      <FaSortDown style={{ marginBottom: -2 }} />
+                    )
+                  ) : (
+                    <FaSort style={{ marginBottom: -2 }} />
+                  )}
+                </button>
+              </th>
+              <th>
+                <button
+                  className="reset"
+                  onClick={() => {
+                    setOrderByBookCount(false)
+                    props.setOrderByUsers(OrderUsersBy.GENRE)
+                    props.orderDirectionUsers === OrderDirection.ASC
+                      ? props.setOrderDirectionUsers(OrderDirection.DESC)
+                      : props.setOrderDirectionUsers(OrderDirection.ASC)
+                  }}
+                >
+                  Favorite genre{' '}
+                  {props.orderByUsers === OrderUsersBy.GENRE ? (
+                    props.orderDirectionUsers === OrderDirection.ASC ? (
+                      <FaSortUp style={{ marginBottom: -2 }} />
+                    ) : (
+                      <FaSortDown style={{ marginBottom: -2 }} />
+                    )
+                  ) : (
+                    <FaSort style={{ marginBottom: -2 }} />
+                  )}
+                </button>
+              </th>
+              <th>
+                <button
+                  className="reset"
+                  onClick={() => {
+                    setOrderByBookCount(true)
+                    props.setOrderByUsers(OrderUsersBy.BOOKS)
+                    setOrderByBookCountASC((prev) => !prev)
+                    orderDirectionUsersBookCount === OrderDirection.ASC
+                      ? setOrderDirectionUsersBookCount(OrderDirection.DESC)
+                      : setOrderDirectionUsersBookCount(OrderDirection.ASC)
+                  }}
+                >
+                  Books added{' '}
+                  {props.orderByUsers === OrderUsersBy.BOOKS ? (
+                    orderDirectionUsersBookCount === OrderDirection.ASC ? (
+                      <FaSortUp style={{ marginBottom: -2 }} />
+                    ) : (
+                      <FaSortDown style={{ marginBottom: -2 }} />
+                    )
+                  ) : (
+                    <FaSort style={{ marginBottom: -2 }} />
+                  )}
+                </button>
+              </th>
             </tr>
-            {sortedByBookAmount?.map((u: userProps) => (
+            {users?.map((u: userProps) => (
               <tr key={u.username}>
                 <td>
                   <Link to={`/users/${u.id}`}>{u.username}</Link>

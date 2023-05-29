@@ -48,10 +48,18 @@ export enum OrderDirection {
   DESC = -1,
 }
 
-export enum OrderBy {
+export enum OrderBooksBy {
   TITLE = 'title',
-  NAME = 'surname',
   PUBLISHED = 'published',
+  AUTHOR = 'name',
+}
+export enum OrderAuthorsBy {
+  NAME = 'surname',
   BORN = 'born',
-  BOOKCOUNT = 'bookCount',
+  BOOKS = 'bookCount',
+}
+export enum OrderUsersBy {
+  USERNAME = 'username',
+  GENRE = 'favoriteGenre',
+  BOOKS = 'books',
 }

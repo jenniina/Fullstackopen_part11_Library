@@ -38,7 +38,7 @@ type Book {
     findBook(title: String!):Book
     authorCount: Int!
     allAuthors(offset: Int, limit: Int, orderDirection: Int!, orderBy: String!): [Author!]!
-    allUsers(id:ID): [User!]!
+    allUsers(id:ID, offset: Int, limit: Int, orderDirection: Int!, orderBy: String!): [User!]!
     findAuthor(name: String! surname:String):Author
     findUser(id: String!):User
     me: User

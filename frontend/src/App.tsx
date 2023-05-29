@@ -3,7 +3,15 @@ import Notify from './components/Notify'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
-import { OrderBy, OrderDirection, authorProps, message, userProps } from './interfaces'
+import {
+  OrderDirection,
+  OrderBooksBy,
+  OrderAuthorsBy,
+  OrderUsersBy,
+  authorProps,
+  message,
+  userProps,
+} from './interfaces'
 import { ALL_AUTHORS, ALL_BOOKS, ALL_USERS, BOOK_ADDED, ME } from './queries'
 import FormLogin from './components/FormLogin'
 import { ApolloCache, DocumentNode, useApolloClient, useQuery, useSubscription } from '@apollo/client'
@@ -52,18 +60,19 @@ const App = () => {
 
   const [message, setMessage] = useState<message>()
 
-  const [limitAuthors, setLimitAuthors] = useState(6)
+  const [limit, setLimit] = useState(5)
   const [orderDirectionAuthorsName, setOrderDirectionAuthorsName] = useState<OrderDirection>(OrderDirection.ASC)
   const [orderDirectionAuthorsBorn, setOrderDirectionAuthorsBorn] = useState<OrderDirection>(OrderDirection.ASC)
-  const [orderDirectionAuthorsBookCount, setOrderDirectionAuthorsBookCount] = useState<OrderDirection>(
-    OrderDirection.ASC
-  )
-  const [orderByAuthors, setOrderByAuthors] = useState<OrderBy>(OrderBy.NAME)
+
+  const [orderDirectionUsers, setOrderDirectionUsers] = useState<OrderDirection>(OrderDirection.ASC)
+
+  const [orderByAuthors, setOrderByAuthors] = useState<OrderAuthorsBy>(OrderAuthorsBy.NAME)
+  const [orderByUsers, setOrderByUsers] = useState<OrderUsersBy>(OrderUsersBy.BOOKS)
 
   const resultAuthors = useQuery(ALL_AUTHORS, {
     variables: {
       offset: 0,
-      limit: limitAuthors,
+      limit,
       orderDirection: orderDirectionAuthorsName,
       orderBy: orderByAuthors,
     },
@@ -71,10 +80,17 @@ const App = () => {
   const resultBooks = useQuery(ALL_BOOKS, {
     variables: {
       orderDirection: OrderDirection.ASC,
-      orderBy: OrderBy.TITLE,
+      orderBy: OrderBooksBy.TITLE,
     },
   })
-  const resultUsers = useQuery(ALL_USERS)
+  const resultUsers = useQuery(ALL_USERS, {
+    variables: {
+      offset: 0,
+      limit,
+      orderDirection: orderDirectionUsers,
+      orderBy: orderByUsers,
+    },
+  })
 
   useEffect(() => {
     resultAuthors.refetch({ orderBy: orderByAuthors, orderDirection: orderDirectionAuthorsName })
@@ -84,7 +100,9 @@ const App = () => {
     resultAuthors.refetch({ orderBy: orderByAuthors, orderDirection: orderDirectionAuthorsBorn })
   }, [orderDirectionAuthorsBorn, orderByAuthors, resultAuthors.refetch])
 
-  // eslint-disable-next-line no-console
+  useEffect(() => {
+    resultUsers.refetch({ orderBy: orderByUsers, orderDirection: orderDirectionUsers })
+  }, [orderDirectionUsers, orderByUsers, resultUsers.refetch])
 
   const { data } = useQuery(ME)
 
@@ -229,18 +247,30 @@ const App = () => {
                 notify={notify}
                 token={token}
                 me={data?.me}
-                setLimitAuthors={setLimitAuthors}
+                setLimitAuthors={setLimit}
                 orderDirectionAuthorsName={orderDirectionAuthorsName}
                 setOrderDirectionAuthorsName={setOrderDirectionAuthorsName}
+                orderByAuthors={orderByAuthors}
                 setOrderByAuthors={setOrderByAuthors}
-                orderDirectionAuthorsBookCount={orderDirectionAuthorsBookCount}
-                setOrderDirectionAuthorsBookCount={setOrderDirectionAuthorsBookCount}
                 orderDirectionAuthorsBorn={orderDirectionAuthorsBorn}
                 setOrderDirectionAuthorsBorn={setOrderDirectionAuthorsBorn}
               />
             }
           />
-          <Route path="/users" element={<Users users={resultUsers} notify={notify} token={token} />} />
+          <Route
+            path="/users"
+            element={
+              <Users
+                users={resultUsers}
+                notify={notify}
+                token={token}
+                orderByUsers={orderByUsers}
+                setOrderByUsers={setOrderByUsers}
+                orderDirectionUsers={orderDirectionUsers}
+                setOrderDirectionUsers={setOrderDirectionUsers}
+              />
+            }
+          />
           <Route
             path="/users/:id"
             element={<User user={user} notify={notify} token={token} me={data?.me} setGenre={setGenre} />}

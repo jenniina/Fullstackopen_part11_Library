@@ -6,6 +6,7 @@ const BOOK_DETAILS = gql`
     published
     author {
       name
+      surname
       id
     }
     genres
@@ -27,8 +28,8 @@ export const ALL_AUTHORS = gql`
 `
 
 export const ALL_USERS = gql`
-  query allUsers($id: ID) {
-    allUsers(id: $id) {
+  query allUsers($id: ID, $offset: Int, $limit: Int, $orderDirection: Int!, $orderBy: String!) {
+    allUsers(id: $id, offset: $offset, limit: $limit, orderDirection: $orderDirection, orderBy: $orderBy) {
       username
       favoriteGenre
       id
