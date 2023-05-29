@@ -1,15 +1,25 @@
 import { useQuery } from '@apollo/client'
-import { booksProps, userProps } from '../interfaces'
+import { OrderBooksBy, OrderDirection, booksProps, userProps } from '../interfaces'
 import { ME } from '../queries'
 import { Link, useNavigate } from 'react-router-dom'
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
+import { InView } from 'react-intersection-observer'
+import { FaSort, FaSortDown, FaSortUp } from 'react-icons/fa'
 
 const Books = (props: {
   books: booksProps[]
   token: string | null
   me: userProps
   setGenre: Dispatch<SetStateAction<string>>
+  setLimitBooks: Dispatch<SetStateAction<number>>
+  orderByBooks: OrderBooksBy
+  setOrderByBooks: Dispatch<SetStateAction<OrderBooksBy>>
+  orderDirectionBooks: OrderDirection
+  setOrderDirectionBooks: Dispatch<SetStateAction<OrderDirection>>
 }) => {
+  const [orderByAuthor, setOrderByAuthor] = useState<Boolean>(false)
+  const [orderByAuthorASC, setOrderByAuthorASC] = useState<Boolean>(true)
+
   const navigate = useNavigate()
 
   const user = useQuery(ME)
@@ -21,10 +31,7 @@ const Books = (props: {
 
   const favorite = user?.data?.me?.favoriteGenre
 
-  const books = props.books
-
-  const filteredBooksInGenre = books?.filter((book) => book.genres.includes(favorite))
-  const filteredBooks = filteredBooksInGenre?.filter((book) => book.user !== props.me.id)
+  const filteredBooks = props.books
 
   const heading = 'Recommendations'
 
@@ -66,9 +73,88 @@ const Books = (props: {
               <table>
                 <tbody>
                   <tr>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>Published</th>
+                    <th>
+                      <button
+                        className="reset"
+                        onClick={() => {
+                          setOrderByAuthor(false)
+                          props.setOrderByBooks(OrderBooksBy.TITLE)
+                          props.orderDirectionBooks === OrderDirection.ASC
+                            ? props.setOrderDirectionBooks(OrderDirection.DESC)
+                            : props.setOrderDirectionBooks(OrderDirection.ASC)
+                        }}
+                        aria-describedby="description1"
+                      >
+                        Title
+                        <span className="screen-reader-text" id="description1">
+                          sort by title
+                        </span>{' '}
+                        {props.orderByBooks === OrderBooksBy.TITLE ? (
+                          props.orderDirectionBooks === OrderDirection.ASC ? (
+                            <FaSortUp style={{ marginBottom: -2 }} />
+                          ) : (
+                            <FaSortDown style={{ marginBottom: -2 }} />
+                          )
+                        ) : (
+                          <FaSort style={{ marginBottom: -2 }} />
+                        )}
+                      </button>
+                    </th>
+                    <th>
+                      <button
+                        className="reset has-tooltip"
+                        onClick={() => {
+                          setOrderByAuthor(true)
+                          setOrderByAuthorASC((prev) => !prev)
+                          props.setOrderByBooks(OrderBooksBy.AUTHOR)
+                          props.orderDirectionBooks === OrderDirection.ASC
+                            ? props.setOrderDirectionBooks(OrderDirection.DESC)
+                            : props.setOrderDirectionBooks(OrderDirection.ASC)
+                        }}
+                        aria-describedby="tooltip2"
+                      >
+                        Author
+                        <span className="tooltip" role="tooltip" id="tooltip2">
+                          sort&nbsp;by author&nbsp;surname (sorts&nbsp;visible)
+                        </span>{' '}
+                        {props.orderByBooks === OrderBooksBy.AUTHOR ? (
+                          props.orderDirectionBooks === OrderDirection.ASC ? (
+                            <FaSortUp style={{ marginBottom: -2 }} />
+                          ) : (
+                            <FaSortDown style={{ marginBottom: -2 }} />
+                          )
+                        ) : (
+                          <FaSort style={{ marginBottom: -2 }} />
+                        )}
+                      </button>
+                    </th>
+                    <th>
+                      <button
+                        className="reset"
+                        onClick={() => {
+                          setOrderByAuthor(false)
+                          props.setOrderByBooks(OrderBooksBy.PUBLISHED)
+                          props.orderDirectionBooks === OrderDirection.ASC
+                            ? props.setOrderDirectionBooks(OrderDirection.DESC)
+                            : props.setOrderDirectionBooks(OrderDirection.ASC)
+                        }}
+                        aria-describedby="description3"
+                      >
+                        Published
+                        <span className="screen-reader-text" id="description3">
+                          sort by publish date
+                        </span>{' '}
+                        {props.orderByBooks === OrderBooksBy.PUBLISHED ? (
+                          props.orderDirectionBooks === OrderDirection.ASC ? (
+                            <FaSortUp style={{ marginBottom: -2 }} />
+                          ) : (
+                            <FaSortDown style={{ marginBottom: -2 }} />
+                          )
+                        ) : (
+                          <FaSort style={{ marginBottom: -2 }} />
+                        )}
+                      </button>
+                    </th>
                   </tr>
                   {filteredBooks?.map((a: booksProps) => (
                     <tr key={a.title}>
@@ -78,11 +164,20 @@ const Books = (props: {
                       <td>
                         <Link to={`/authors/${a.author.id}`}>{a.author.name}</Link>
                       </td>
-                      <td>{a.published}</td>
+                      <td>{a.published && a.published < 0 ? `${Math.abs(a.published)} BC` : a.published}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+            )}
+            {filteredBooks && (
+              <InView
+                onChange={async (inView) => {
+                  if (inView) {
+                    props.setLimitBooks((prev) => prev + 20)
+                  }
+                }}
+              />
             )}
           </>
         )}

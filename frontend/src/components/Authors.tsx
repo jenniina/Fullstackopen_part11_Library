@@ -1,9 +1,11 @@
 import { useMutation } from '@apollo/client'
-import { authorProps, message, userProps } from '../interfaces'
-import { useEffect, useRef, useState, FormEvent, useMemo } from 'react'
+import { OrderAuthorsBy, OrderDirection, authorProps, message, userProps } from '../interfaces'
+import { useEffect, useRef, useState, FormEvent, useMemo, Dispatch, SetStateAction } from 'react'
 import { EDIT_BORN, ALL_AUTHORS, DELETE_AUTHOR } from '../queries'
 import { Link } from 'react-router-dom'
 import { Select, SelectOption } from './Select/Select'
+import { InView } from 'react-intersection-observer'
+import { FaSort, FaSortDown, FaSortUp } from 'react-icons/fa'
 
 const Authors = (props: {
   authors: {
@@ -15,6 +17,13 @@ const Authors = (props: {
   notify: ({ error, message }: message, seconds: number) => void
   token: string | null
   me: userProps
+  setLimitAuthors: Dispatch<SetStateAction<number>>
+  orderDirectionAuthorsName: OrderDirection
+  orderDirectionAuthorsBorn: OrderDirection
+  orderByAuthors: OrderAuthorsBy
+  setOrderByAuthors: Dispatch<SetStateAction<OrderAuthorsBy>>
+  setOrderDirectionAuthorsName: Dispatch<SetStateAction<OrderDirection>>
+  setOrderDirectionAuthorsBorn: Dispatch<SetStateAction<OrderDirection>>
 }) => {
   const [name1, setName1] = useState<SelectOption | undefined>({
     label: 'Choose one',
@@ -29,7 +38,17 @@ const Authors = (props: {
   const addRef = useRef<HTMLFormElement>(null)
   const changeRef = useRef<HTMLFormElement>(null)
 
-  const authors = props.authors?.data?.allAuthors
+  const [orderByBookCount, setOrderByBookCount] = useState<Boolean>(false)
+  const [orderByBookCountASC, setOrderByBookCountASC] = useState<Boolean>(true)
+  const [orderDirectionAuthorsBookCount, setOrderDirectionAuthorsBookCount] = useState<OrderDirection>(
+    OrderDirection.ASC
+  )
+
+  const authors = !orderByBookCount
+    ? props.authors?.data?.allAuthors
+    : props.authors?.data?.allAuthors
+        ?.slice()
+        .sort((a, b) => (orderByBookCountASC ? b.bookCount - a.bookCount : a.bookCount - b.bookCount))
 
   const chooseOne = 'Choose one'
 
@@ -54,6 +73,13 @@ const Authors = (props: {
 
   useEffect(() => {
     if (authorsWithoutBornObjects?.length < authorsWithoutBorn?.length) {
+      authorsWithoutBornObjects = [
+        {
+          label: chooseOne,
+          value: 'nothing chosen',
+        },
+      ]
+
       for (let object in authorsWithoutBorn) {
         authorsWithoutBornObjects.push({
           label: authorsWithoutBorn[object],
@@ -61,7 +87,7 @@ const Authors = (props: {
         })
       }
     }
-  }, [authorsWithoutBorn, authorsWithoutBornObjects])
+  }, [authorsWithoutBorn?.length, authorsWithoutBornObjects?.length])
 
   const authorsWithBorn = authors?.map((a) => (!a.born ? null : `${a.name}: ${a.born}`)).filter((a) => a !== null)
 
@@ -77,6 +103,13 @@ const Authors = (props: {
 
   useEffect(() => {
     if (authorsWITHBornObjects?.length < authorsWithBorn?.length) {
+      authorsWITHBornObjects = [
+        {
+          label: chooseOne,
+          value: 'nothing chosen',
+        },
+      ]
+
       for (let object in authorsWithBorn) {
         authorsWITHBornObjects.push({
           label: authorsWithBorn[object],
@@ -84,7 +117,7 @@ const Authors = (props: {
         })
       }
     }
-  }, [authorsWithBorn, authorsWITHBornObjects])
+  }, [authorsWithBorn?.length, authorsWITHBornObjects?.length])
 
   const [editAuthorBornYear] = useMutation(EDIT_BORN, {
     refetchQueries: [{ query: ALL_AUTHORS }],
@@ -131,6 +164,8 @@ const Authors = (props: {
     }
   }
 
+  // eslint-disable-next-line no-console
+
   const heading = 'Authors'
 
   return (
@@ -147,17 +182,94 @@ const Authors = (props: {
           <big>Loading...</big>
         </div>
       ) : (
-        <table className="tableauthors">
-          <tbody>
-            <tr>
-              <th>Author</th>
-              <th>Born</th>
-              <th>Books</th>
-            </tr>
-            {authors
-              ?.slice()
-              .sort((a, b) => a.name.localeCompare(b.name))
-              .map((a: authorProps) => (
+        <>
+          <table className="tableauthors">
+            <tbody>
+              <tr>
+                <th>
+                  <button
+                    className="reset"
+                    onClick={() => {
+                      setOrderByBookCount(false)
+                      props.setOrderByAuthors(OrderAuthorsBy.NAME)
+                      props.orderDirectionAuthorsName === OrderDirection.ASC
+                        ? props.setOrderDirectionAuthorsName(OrderDirection.DESC)
+                        : props.setOrderDirectionAuthorsName(OrderDirection.ASC)
+                    }}
+                    aria-describedby="description1"
+                  >
+                    Author
+                    <span className="screen-reader-text" id="description1">
+                      sort by author surname
+                    </span>{' '}
+                    {props.orderByAuthors === OrderAuthorsBy.NAME ? (
+                      props.orderDirectionAuthorsName === OrderDirection.ASC ? (
+                        <FaSortUp style={{ marginBottom: -2 }} />
+                      ) : (
+                        <FaSortDown style={{ marginBottom: -2 }} />
+                      )
+                    ) : (
+                      <FaSort style={{ marginBottom: -2 }} />
+                    )}
+                  </button>
+                </th>
+                <th>
+                  <button
+                    className="reset"
+                    onClick={() => {
+                      setOrderByBookCount(false)
+                      props.setOrderByAuthors(OrderAuthorsBy.BORN)
+                      props.orderDirectionAuthorsBorn === OrderDirection.ASC
+                        ? props.setOrderDirectionAuthorsBorn(OrderDirection.DESC)
+                        : props.setOrderDirectionAuthorsBorn(OrderDirection.ASC)
+                    }}
+                    aria-describedby="description2"
+                  >
+                    Born
+                    <span className="screen-reader-text" id="description2">
+                      sort by birth date
+                    </span>{' '}
+                    {props.orderByAuthors === OrderAuthorsBy.BORN ? (
+                      props.orderDirectionAuthorsBorn === OrderDirection.ASC ? (
+                        <FaSortUp style={{ marginBottom: -2 }} />
+                      ) : (
+                        <FaSortDown style={{ marginBottom: -2 }} />
+                      )
+                    ) : (
+                      <FaSort style={{ marginBottom: -2 }} />
+                    )}
+                  </button>
+                </th>
+                <th>
+                  <button
+                    className="reset has-tooltip"
+                    onClick={() => {
+                      setOrderByBookCount(true)
+                      props.setOrderByAuthors(OrderAuthorsBy.BOOKS)
+                      setOrderByBookCountASC((prev) => !prev)
+                      orderDirectionAuthorsBookCount === OrderDirection.ASC
+                        ? setOrderDirectionAuthorsBookCount(OrderDirection.DESC)
+                        : setOrderDirectionAuthorsBookCount(OrderDirection.ASC)
+                    }}
+                    aria-describedby="tooltip1"
+                  >
+                    Books
+                    <span className="tooltip" role="tooltip" id="tooltip1">
+                      sort&nbsp;by book&nbsp;count (sorts&nbsp;visible)
+                    </span>{' '}
+                    {props.orderByAuthors === OrderAuthorsBy.BOOKS ? (
+                      orderDirectionAuthorsBookCount === OrderDirection.ASC ? (
+                        <FaSortUp style={{ marginBottom: -2 }} />
+                      ) : (
+                        <FaSortDown style={{ marginBottom: -2 }} />
+                      )
+                    ) : (
+                      <FaSort style={{ marginBottom: -2 }} />
+                    )}
+                  </button>
+                </th>
+              </tr>
+              {authors?.slice().map((a: authorProps) => (
                 <tr key={a.name}>
                   <td>
                     <Link to={`/authors/${a.id}`}>{a.name}</Link>
@@ -166,8 +278,18 @@ const Authors = (props: {
                   <td>{a.bookCount}</td>
                 </tr>
               ))}
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+          {authors && (
+            <InView
+              onChange={async (inView) => {
+                if (inView) {
+                  props.setLimitAuthors((prev) => prev + 20)
+                }
+              }}
+            />
+          )}
+        </>
       )}{' '}
       {!props.token ? (
         ''

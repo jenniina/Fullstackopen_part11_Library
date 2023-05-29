@@ -13,24 +13,71 @@ const resolvers = {
   Query: {
     bookCount: () => Book.collection.countDocuments(),
     allBooks: async (_root, args) => {
+      const orderBy = args.orderBy || 'title'
+      const orderDirection = args.orderDirection || 1
+      const options = { sort: [['author.surname', orderDirection]] }
       if (args.author) {
         const author = await Author.findOne({ name: args.author })
         if (author) {
-          if (args.genre) {
+          if (args.genre && orderBy === 'title') {
             return await Book.find({
               author: author.id,
               genres: { $in: [args.genre] },
-            }).populate('author')
-          }
-          return await Book.find({ author: author.id }).populate('author')
+            })
+              .sort({ title: orderDirection })
+              .populate('author')
+          } else if (orderBy === 'published') {
+            return await Book.find({
+              author: author.id,
+              genres: { $in: [args.genre] },
+            })
+              .populate('author')
+              .sort({ published: orderDirection })
+          } else
+            return await Book.find({ author: author.id }).populate({
+              path: 'author',
+              select: 'surname name',
+              options: options,
+            })
         } else return null
       }
 
       if (args.genre) {
-        return Book.find({ genres: { $in: [args.genre] } }).populate('author')
+        if (orderBy === 'title') {
+          return await Book.find({ genres: { $in: [args.genre] } })
+            .sort({ title: orderDirection })
+            .populate('author')
+        } else if (orderBy === 'published') {
+          return await Book.find({ genres: { $in: [args.genre] } })
+            .populate('author')
+            .sort({ published: orderDirection })
+        } else
+          await Book.find({ genres: { $in: [args.genre] } }).populate({
+            path: 'author',
+            select: 'surname name',
+            options: options,
+          })
       }
 
-      return Book.find({}).populate('author')
+      if (args.limit) {
+        if (orderBy === 'title') {
+          return Book.find({}).sort({ title: orderDirection }).populate('author')
+        } else {
+          return Book.find({}).populate('author').sort({ published: orderDirection })
+        }
+      }
+
+      if (orderBy === 'title') {
+        return Book.find({}).sort({ title: orderDirection }).populate('author')
+      } else if (orderBy === 'published') {
+        return Book.find({}).populate('author').sort({ published: orderDirection })
+      } else {
+        return Book.find({}).populate({
+          path: 'author',
+          select: 'surname name',
+          options: options,
+        })
+      }
     },
     findBook: async (_root, args) => {
       if (args.author) {
@@ -58,9 +105,26 @@ const resolvers = {
     },
 
     authorCount: () => Author.collection.countDocuments(),
-    allAuthors: async () => await Author.find({}).populate('bookCount'),
+    allAuthors: async (_root, args) => {
+      const orderBy = args.orderBy || 'surname'
+      const orderDirection = args.orderDirection || 1
+      if (orderBy === 'surname') {
+        return await Author.find({})
+          .sort({ surname: orderDirection })
+          .populate('bookCount')
+      } else if (orderBy === 'born') {
+        return await Author.find({}).sort({ born: orderDirection }).populate('bookCount')
+      } //else return await Author.find({}).populate('bookCount')
+      else {
+        // const author = await Author.find({}).populate('bookCount').exec()
+        // return [...author].sort((a, b) => a.bookCount - b.bookCount)
+        return await Author.find({}).populate('bookCount').exec()
+      }
+    },
     //allUsers: async () => await User.find({}).populate('books'),
-    allUsers: async (root, args) => {
+    allUsers: async (_root, args) => {
+      const orderBy = args.orderBy || 'username'
+      const orderDirection = args.orderDirection || 1
       if (args.id) {
         return User.find({ id: args.id })
           .populate({
@@ -69,12 +133,28 @@ const resolvers = {
             populate: [{ path: 'author' }],
           })
           .exec()
-      }
-      return User.find({}).populate({
-        path: 'books',
-        select: 'id title author',
-        populate: [{ path: 'author' }],
-      })
+      } else if (orderBy === 'username') {
+        return User.find({})
+          .sort({ username: orderDirection })
+          .populate({
+            path: 'books',
+            select: 'id title author',
+            populate: [{ path: 'author' }],
+          })
+      } else if (orderBy === 'favoriteGenre') {
+        return User.find({})
+          .sort({ favoriteGenre: orderDirection })
+          .populate({
+            path: 'books',
+            select: 'id title author',
+            populate: [{ path: 'author' }],
+          })
+      } else
+        return User.find({}).populate({
+          path: 'books',
+          select: 'id title author',
+          populate: [{ path: 'author' }],
+        })
     },
     findAuthor: async (root) => await Author.findOne({ name: root.name }),
     findUser: async (root) => await User.findById(root),
@@ -116,7 +196,7 @@ const resolvers = {
       }
 
       if (!author) {
-        const newAuthor = new Author({ name: args.author })
+        const newAuthor = new Author({ name: args.author, surname: args.surname })
         try {
           await newAuthor.save()
         } catch (error) {

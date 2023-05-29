@@ -42,3 +42,24 @@ export interface authorProps {
 export interface RefObject<T> {
   readonly current: T
 }
+
+export enum OrderDirection {
+  ASC = 1,
+  DESC = -1,
+}
+
+export enum OrderBooksBy {
+  TITLE = 'title',
+  PUBLISHED = 'published',
+  AUTHOR = 'name',
+}
+export enum OrderAuthorsBy {
+  NAME = 'surname',
+  BORN = 'born',
+  BOOKS = 'bookCount',
+}
+export enum OrderUsersBy {
+  USERNAME = 'username',
+  GENRE = 'favoriteGenre',
+  BOOKS = 'books',
+}

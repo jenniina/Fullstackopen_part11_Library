@@ -6,6 +6,7 @@ const BOOK_DETAILS = gql`
     published
     author {
       name
+      surname
       id
     }
     genres
@@ -15,8 +16,9 @@ const BOOK_DETAILS = gql`
 `
 
 export const ALL_AUTHORS = gql`
-  query allAuthors {
-    allAuthors {
+  query allAuthors($offset: Int, $limit: Int, $orderDirection: Int!, $orderBy: String!) {
+    allAuthors(offset: $offset, limit: $limit, orderDirection: $orderDirection, orderBy: $orderBy) {
+      surname
       name
       born
       bookCount
@@ -26,8 +28,8 @@ export const ALL_AUTHORS = gql`
 `
 
 export const ALL_USERS = gql`
-  query allUsers($id: ID) {
-    allUsers(id: $id) {
+  query allUsers($id: ID, $offset: Int, $limit: Int, $orderDirection: Int!, $orderBy: String!) {
+    allUsers(id: $id, offset: $offset, limit: $limit, orderDirection: $orderDirection, orderBy: $orderBy) {
       username
       favoriteGenre
       id
@@ -44,16 +46,16 @@ export const ALL_USERS = gql`
 `
 
 export const ALL_BOOKS = gql`
-  query allBooks {
-    allBooks {
+  query allBooks($orderDirection: Int!, $orderBy: String!, $offset: Int, $limit: Int) {
+    allBooks(orderDirection: $orderDirection, orderBy: $orderBy, offset: $offset, limit: $limit) {
       ...BookDetails
     }
   }
   ${BOOK_DETAILS}
 `
 export const FILTER_BOOKS = gql`
-  query allBooks($genre: String) {
-    allBooks(genre: $genre) {
+  query allBooks($orderDirection: Int!, $orderBy: String!, $genre: String, $offset: Int, $limit: Int) {
+    allBooks(orderDirection: $orderDirection, orderBy: $orderBy, genre: $genre, offset: $offset, limit: $limit) {
       ...BookDetails
     }
   }
@@ -86,17 +88,12 @@ export const ADD_BOOK = gql`
   mutation createBook(
     $title: String!
     $author: String!
+    $surname: String!
     $published: Int!
     $genres: [String!]!
     $user: ID
   ) {
-    createBook(
-      title: $title
-      author: $author
-      published: $published
-      user: $user
-      genres: $genres
-    ) {
+    createBook(title: $title, author: $author, surname: $surname, published: $published, user: $user, genres: $genres) {
       ...BookDetails
     }
   }
@@ -112,18 +109,8 @@ export const EDIT_BORN = gql`
   }
 `
 export const EDIT_USER = gql`
-  mutation editUser(
-    $id: ID!
-    $setGenre: String
-    $setUsername: String
-    $setPassword: String
-  ) {
-    editUser(
-      id: $id
-      setGenre: $setGenre
-      setUsername: $setUsername
-      setPassword: $setPassword
-    ) {
+  mutation editUser($id: ID!, $setGenre: String, $setUsername: String, $setPassword: String) {
+    editUser(id: $id, setGenre: $setGenre, setUsername: $setUsername, setPassword: $setPassword) {
       username
       favoriteGenre
       passwordHash
@@ -157,16 +144,8 @@ export const BOOK_ADDED = gql`
   ${BOOK_DETAILS}
 `
 export const CREATE_USER = gql`
-  mutation createUser(
-    $username: String!
-    $passwordHash: String!
-    $favoriteGenre: String!
-  ) {
-    createUser(
-      username: $username
-      passwordHash: $passwordHash
-      favoriteGenre: $favoriteGenre
-    ) {
+  mutation createUser($username: String!, $passwordHash: String!, $favoriteGenre: String!) {
+    createUser(username: $username, passwordHash: $passwordHash, favoriteGenre: $favoriteGenre) {
       username
       favoriteGenre
     }

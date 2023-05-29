@@ -9,6 +9,10 @@ const schema = new mongoose.Schema({
     unique: true,
     minlength: 4,
   },
+  surname: {
+    type: String,
+    required: true,
+  },
   bookCount: {
     type: Number,
   },

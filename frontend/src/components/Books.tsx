@@ -1,47 +1,69 @@
 import { useQuery } from '@apollo/client'
-import { booksProps } from '../interfaces'
-import { Dispatch, SetStateAction, useEffect } from 'react'
+import { OrderAuthorsBy, OrderBooksBy, OrderDirection, booksProps } from '../interfaces'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { FILTER_BOOKS } from '../queries'
-import { Link } from 'react-router-dom'
+import FeedBooks from './FeedBooks'
+import { InView } from 'react-intersection-observer'
+import { FaSortUp, FaSortDown, FaSort } from 'react-icons/fa'
 
 interface BookProps {
   genre: string
   setGenre: Dispatch<SetStateAction<string>>
+  booklist: booksProps[]
 }
-const Books = ({ genre, setGenre }: BookProps) => {
-  const { data, loading, error, refetch } = useQuery(FILTER_BOOKS)
+const Books = ({ genre, setGenre, booklist }: BookProps) => {
+  const [limit, setLimit] = useState(6)
+  const [orderDirection, setOrderDirection] = useState<OrderDirection>(OrderDirection.ASC)
+  const [orderBy, setOrderBy] = useState<OrderBooksBy>(OrderBooksBy.TITLE)
+  const [currentGenre, setCurrentGenre] = useState(genre)
 
-  const books = data?.allBooks?.slice().sort(function (a: { title: string }, b: { title: string }) {
-    let aTitle = a.title.toLowerCase()
-    let bTitle = b.title.toLowerCase()
-    if (aTitle > bTitle) {
-      return 1
-    } else if (aTitle < bTitle) {
-      return -1
-    } else {
-      return 0
-    }
+  const [orderByAuthor, setOrderByAuthor] = useState<Boolean>(false)
+  const [orderByAuthorASC, setOrderByAuthorASC] = useState<Boolean>(true)
+
+  const { data, loading, error, refetch } = useQuery(FILTER_BOOKS, {
+    variables: {
+      genre,
+      offset: 0,
+      limit,
+      orderDirection,
+      orderBy,
+    },
   })
+  // eslint-disable-next-line no-console
+
+  const books = !orderByAuthor
+    ? data?.allBooks
+    : data?.allBooks
+        ?.slice()
+        .sort((a: { author: { surname: string } }, b: { author: { surname: string } }) =>
+          orderByAuthorASC
+            ? a.author.surname.localeCompare(b.author.surname)
+            : b.author.surname.localeCompare(a.author.surname)
+        )
 
   let genres = Array.prototype.concat.apply(
     [],
-    books?.map((b: { genres: booksProps['genres'] }) => b.genres)
+    booklist?.map((b: { genres: booksProps['genres'] }) => b.genres)
   )
   genres = [...new Set(genres)]
 
   useEffect(() => {
-    refetch({ genre: genre })
+    refetch({ genre })
   }, [genre, refetch])
 
+  useEffect(() => {
+    refetch({ orderDirection })
+  }, [orderDirection, refetch])
+
+  useEffect(() => {
+    refetch({ orderBy })
+  }, [orderBy, refetch])
+
   const heading = 'Books'
-  // if (loading) {
-  //   return (
-  //     <div>
-  //       <big>loading...</big>
-  //     </div>
-  //   )
-  // }
+
   if (error) {
+    // eslint-disable-next-line no-console
+    console.log(JSON.stringify(error, null, 2))
     return (
       <div>
         <big>There was an error loading the books</big>
@@ -62,39 +84,131 @@ const Books = ({ genre, setGenre }: BookProps) => {
             <p>You may filter the books by pressing one of the buttons below:</p>
             <div className="genresButtons">
               <div>
-                <button onClick={() => setGenre('')}>
-                  <big>all genres</big>
+                <button
+                  className={`${currentGenre === '' ? 'active' : genre}`}
+                  onClick={() => {
+                    setGenre('')
+                    setCurrentGenre('')
+                  }}
+                >
+                  all genres
                 </button>
               </div>
               {genres
                 ?.sort((a, b) => a.localeCompare(b))
                 .map((genre) => (
-                  <button key={genre} onClick={() => setGenre(genre)}>
+                  <button
+                    key={genre}
+                    onClick={() => {
+                      setGenre(genre)
+                      setCurrentGenre(genre)
+                    }}
+                    className={`${genre === currentGenre ? 'active' : genre}`}
+                  >
                     {genre}
                   </button>
                 ))}
             </div>
-
             <table className="tablebooks">
               <tbody>
                 <tr>
-                  <th>Title</th>
-                  <th>Author</th>
-                  <th>Published</th>
+                  <th>
+                    <button
+                      className="reset"
+                      onClick={() => {
+                        setOrderByAuthor(false)
+                        setOrderBy(OrderBooksBy.TITLE)
+                        orderDirection === OrderDirection.ASC
+                          ? setOrderDirection(OrderDirection.DESC)
+                          : setOrderDirection(OrderDirection.ASC)
+                      }}
+                      aria-describedby="description1"
+                    >
+                      Title
+                      <span className="screen-reader-text" id="description1">
+                        sort by title
+                      </span>{' '}
+                      {orderBy === OrderBooksBy.TITLE ? (
+                        orderDirection === OrderDirection.ASC ? (
+                          <FaSortUp style={{ marginBottom: -2 }} />
+                        ) : (
+                          <FaSortDown style={{ marginBottom: -2 }} />
+                        )
+                      ) : (
+                        <FaSort style={{ marginBottom: -2 }} />
+                      )}
+                    </button>
+                  </th>
+                  <th>
+                    <button
+                      className="reset has-tooltip"
+                      onClick={() => {
+                        setOrderByAuthor(true)
+                        setOrderBy(OrderBooksBy.AUTHOR)
+                        setOrderByAuthorASC((prev) => !prev)
+                        orderDirection === OrderDirection.ASC
+                          ? setOrderDirection(OrderDirection.DESC)
+                          : setOrderDirection(OrderDirection.ASC)
+                      }}
+                      aria-describedby="tooltip2"
+                    >
+                      Author
+                      <span className="tooltip" role="tooltip" id="tooltip2">
+                        sort&nbsp;by author&nbsp;surname (sorts&nbsp;visible)
+                      </span>{' '}
+                      {orderBy === OrderBooksBy.AUTHOR ? (
+                        orderDirection === OrderDirection.ASC ? (
+                          <FaSortUp style={{ marginBottom: -2 }} />
+                        ) : (
+                          <FaSortDown style={{ marginBottom: -2 }} />
+                        )
+                      ) : (
+                        <FaSort style={{ marginBottom: -2 }} />
+                      )}
+                    </button>
+                  </th>
+                  <th>
+                    <button
+                      className="reset"
+                      onClick={() => {
+                        setOrderByAuthor(false)
+                        setOrderBy(OrderBooksBy.PUBLISHED)
+                        orderDirection === OrderDirection.ASC
+                          ? setOrderDirection(OrderDirection.DESC)
+                          : setOrderDirection(OrderDirection.ASC)
+                      }}
+                      aria-describedby="description3"
+                    >
+                      Published
+                      <span className="screen-reader-text" id="description3">
+                        sort by publish date
+                      </span>{' '}
+                      {orderBy === OrderBooksBy.PUBLISHED ? (
+                        orderDirection === OrderDirection.ASC ? (
+                          <FaSortUp style={{ marginBottom: -2 }} />
+                        ) : (
+                          <FaSortDown style={{ marginBottom: -2 }} />
+                        )
+                      ) : (
+                        <FaSort style={{ marginBottom: -2 }} />
+                      )}
+                    </button>
+                  </th>
                 </tr>
                 {books?.map((a: booksProps) => (
-                  <tr key={a.title}>
-                    <td>
-                      <Link to={`/books/${a.id}`}>{a.title}</Link>
-                    </td>
-                    <td>
-                      <Link to={`/authors/${a.author.id}`}>{a.author.name}</Link>
-                    </td>
-                    <td>{a.published && a.published < 0 ? `${Math.abs(a.published)} BC` : a.published}</td>
-                  </tr>
+                  <FeedBooks key={a.title} a={a} />
                 ))}
               </tbody>
             </table>
+            {data && (
+              <InView
+                onChange={async (inView) => {
+                  if (inView) {
+                    setLimit((prev) => prev + 20)
+                  }
+                }}
+              />
+            )}
           </>
         )}
       </div>
