@@ -268,6 +268,7 @@ const App = () => {
                 setOrderByUsers={setOrderByUsers}
                 orderDirectionUsers={orderDirectionUsers}
                 setOrderDirectionUsers={setOrderDirectionUsers}
+                setLimitUsers={setLimitUsers}
               />
             }
           />

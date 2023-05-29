@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { userProps, message, OrderDirection, OrderUsersBy } from '../interfaces'
 import { Dispatch, SetStateAction, useState } from 'react'
 import { FaSortDown, FaSortUp, FaSort } from 'react-icons/fa'
+import { InView } from 'react-intersection-observer'
 
 const Users = (props: {
   users: {
@@ -16,6 +17,7 @@ const Users = (props: {
   setOrderByUsers: Dispatch<SetStateAction<OrderUsersBy>>
   orderDirectionUsers: OrderDirection
   setOrderDirectionUsers: Dispatch<SetStateAction<OrderDirection>>
+  setLimitUsers: Dispatch<SetStateAction<number>>
 }) => {
   const [orderByBookCount, setOrderByBookCount] = useState<Boolean>(true)
   const [orderByBookCountASC, setOrderByBookCountASC] = useState<Boolean>(true)
@@ -135,6 +137,15 @@ const Users = (props: {
             ))}
           </tbody>
         </table>
+        {users && (
+          <InView
+            onChange={async (inView) => {
+              if (inView) {
+                props.setLimitUsers((prev) => prev + 6)
+              }
+            }}
+          />
+        )}
       </div>
     )
 }
