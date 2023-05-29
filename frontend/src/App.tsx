@@ -133,14 +133,13 @@ const App = () => {
     resultFilterByFavoriteGenre.refetch({ genre: favorite, orderBy: orderByBooks, orderDirection: orderDirectionBooks })
   }, [favorite, orderDirectionBooks, orderByBooks, resultBooks.refetch])
 
-  // extra filtering due to unreliable graphql filter
+  // extra filtering due to unreliable graphql filter:
   const filteredBooksInGenre = resultFilterByFavoriteGenre?.data?.allBooks?.filter((book: { genres: string[] }) =>
     book.genres.includes(favorite)
   )
   const filteredBooks = filteredBooksInGenre?.filter((book: { user: string }) => book.user !== data?.me?.id)
 
   // eslint-disable-next-line no-console
-  console.log(resultFilterByFavoriteGenre?.data?.allBooks)
 
   const [genre, setGenre] = useState<string>('')
 
