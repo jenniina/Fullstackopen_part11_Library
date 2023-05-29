@@ -106,7 +106,7 @@ const Books = ({ genre, setGenre, booklist }: BookProps) => {
                 <tr>
                   <th>
                     <button
-                      className="reset"
+                      className="reset has-tooltip"
                       onClick={() => {
                         setOrderByAuthor(false)
                         setOrderBy(OrderBooksBy.TITLE)
@@ -117,8 +117,8 @@ const Books = ({ genre, setGenre, booklist }: BookProps) => {
                       aria-describedby="description1"
                     >
                       Title
-                      <span className="screen-reader-text" id="description1">
-                        sort by title
+                      <span className="tooltip" role="tooltip" id="tooltip3">
+                        sort&nbsp;by title
                       </span>{' '}
                       {orderBy === OrderBooksBy.TITLE ? (
                         orderDirection === OrderDirection.ASC ? (
@@ -146,7 +146,7 @@ const Books = ({ genre, setGenre, booklist }: BookProps) => {
                     >
                       Author
                       <span className="tooltip" role="tooltip" id="tooltip2">
-                        sort&nbsp;by author&nbsp;surname (sorts&nbsp;visible)
+                        sort&nbsp;by author&nbsp;surname <small>(sorts&nbsp;visible)</small>
                       </span>{' '}
                       {orderBy === OrderBooksBy.AUTHOR ? (
                         orderDirection === OrderDirection.ASC ? (
@@ -161,7 +161,7 @@ const Books = ({ genre, setGenre, booklist }: BookProps) => {
                   </th>
                   <th>
                     <button
-                      className="reset"
+                      className="reset has-tooltip"
                       onClick={() => {
                         setOrderByAuthor(false)
                         setOrderBy(OrderBooksBy.PUBLISHED)
@@ -169,11 +169,11 @@ const Books = ({ genre, setGenre, booklist }: BookProps) => {
                           ? setOrderDirection(OrderDirection.DESC)
                           : setOrderDirection(OrderDirection.ASC)
                       }}
-                      aria-describedby="description3"
+                      aria-describedby="tooltip3"
                     >
                       Published
-                      <span className="screen-reader-text" id="description3">
-                        sort by publish date
+                      <span className="tooltip" role="tooltip" id="tooltip3">
+                        sort&nbsp;by publish&nbsp;date
                       </span>{' '}
                       {orderBy === OrderBooksBy.PUBLISHED ? (
                         orderDirection === OrderDirection.ASC ? (
