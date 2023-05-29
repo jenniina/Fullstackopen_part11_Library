@@ -60,9 +60,8 @@ const App = () => {
 
   const [message, setMessage] = useState<message>()
 
-  const [limitBooks, setLimitBooks] = useState(10)
-  const [limitAuthors, setLimitAuthors] = useState(10)
-  const [limitUsers, setLimitUsers] = useState(10)
+  const [limitAuthors, setLimitAuthors] = useState(15)
+  const [limitUsers, setLimitUsers] = useState(15)
 
   const [orderDirectionAuthorsName, setOrderDirectionAuthorsName] = useState<OrderDirection>(OrderDirection.ASC)
   const [orderDirectionAuthorsBorn, setOrderDirectionAuthorsBorn] = useState<OrderDirection>(OrderDirection.ASC)
@@ -116,28 +115,6 @@ const App = () => {
   }, [orderDirectionBooks, orderByBooks, resultBooks.refetch])
 
   const { data } = useQuery(ME)
-
-  const favorite = data?.me?.favoriteGenre
-
-  const resultFilterByFavoriteGenre = useQuery(FILTER_BOOKS, {
-    variables: {
-      genre: favorite,
-      offset: 0,
-      limit: limitBooks,
-      orderDirection: orderDirectionBooks,
-      orderBy: orderByBooks,
-    },
-  })
-
-  useEffect(() => {
-    resultFilterByFavoriteGenre.refetch({ genre: favorite, orderBy: orderByBooks, orderDirection: orderDirectionBooks })
-  }, [favorite, orderDirectionBooks, orderByBooks, resultBooks.refetch])
-
-  // extra filtering due to unreliable graphql filter:
-  const filteredBooksInGenre = resultFilterByFavoriteGenre?.data?.allBooks?.filter((book: { genres: string[] }) =>
-    book.genres.includes(favorite)
-  )
-  const filteredBooks = filteredBooksInGenre?.filter((book: { user: string }) => book.user !== data?.me?.id)
 
   // eslint-disable-next-line no-console
 
@@ -326,11 +303,9 @@ const App = () => {
             path="/recommended"
             element={
               <Recommended
-                books={filteredBooks}
                 token={token}
                 me={data?.me}
                 setGenre={setGenre}
-                setLimitBooks={setLimitBooks}
                 orderDirectionBooks={orderDirectionBooks}
                 setOrderDirectionBooks={setOrderDirectionBooks}
                 orderByBooks={orderByBooks}

@@ -1,24 +1,59 @@
 import { useQuery } from '@apollo/client'
 import { OrderBooksBy, OrderDirection, booksProps, userProps } from '../interfaces'
-import { ME } from '../queries'
+import { FILTER_BOOKS, ME } from '../queries'
 import { Link, useNavigate } from 'react-router-dom'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { InView } from 'react-intersection-observer'
 import { FaSort, FaSortDown, FaSortUp } from 'react-icons/fa'
 
 const Books = (props: {
-  books: booksProps[]
   token: string | null
   me: userProps
   setGenre: Dispatch<SetStateAction<string>>
-  setLimitBooks: Dispatch<SetStateAction<number>>
   orderByBooks: OrderBooksBy
   setOrderByBooks: Dispatch<SetStateAction<OrderBooksBy>>
   orderDirectionBooks: OrderDirection
   setOrderDirectionBooks: Dispatch<SetStateAction<OrderDirection>>
 }) => {
+  const [limitBooks, setLimitBooks] = useState(15)
   const [orderByAuthor, setOrderByAuthor] = useState<Boolean>(false)
   const [orderByAuthorASC, setOrderByAuthorASC] = useState<Boolean>(true)
+
+  const favorite = props.me?.favoriteGenre
+
+  const resultFilterByFavoriteGenre = useQuery(FILTER_BOOKS, {
+    variables: {
+      genre: favorite,
+      offset: 0,
+      limit: limitBooks,
+      orderDirection: props.orderDirectionBooks,
+      orderBy: props.orderByBooks,
+    },
+  })
+
+  useEffect(() => {
+    resultFilterByFavoriteGenre.refetch({
+      genre: favorite,
+      orderBy: props.orderByBooks,
+      orderDirection: props.orderDirectionBooks,
+    })
+  }, [favorite, props.orderDirectionBooks, props.orderByBooks, resultFilterByFavoriteGenre.refetch])
+
+  // extra filtering due to unreliable graphql filter:
+  const filteredBooksInGenre = resultFilterByFavoriteGenre?.data?.allBooks?.filter((book: { genres: string[] }) =>
+    book.genres.includes(favorite)
+  )
+  const filteredBooks = filteredBooksInGenre?.filter((book: { user: string }) => book.user !== props.me?.id)
+
+  const books = !orderByAuthor
+    ? filteredBooks
+    : filteredBooks
+        ?.slice()
+        .sort((a: { author: { surname: string } }, b: { author: { surname: string } }) =>
+          orderByAuthorASC
+            ? a.author.surname.localeCompare(b.author.surname)
+            : b.author.surname.localeCompare(a.author.surname)
+        )
 
   const navigate = useNavigate()
 
@@ -29,9 +64,9 @@ const Books = (props: {
     navigate('/books')
   }
 
-  const favorite = user?.data?.me?.favoriteGenre
+  //const favorite = user?.data?.me?.favoriteGenre
 
-  const filteredBooks = props.books
+  //const filteredBooks = props.books
 
   const heading = 'Recommendations'
 
@@ -62,7 +97,7 @@ const Books = (props: {
                 </big>
               </button>
             </p>
-            {filteredBooks?.length === 0 ? (
+            {books?.length === 0 ? (
               <>
                 <p>Oh no! No-one else has added any books in your favorite genre, yet!</p>
                 <p>
@@ -156,7 +191,7 @@ const Books = (props: {
                       </button>
                     </th>
                   </tr>
-                  {filteredBooks?.map((a: booksProps) => (
+                  {books?.map((a: booksProps) => (
                     <tr key={a.title}>
                       <td>
                         <Link to={`/books/${a.id}`}>{a.title}</Link>
@@ -170,11 +205,11 @@ const Books = (props: {
                 </tbody>
               </table>
             )}
-            {filteredBooks && (
+            {books && (
               <InView
                 onChange={async (inView) => {
                   if (inView) {
-                    props.setLimitBooks((prev) => prev + 20)
+                    setLimitBooks((prev) => prev + 20)
                   }
                 }}
               />
