@@ -102,6 +102,7 @@ const Books = ({ genre, setGenre, booklist }: BookProps) => {
                 ))}
             </div>
             <table className="tablebooks">
+              <caption className="screen-reader-text">List of books</caption>
               <tbody>
                 <tr>
                   <th>

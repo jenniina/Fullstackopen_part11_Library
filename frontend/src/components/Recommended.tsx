@@ -102,6 +102,7 @@ const Books = (props: {
               </>
             ) : (
               <table>
+                <caption className="screen-reader-text">List of book recommendations</caption>
                 <tbody>
                   <tr>
                     <th>

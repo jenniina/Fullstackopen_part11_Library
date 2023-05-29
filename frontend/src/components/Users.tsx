@@ -49,6 +49,7 @@ const Users = (props: {
           <span data-text={heading}>{heading}</span>
         </h1>
         <table>
+          <caption className="screen-reader-text">List of users</caption>
           <tbody>
             <tr>
               <th>

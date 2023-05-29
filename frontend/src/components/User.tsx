@@ -129,6 +129,7 @@ const User = (props: {
           </>
         ) : (
           <table>
+            <caption className="screen-reader-text">List of books added by {user?.username}</caption>
             <tbody>
               <tr>
                 <th>Books added</th>

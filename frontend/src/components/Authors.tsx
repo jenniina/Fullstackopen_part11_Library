@@ -184,6 +184,9 @@ const Authors = (props: {
       ) : (
         <>
           <table className="tableauthors">
+            <caption className="screen-reader-text">
+              List of authors, with author name, birth date and book count. Note that anyone can edit the birth dates.
+            </caption>
             <tbody>
               <tr>
                 <th>
