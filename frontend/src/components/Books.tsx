@@ -122,8 +122,12 @@ const Books = ({ genre, setGenre, booklist }: BookProps) => {
                           ? setOrderDirection(OrderDirection.DESC)
                           : setOrderDirection(OrderDirection.ASC)
                       }}
+                      aria-describedby="description1"
                     >
-                      Title{' '}
+                      Title
+                      <span className="screen-reader-text" id="description1">
+                        sort by title
+                      </span>{' '}
                       {orderBy === OrderBooksBy.TITLE ? (
                         orderDirection === OrderDirection.ASC ? (
                           <FaSortUp style={{ marginBottom: -2 }} />
@@ -137,18 +141,21 @@ const Books = ({ genre, setGenre, booklist }: BookProps) => {
                   </th>
                   <th>
                     <button
-                      className="reset"
+                      className="reset has-tooltip"
                       onClick={() => {
                         setOrderByAuthor(true)
                         setOrderBy(OrderBooksBy.AUTHOR)
                         setOrderByAuthorASC((prev) => !prev)
-                        setOrderBy(OrderBooksBy.AUTHOR)
                         orderDirection === OrderDirection.ASC
                           ? setOrderDirection(OrderDirection.DESC)
                           : setOrderDirection(OrderDirection.ASC)
                       }}
+                      aria-describedby="tooltip2"
                     >
-                      Author{' '}
+                      Author
+                      <span className="tooltip" role="tooltip" id="tooltip2">
+                        sort&nbsp;by author&nbsp;surname (sorts&nbsp;visible)
+                      </span>{' '}
                       {orderBy === OrderBooksBy.AUTHOR ? (
                         orderDirection === OrderDirection.ASC ? (
                           <FaSortUp style={{ marginBottom: -2 }} />
@@ -170,8 +177,12 @@ const Books = ({ genre, setGenre, booklist }: BookProps) => {
                           ? setOrderDirection(OrderDirection.DESC)
                           : setOrderDirection(OrderDirection.ASC)
                       }}
+                      aria-describedby="description3"
                     >
-                      Published{' '}
+                      Published
+                      <span className="screen-reader-text" id="description3">
+                        sort by publish date
+                      </span>{' '}
                       {orderBy === OrderBooksBy.PUBLISHED ? (
                         orderDirection === OrderDirection.ASC ? (
                           <FaSortUp style={{ marginBottom: -2 }} />

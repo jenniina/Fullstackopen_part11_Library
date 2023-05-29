@@ -196,8 +196,12 @@ const Authors = (props: {
                         ? props.setOrderDirectionAuthorsName(OrderDirection.DESC)
                         : props.setOrderDirectionAuthorsName(OrderDirection.ASC)
                     }}
+                    aria-describedby="description1"
                   >
-                    Author{' '}
+                    Author
+                    <span className="screen-reader-text" id="description1">
+                      sort by author surname
+                    </span>{' '}
                     {props.orderByAuthors === OrderAuthorsBy.NAME ? (
                       props.orderDirectionAuthorsName === OrderDirection.ASC ? (
                         <FaSortUp style={{ marginBottom: -2 }} />
@@ -219,8 +223,12 @@ const Authors = (props: {
                         ? props.setOrderDirectionAuthorsBorn(OrderDirection.DESC)
                         : props.setOrderDirectionAuthorsBorn(OrderDirection.ASC)
                     }}
+                    aria-describedby="description2"
                   >
-                    Born{' '}
+                    Born
+                    <span className="screen-reader-text" id="description2">
+                      sort by birth date
+                    </span>{' '}
                     {props.orderByAuthors === OrderAuthorsBy.BORN ? (
                       props.orderDirectionAuthorsBorn === OrderDirection.ASC ? (
                         <FaSortUp style={{ marginBottom: -2 }} />
@@ -234,7 +242,7 @@ const Authors = (props: {
                 </th>
                 <th>
                   <button
-                    className="reset"
+                    className="reset has-tooltip"
                     onClick={() => {
                       setOrderByBookCount(true)
                       props.setOrderByAuthors(OrderAuthorsBy.BOOKS)
@@ -243,8 +251,12 @@ const Authors = (props: {
                         ? setOrderDirectionAuthorsBookCount(OrderDirection.DESC)
                         : setOrderDirectionAuthorsBookCount(OrderDirection.ASC)
                     }}
+                    aria-describedby="tooltip1"
                   >
-                    Books{' '}
+                    Books
+                    <span className="tooltip" role="tooltip" id="tooltip1">
+                      sort&nbsp;by book&nbsp;count (sorts&nbsp;visible)
+                    </span>{' '}
                     {props.orderByAuthors === OrderAuthorsBy.BOOKS ? (
                       orderDirectionAuthorsBookCount === OrderDirection.ASC ? (
                         <FaSortUp style={{ marginBottom: -2 }} />

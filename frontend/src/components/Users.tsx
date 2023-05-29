@@ -97,7 +97,7 @@ const Users = (props: {
               </th>
               <th>
                 <button
-                  className="reset"
+                  className="reset has-tooltip"
                   onClick={() => {
                     setOrderByBookCount(true)
                     props.setOrderByUsers(OrderUsersBy.BOOKS)
@@ -106,8 +106,12 @@ const Users = (props: {
                       ? setOrderDirectionUsersBookCount(OrderDirection.DESC)
                       : setOrderDirectionUsersBookCount(OrderDirection.ASC)
                   }}
+                  aria-describedby="tooltip1"
                 >
-                  Books added{' '}
+                  Books added
+                  <span className="tooltip" role="tooltip" id="tooltip1">
+                    sort&nbsp;by book&nbsp;count (sorts&nbsp;visible)
+                  </span>{' '}
                   {props.orderByUsers === OrderUsersBy.BOOKS ? (
                     orderDirectionUsersBookCount === OrderDirection.ASC ? (
                       <FaSortUp style={{ marginBottom: -2 }} />

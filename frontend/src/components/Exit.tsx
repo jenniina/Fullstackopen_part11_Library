@@ -24,23 +24,32 @@ const Exit = () => {
   }
 
   return (
-    <div className='page-exit'>
-      <h1 className='screen-reader-text'>Exit Site</h1>
+    <div className="page-exit">
+      <h1 className="screen-reader-text">Exit Site</h1>
       <p>
         <big>Are you sure you want to leave the site?</big>
       </p>
       <div style={mediaIsLarge ? itemStyleLarge : itemStyleSmall}>
-        <a href='https://jenniina.fi'>
+        <a href="https://jenniina.fi" className="has-tooltip" aria-describedby="tooltip-home">
           <RiHomeSmileLine />
-          <abbr title='https://jenniina.fi'>Go to Main Site</abbr>
+          Go to Main Site
+          <span className="tooltip" role="tooltip" id="tooltip-home">
+            go to https://jenniina.fi
+          </span>
         </a>
-        <a href='https://jenniina.fi/react'>
+        <a href="https://react.jenniina.fi" className="has-tooltip" aria-describedby="tooltip-react">
           <FaReact />
-          <abbr title='https://jenniina.fi/react'>Go to React Site</abbr>
+          Go to React Site
+          <span className="tooltip" role="tooltip" id="tooltip-react">
+            go to https://react.jenniina.fi
+          </span>
         </a>
-        <NavLink to='/'>
+        <NavLink to="/" className="has-tooltip" aria-describedby="tooltip-back">
           <RiArrowGoBackFill />
-          <abbr title='Welcome'>Back to Browsing</abbr>
+          Back to Browsing
+          <span className="tooltip" role="tooltip" id="tooltip-back">
+            back to welcome page
+          </span>
         </NavLink>
       </div>
     </div>
