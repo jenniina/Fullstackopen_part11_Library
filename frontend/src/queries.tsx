@@ -38,6 +38,7 @@ export const ALL_USERS = gql`
         id
         author {
           name
+          surname
           id
         }
       }

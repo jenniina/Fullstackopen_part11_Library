@@ -17,6 +17,7 @@ export interface userProps {
           id: booksProps['id']
           author: {
             name: string
+            surname: string
             id: string
           }
         }

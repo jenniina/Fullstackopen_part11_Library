@@ -286,7 +286,19 @@ const App = () => {
           />
           <Route
             path="/users/:id"
-            element={<User user={user} notify={notify} token={token} me={data?.me} setGenre={setGenre} />}
+            element={
+              <User
+                user={user}
+                notify={notify}
+                token={token}
+                me={data?.me}
+                setGenre={setGenre}
+                orderByBooks={orderByBooks}
+                setOrderByBooks={setOrderByBooks}
+                orderDirectionBooks={orderDirectionBooks}
+                setOrderDirectionBooks={setOrderDirectionBooks}
+              />
+            }
           />
 
           <Route

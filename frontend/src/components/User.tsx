@@ -1,9 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { userProps, message } from '../interfaces'
+import { userProps, message, OrderBooksBy, OrderDirection } from '../interfaces'
 import { ALL_USERS, EDIT_USER, ME } from '../queries'
 import { useMutation } from '@apollo/client'
 import { useState, FormEvent, Dispatch, SetStateAction } from 'react'
 import { tester } from '../App'
+import { FaSort, FaSortDown, FaSortUp } from 'react-icons/fa'
 
 const User = (props: {
   user: userProps
@@ -11,13 +12,29 @@ const User = (props: {
   token: string | null
   me: userProps
   setGenre: Dispatch<SetStateAction<string>>
+  orderByBooks: OrderBooksBy
+  setOrderByBooks: Dispatch<SetStateAction<OrderBooksBy>>
+  orderDirectionBooks: OrderDirection
+  setOrderDirectionBooks: Dispatch<SetStateAction<OrderDirection>>
 }) => {
-  const user = props.user
-
   const [genre, setGenre] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [passwordConfirm, setPasswordConfirm] = useState('')
+
+  const [orderByTitle, setOrderByTitle] = useState<Boolean>(false)
+  const [orderByAuthor, setOrderByAuthor] = useState<Boolean>(false)
+  const [orderByASC, setOrderByASC] = useState<Boolean>(true)
+
+  const user = props.user
+  const books =
+    orderByTitle && orderByASC
+      ? user?.books?.slice().sort((a, b) => a.title.localeCompare(b.title))
+      : orderByTitle && !orderByASC
+      ? user?.books?.slice().sort((a, b) => b.title.localeCompare(a.title))
+      : orderByAuthor && orderByASC
+      ? user?.books?.slice().sort((a, b) => a.author.surname.localeCompare(b.author.surname))
+      : user?.books?.slice().sort((a, b) => b.author.surname.localeCompare(a.author.surname))
 
   const navigate = useNavigate()
 
@@ -132,23 +149,76 @@ const User = (props: {
             <caption className="screen-reader-text">List of books added by {user?.username}</caption>
             <tbody>
               <tr>
-                <th>Books added</th>
-                <th>Author</th>
+                <th>
+                  <button
+                    className="reset has-tooltip"
+                    onClick={() => {
+                      setOrderByAuthor(false)
+                      setOrderByTitle(true)
+                      setOrderByASC((prev) => !prev)
+                      props.setOrderByBooks(OrderBooksBy.TITLE)
+                      props.orderDirectionBooks === OrderDirection.ASC
+                        ? props.setOrderDirectionBooks(OrderDirection.DESC)
+                        : props.setOrderDirectionBooks(OrderDirection.ASC)
+                    }}
+                    aria-describedby="tooltip1"
+                  >
+                    Books added
+                    <span className="tooltip" role="tooltip" id="tooltip1">
+                      sort&nbsp;by books&nbsp;added
+                    </span>{' '}
+                    {props.orderByBooks === OrderBooksBy.TITLE ? (
+                      orderByASC ? (
+                        <FaSortUp style={{ marginBottom: -2 }} />
+                      ) : (
+                        <FaSortDown style={{ marginBottom: -2 }} />
+                      )
+                    ) : (
+                      <FaSort style={{ marginBottom: -2 }} />
+                    )}
+                  </button>
+                </th>
+                <th>
+                  <button
+                    className="reset has-tooltip"
+                    onClick={() => {
+                      setOrderByAuthor(true)
+                      setOrderByTitle(false)
+                      setOrderByASC((prev) => !prev)
+                      props.setOrderByBooks(OrderBooksBy.AUTHOR)
+                      props.orderDirectionBooks === OrderDirection.ASC
+                        ? props.setOrderDirectionBooks(OrderDirection.DESC)
+                        : props.setOrderDirectionBooks(OrderDirection.ASC)
+                    }}
+                    aria-describedby="tooltip2"
+                  >
+                    Author
+                    <span className="tooltip" role="tooltip" id="tooltip2">
+                      sort&nbsp;by author&nbsp;surname <small>(sorts&nbsp;visible)</small>
+                    </span>{' '}
+                    {props.orderByBooks === OrderBooksBy.AUTHOR ? (
+                      orderByASC ? (
+                        <FaSortUp style={{ marginBottom: -2 }} />
+                      ) : (
+                        <FaSortDown style={{ marginBottom: -2 }} />
+                      )
+                    ) : (
+                      <FaSort style={{ marginBottom: -2 }} />
+                    )}
+                  </button>
+                </th>
               </tr>
 
-              {user?.books
-                ?.slice()
-                .sort((a, b) => a.title.localeCompare(b.title))
-                .map((book) => (
-                  <tr key={book?.id}>
-                    <td>
-                      <Link to={`/books/${book?.id}`}>{book?.title}</Link>
-                    </td>
-                    <td>
-                      <Link to={`/authors/${book?.author?.id}`}>{book?.author?.name}</Link>
-                    </td>
-                  </tr>
-                ))}
+              {books?.map((book) => (
+                <tr key={book?.id}>
+                  <td>
+                    <Link to={`/books/${book?.id}`}>{book?.title}</Link>
+                  </td>
+                  <td>
+                    <Link to={`/authors/${book?.author?.id}`}>{book?.author?.name}</Link>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         )}
