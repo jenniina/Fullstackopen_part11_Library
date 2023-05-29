@@ -12,7 +12,7 @@ import {
   message,
   userProps,
 } from './interfaces'
-import { ALL_AUTHORS, ALL_BOOKS, ALL_USERS, BOOK_ADDED, ME } from './queries'
+import { ALL_AUTHORS, ALL_BOOKS, ALL_USERS, BOOK_ADDED, FILTER_BOOKS, ME } from './queries'
 import FormLogin from './components/FormLogin'
 import { ApolloCache, DocumentNode, useApolloClient, useQuery, useSubscription } from '@apollo/client'
 import { Route, Routes, NavLink, useMatch, Link, useLocation } from 'react-router-dom'
@@ -60,33 +60,40 @@ const App = () => {
 
   const [message, setMessage] = useState<message>()
 
-  const [limit, setLimit] = useState(5)
+  const [limitBooks, setLimitBooks] = useState(10)
+  const [limitAuthors, setLimitAuthors] = useState(10)
+  const [limitUsers, setLimitUsers] = useState(10)
+
   const [orderDirectionAuthorsName, setOrderDirectionAuthorsName] = useState<OrderDirection>(OrderDirection.ASC)
   const [orderDirectionAuthorsBorn, setOrderDirectionAuthorsBorn] = useState<OrderDirection>(OrderDirection.ASC)
 
   const [orderDirectionUsers, setOrderDirectionUsers] = useState<OrderDirection>(OrderDirection.ASC)
 
+  const [orderDirectionBooks, setOrderDirectionBooks] = useState<OrderDirection>(OrderDirection.ASC)
+
   const [orderByAuthors, setOrderByAuthors] = useState<OrderAuthorsBy>(OrderAuthorsBy.NAME)
   const [orderByUsers, setOrderByUsers] = useState<OrderUsersBy>(OrderUsersBy.BOOKS)
+  const [orderByBooks, setOrderByBooks] = useState<OrderBooksBy>(OrderBooksBy.TITLE)
 
+  const resultBooks = useQuery(ALL_BOOKS, {
+    variables: {
+      //do not add limit
+      orderDirection: OrderDirection.ASC,
+      orderBy: OrderBooksBy.TITLE,
+    },
+  })
   const resultAuthors = useQuery(ALL_AUTHORS, {
     variables: {
       offset: 0,
-      limit,
+      limit: limitAuthors,
       orderDirection: orderDirectionAuthorsName,
       orderBy: orderByAuthors,
-    },
-  })
-  const resultBooks = useQuery(ALL_BOOKS, {
-    variables: {
-      orderDirection: OrderDirection.ASC,
-      orderBy: OrderBooksBy.TITLE,
     },
   })
   const resultUsers = useQuery(ALL_USERS, {
     variables: {
       offset: 0,
-      limit,
+      limit: limitUsers,
       orderDirection: orderDirectionUsers,
       orderBy: orderByUsers,
     },
@@ -104,7 +111,36 @@ const App = () => {
     resultUsers.refetch({ orderBy: orderByUsers, orderDirection: orderDirectionUsers })
   }, [orderDirectionUsers, orderByUsers, resultUsers.refetch])
 
+  useEffect(() => {
+    resultBooks.refetch({ orderBy: orderByBooks, orderDirection: orderDirectionBooks })
+  }, [orderDirectionBooks, orderByBooks, resultBooks.refetch])
+
   const { data } = useQuery(ME)
+
+  const favorite = data?.me?.favoriteGenre
+
+  const resultFilterByFavoriteGenre = useQuery(FILTER_BOOKS, {
+    variables: {
+      genre: favorite,
+      offset: 0,
+      limit: limitBooks,
+      orderDirection: orderDirectionBooks,
+      orderBy: orderByBooks,
+    },
+  })
+
+  useEffect(() => {
+    resultFilterByFavoriteGenre.refetch({ genre: favorite, orderBy: orderByBooks, orderDirection: orderDirectionBooks })
+  }, [favorite, orderDirectionBooks, orderByBooks, resultBooks.refetch])
+
+  // extra filtering due to unreliable graphql filter
+  const filteredBooksInGenre = resultFilterByFavoriteGenre?.data?.allBooks?.filter((book: { genres: string[] }) =>
+    book.genres.includes(favorite)
+  )
+  const filteredBooks = filteredBooksInGenre?.filter((book: { user: string }) => book.user !== data?.me?.id)
+
+  // eslint-disable-next-line no-console
+  console.log(resultFilterByFavoriteGenre?.data?.allBooks)
 
   const [genre, setGenre] = useState<string>('')
 
@@ -247,7 +283,7 @@ const App = () => {
                 notify={notify}
                 token={token}
                 me={data?.me}
-                setLimitAuthors={setLimit}
+                setLimitAuthors={setLimitAuthors}
                 orderDirectionAuthorsName={orderDirectionAuthorsName}
                 setOrderDirectionAuthorsName={setOrderDirectionAuthorsName}
                 orderByAuthors={orderByAuthors}
@@ -290,7 +326,17 @@ const App = () => {
           <Route
             path="/recommended"
             element={
-              <Recommended books={resultBooks?.data?.allBooks} token={token} me={data?.me} setGenre={setGenre} />
+              <Recommended
+                books={filteredBooks}
+                token={token}
+                me={data?.me}
+                setGenre={setGenre}
+                setLimitBooks={setLimitBooks}
+                orderDirectionBooks={orderDirectionBooks}
+                setOrderDirectionBooks={setOrderDirectionBooks}
+                orderByBooks={orderByBooks}
+                setOrderByBooks={setOrderByBooks}
+              />
             }
           />
           <Route path="/login" element={<FormLogin notify={notify} setToken={setToken} token={token} />} />

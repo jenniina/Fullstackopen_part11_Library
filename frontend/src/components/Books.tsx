@@ -204,7 +204,7 @@ const Books = ({ genre, setGenre, booklist }: BookProps) => {
               <InView
                 onChange={async (inView) => {
                   if (inView) {
-                    setLimit((prev) => prev + 6)
+                    setLimit((prev) => prev + 20)
                   }
                 }}
               />

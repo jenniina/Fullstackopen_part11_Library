@@ -284,7 +284,7 @@ const Authors = (props: {
             <InView
               onChange={async (inView) => {
                 if (inView) {
-                  props.setLimitAuthors((prev) => prev + 6)
+                  props.setLimitAuthors((prev) => prev + 20)
                 }
               }}
             />
