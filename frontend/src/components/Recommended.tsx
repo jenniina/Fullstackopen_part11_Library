@@ -1,14 +1,21 @@
 import { useQuery } from '@apollo/client'
-import { booksProps, userProps } from '../interfaces'
+import { OrderBooksBy, OrderDirection, booksProps, userProps } from '../interfaces'
 import { ME } from '../queries'
 import { Link, useNavigate } from 'react-router-dom'
 import { Dispatch, SetStateAction } from 'react'
+import { InView } from 'react-intersection-observer'
+import { FaSort, FaSortDown, FaSortUp } from 'react-icons/fa'
 
 const Books = (props: {
   books: booksProps[]
   token: string | null
   me: userProps
   setGenre: Dispatch<SetStateAction<string>>
+  setLimitBooks: Dispatch<SetStateAction<number>>
+  orderByBooks: OrderBooksBy
+  setOrderByBooks: Dispatch<SetStateAction<OrderBooksBy>>
+  orderDirectionBooks: OrderDirection
+  setOrderDirectionBooks: Dispatch<SetStateAction<OrderDirection>>
 }) => {
   const navigate = useNavigate()
 
@@ -68,9 +75,34 @@ const Books = (props: {
                   <tr>
                     <th>Title</th>
                     <th>Author</th>
-                    <th>Published</th>
+                    <th>
+                      <button
+                        className="reset"
+                        onClick={() => {
+                          props.setOrderByBooks(OrderBooksBy.PUBLISHED)
+                          props.orderDirectionBooks === OrderDirection.ASC
+                            ? props.setOrderDirectionBooks(OrderDirection.DESC)
+                            : props.setOrderDirectionBooks(OrderDirection.ASC)
+                        }}
+                        aria-describedby="description3"
+                      >
+                        Published
+                        <span className="screen-reader-text" id="description3">
+                          sort by publish date
+                        </span>{' '}
+                        {props.orderByBooks === OrderBooksBy.PUBLISHED ? (
+                          props.orderDirectionBooks === OrderDirection.ASC ? (
+                            <FaSortUp style={{ marginBottom: -2 }} />
+                          ) : (
+                            <FaSortDown style={{ marginBottom: -2 }} />
+                          )
+                        ) : (
+                          <FaSort style={{ marginBottom: -2 }} />
+                        )}
+                      </button>
+                    </th>
                   </tr>
-                  {filteredBooks?.map((a: booksProps) => (
+                  {books?.map((a: booksProps) => (
                     <tr key={a.title}>
                       <td>
                         <Link to={`/books/${a.id}`}>{a.title}</Link>
@@ -78,11 +110,20 @@ const Books = (props: {
                       <td>
                         <Link to={`/authors/${a.author.id}`}>{a.author.name}</Link>
                       </td>
-                      <td>{a.published}</td>
+                      <td>{a.published && a.published < 0 ? `${Math.abs(a.published)} BC` : a.published}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+            )}
+            {filteredBooks && (
+              <InView
+                onChange={async (inView) => {
+                  if (inView) {
+                    props.setLimitBooks((prev) => prev + 5)
+                  }
+                }}
+              />
             )}
           </>
         )}
