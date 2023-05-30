@@ -43,14 +43,17 @@ describe('site function', () => {
       body: {
         operationName: 'allUsers',
         query: `
-            query allUsers {
-              allUsers {
+            query allUsers($orderDirection: Int!, $orderBy: String!) {
+              allUsers(orderDirection: $orderDirection, orderBy: $orderBy) {
                 username
                 favoriteGenre
                 id
               }
-            }
-            `,
+            }`,
+        variables: {
+          orderDirection: 1,
+          orderBy: 'username',
+        },
       },
     })
       .its('body.data.allUsers')
@@ -129,8 +132,8 @@ describe('site function', () => {
       body: {
         operationName: 'allAuthors',
         query: `
-        query allAuthors{
-          allAuthors {
+        query allAuthors($orderDirection: Int!, $orderBy: String!){
+          allAuthors(orderDirection: $orderDirection, orderBy: $orderBy) {
             name
             born
             bookCount
@@ -138,6 +141,10 @@ describe('site function', () => {
           }
         }
         `,
+        variables: {
+          orderDirection: 1,
+          orderBy: 'surname',
+        },
       },
     })
       .its('body.data.allAuthors')
@@ -149,12 +156,15 @@ describe('site function', () => {
       body: {
         operationName: 'allBooks',
         query: `
-        query allBooks{
-          allBooks {
+        query allBooks($orderDirection: Int!, $orderBy: String!){
+          allBooks(orderDirection: $orderDirection, orderBy: $orderBy) {
             title
           }
-        }
-        `,
+        }`,
+        variables: {
+          orderDirection: 1,
+          orderBy: 'title',
+        },
       },
     })
       .its('body.data.allBooks')

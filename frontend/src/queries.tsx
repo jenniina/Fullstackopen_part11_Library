@@ -16,7 +16,7 @@ const BOOK_DETAILS = gql`
 `
 
 export const ALL_AUTHORS = gql`
-  query allAuthors($offset: Int, $limit: Int, $orderDirection: Int!, $orderBy: String!) {
+  query allAuthors($offset: Int, $limit: Int, $orderDirection: Int, $orderBy: String) {
     allAuthors(offset: $offset, limit: $limit, orderDirection: $orderDirection, orderBy: $orderBy) {
       surname
       name
@@ -28,7 +28,7 @@ export const ALL_AUTHORS = gql`
 `
 
 export const ALL_USERS = gql`
-  query allUsers($id: ID, $offset: Int, $limit: Int, $orderDirection: Int!, $orderBy: String!) {
+  query allUsers($id: ID, $offset: Int, $limit: Int, $orderDirection: Int, $orderBy: String) {
     allUsers(id: $id, offset: $offset, limit: $limit, orderDirection: $orderDirection, orderBy: $orderBy) {
       username
       favoriteGenre
@@ -47,7 +47,7 @@ export const ALL_USERS = gql`
 `
 
 export const ALL_BOOKS = gql`
-  query allBooks($orderDirection: Int!, $orderBy: String!, $offset: Int, $limit: Int) {
+  query allBooks($orderDirection: Int, $orderBy: String, $offset: Int, $limit: Int) {
     allBooks(orderDirection: $orderDirection, orderBy: $orderBy, offset: $offset, limit: $limit) {
       ...BookDetails
     }
@@ -55,7 +55,7 @@ export const ALL_BOOKS = gql`
   ${BOOK_DETAILS}
 `
 export const FILTER_BOOKS = gql`
-  query allBooks($orderDirection: Int!, $orderBy: String!, $genre: String, $offset: Int, $limit: Int) {
+  query allBooks($orderDirection: Int, $orderBy: String, $genre: String, $offset: Int, $limit: Int) {
     allBooks(orderDirection: $orderDirection, orderBy: $orderBy, genre: $genre, offset: $offset, limit: $limit) {
       ...BookDetails
     }
@@ -89,7 +89,7 @@ export const ADD_BOOK = gql`
   mutation createBook(
     $title: String!
     $author: String!
-    $surname: String!
+    $surname: String
     $published: Int!
     $genres: [String!]!
     $user: ID

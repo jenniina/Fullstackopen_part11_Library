@@ -15,7 +15,7 @@ const resolvers = {
     allBooks: async (_root, args) => {
       const orderBy = args.orderBy || 'title'
       const orderDirection = args.orderDirection || 1
-      const options = { sort: [['author.surname', orderDirection]] }
+      //const options = { sort: [['author.surname', orderDirection]] }
       if (args.author) {
         const author = await Author.findOne({ name: args.author })
         if (author) {
@@ -33,13 +33,8 @@ const resolvers = {
             })
               .populate('author')
               .sort({ published: orderDirection })
-          } else
-            return await Book.find({ author: author.id }).populate({
-              path: 'author',
-              select: 'surname name',
-              options: options,
-            })
-        } else return null
+          } else return await Book.find({ author: author.id }).populate('author')
+        }
       }
 
       if (args.genre) {
@@ -51,20 +46,7 @@ const resolvers = {
           return await Book.find({ genres: { $in: [args.genre] } })
             .populate('author')
             .sort({ published: orderDirection })
-        } else
-          await Book.find({ genres: { $in: [args.genre] } }).populate({
-            path: 'author',
-            select: 'surname name',
-            options: options,
-          })
-      }
-
-      if (args.limit) {
-        if (orderBy === 'title') {
-          return Book.find({}).sort({ title: orderDirection }).populate('author')
-        } else {
-          return Book.find({}).populate('author').sort({ published: orderDirection })
-        }
+        } else await Book.find({ genres: { $in: [args.genre] } }).populate('author')
       }
 
       if (orderBy === 'title') {
@@ -72,11 +54,12 @@ const resolvers = {
       } else if (orderBy === 'published') {
         return Book.find({}).populate('author').sort({ published: orderDirection })
       } else {
-        return Book.find({}).populate({
-          path: 'author',
-          select: 'surname name',
-          options: options,
-        })
+        // return Book.find({}).populate({
+        //   path: 'author',
+        //   select: 'surname name',
+        //   //options: options,
+        // })
+        return Book.find({}).populate('author')
       }
     },
     findBook: async (_root, args) => {

@@ -1,8 +1,8 @@
 import { KeyboardEvent, useEffect, useRef, useState, FormEvent } from 'react'
-import { useMutation, useQuery } from '@apollo/client'
-import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS, ALL_USERS, ME } from '../queries'
+import { gql, useMutation, useQuery } from '@apollo/client'
+import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS, ALL_USERS, FILTER_BOOKS, ME } from '../queries'
 import { RefObject, message, userProps } from '../interfaces'
-import { tester, updateCache } from '../App'
+import { tester } from '../App'
 import { useNavigate } from 'react-router-dom'
 import emailjs from '@emailjs/browser'
 
@@ -31,9 +31,31 @@ const NewBook = (props: {
   }, [user])
 
   const [createBook] = useMutation(ADD_BOOK, {
-    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }, { query: ME }, { query: ALL_USERS }],
-    update: (cache, response) => {
-      updateCache(cache, { query: ALL_BOOKS }, response.data.createBook)
+    refetchQueries: [{ query: FILTER_BOOKS }, { query: ALL_AUTHORS }, { query: ME }, { query: ALL_USERS }],
+    update: (cache, { data: { createBook } }) => {
+      cache.modify({
+        fields: {
+          allBooks(existingBooks) {
+            const newBookRef = cache.writeFragment({
+              data: createBook,
+              fragment: gql`
+                fragment NewBook on Book {
+                  title
+                  published
+                  author
+                  genres
+                  id
+                  user
+                }
+              `,
+            })
+            return [...existingBooks, newBookRef]
+          },
+        },
+      })
+    },
+    onQueryUpdated(observableQuery) {
+      return observableQuery.refetch()
     },
     onError: (error) => {
       //eslint-disable-next-line no-console
@@ -55,8 +77,14 @@ const NewBook = (props: {
     setGenre('')
   }
 
+  useEffect(() => {
+    const surname = author.split(' ').splice(-1)[0]
+    setAuthorSurname(surname)
+  }, [author])
+
   const submit = async (event: FormEvent) => {
     event.preventDefault()
+
     if (props.me?.id === tester)
       props.notify(
         {
@@ -65,16 +93,8 @@ const NewBook = (props: {
         },
         10
       )
-    else if (title.length < 5) props.notify({ error: true, message: 'Title too short' }, 10)
-    else if (author.split(' ').splice(-1)[0] !== surname) {
-      props.notify(
-        {
-          error: true,
-          message: 'Looks like the last name in FULL NAME doesn\'t match the LAST NAME',
-        },
-        10
-      )
-    } else {
+    else if (title.length < 2) props.notify({ error: true, message: 'Title too short' }, 10)
+    else {
       createBook({
         variables: {
           title,
@@ -84,6 +104,7 @@ const NewBook = (props: {
           published: parseInt(published),
           user: userId,
         },
+        refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }, { query: ME }, { query: ALL_USERS }],
       }).catch((error) => {
         // eslint-disable-next-line no-console
         console.log(JSON.stringify(error, null, 2))
@@ -132,12 +153,12 @@ const NewBook = (props: {
   }
   const keyHandlerGenre = (e: KeyboardEvent<HTMLInputElement>) => {
     switch (e.code) {
-    case 'Enter':
-    case 'Tab':
-      e.preventDefault()
-      genreButton.current?.click()
-      addGenre()
-      props.notify({ error: false, message: `Added ${genre} to genres list` }, 10)
+      case 'Enter':
+      case 'Tab':
+        e.preventDefault()
+        genreButton.current?.click()
+        addGenre()
+        props.notify({ error: false, message: `Added ${genre} to genres list` }, 10)
     }
   }
 
@@ -191,21 +212,7 @@ const NewBook = (props: {
                   onChange={({ target }) => setAuthor(target.value)}
                 />
                 <span>
-                  <small>author (FULL NAME): </small>
-                </span>
-              </label>
-            </div>
-            <div className="input-wrap fourth">
-              <label data-test="author-surname">
-                <input
-                  name="surname"
-                  value={surname}
-                  type="text"
-                  required
-                  onChange={({ target }) => setAuthorSurname(target.value)}
-                />
-                <span>
-                  <small>author (LAST NAME): </small>
+                  <small>author: </small>
                 </span>
               </label>
             </div>
