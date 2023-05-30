@@ -19,6 +19,7 @@ const FormLogin = ({ notify, setToken, token }: loginProps) => {
   const [login, result] = useMutation(LOGIN, {
     refetchQueries: [{ query: ME }],
     onError: (error) => {
+      // eslint-disable-next-line no-console
       //console.log(JSON.stringify(error, null, 2))
       notify({ error: true, message: error.message }, 10)
     },

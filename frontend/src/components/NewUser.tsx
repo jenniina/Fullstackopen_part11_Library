@@ -17,6 +17,7 @@ const NewUser = (props: {
     refetchQueries: [{ query: ALL_USERS }],
     onError: (error) => {
       props.notify({ error: true, message: error.message }, 10)
+      // eslint-disable-next-line no-console
       //console.log(JSON.stringify(error, null, 2))
     },
     onCompleted: () => {
@@ -32,8 +33,7 @@ const NewUser = (props: {
 
   const submit = async (event: FormEvent) => {
     event.preventDefault()
-    if (username.length > 15)
-      props.notify({ error: false, message: 'Please try a shorter username' }, 5)
+    if (username.length > 15) props.notify({ error: false, message: 'Please try a shorter username' }, 5)
     else {
       const user: userProps = {
         username,
@@ -45,12 +45,7 @@ const NewUser = (props: {
       createUser({
         variables: user,
       })
-        .then(() =>
-          props.notify(
-            { error: false, message: `Successfully made a new user "${username}"` },
-            5
-          )
-        )
+        .then(() => props.notify({ error: false, message: `Successfully made a new user "${username}"` }, 5))
         .then(() => login({ variables: { username, password } }))
         .catch((error) => {
           props.notify({ error: true, message: error.message }, 10)
@@ -65,6 +60,7 @@ const NewUser = (props: {
   const [login, result] = useMutation(LOGIN, {
     refetchQueries: [{ query: ME }],
     onError: (error) => {
+      // eslint-disable-next-line no-console
       //console.log(JSON.stringify(error, null, 2))
       props.notify({ error: true, message: error.message }, 10)
     },
@@ -85,44 +81,29 @@ const NewUser = (props: {
 
   return (
     <div>
-      <h1 className='screen-reader-text'>Add User</h1>
+      <h1 className="screen-reader-text">Add User</h1>
       <form onSubmit={submit}>
         <legend>Add User</legend>
-        <div className='input-wrap'>
+        <div className="input-wrap">
           <label>
-            <input
-              value={username}
-              required
-              type='text'
-              onChange={({ target }) => setUsername(target.value)}
-            />
+            <input value={username} required type="text" onChange={({ target }) => setUsername(target.value)} />
             <span>username </span>
           </label>
         </div>
-        <div className='input-wrap'>
+        <div className="input-wrap">
           <label>
-            <input
-              type='password'
-              value={password}
-              required
-              onChange={({ target }) => setPassword(target.value)}
-            />
+            <input type="password" value={password} required onChange={({ target }) => setPassword(target.value)} />
             <span>password </span>
           </label>
         </div>
 
-        <div className='input-wrap'>
+        <div className="input-wrap">
           <label>
-            <input
-              value={genre}
-              required
-              type='text'
-              onChange={({ target }) => setGenre(target.value)}
-            />
+            <input value={genre} required type="text" onChange={({ target }) => setGenre(target.value)} />
             <span>favorite genre </span>
           </label>
         </div>
-        <button type='submit'>create user</button>
+        <button type="submit">create user</button>
       </form>
     </div>
   )

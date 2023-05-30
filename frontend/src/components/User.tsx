@@ -30,10 +30,10 @@ const User = (props: {
     orderByTitle && orderByASC
       ? user?.books?.slice().sort((a, b) => a.title.localeCompare(b.title))
       : orderByTitle && !orderByASC
-      ? user?.books?.slice().sort((a, b) => b.title.localeCompare(a.title))
-      : !orderByTitle && orderByASC
-      ? user?.books?.slice().sort((a, b) => a.author.surname.localeCompare(b.author.surname))
-      : user?.books?.slice().sort((a, b) => b.author.surname.localeCompare(a.author.surname))
+        ? user?.books?.slice().sort((a, b) => b.title.localeCompare(a.title))
+        : !orderByTitle && orderByASC
+          ? user?.books?.slice().sort((a, b) => a.author.surname.localeCompare(b.author.surname))
+          : user?.books?.slice().sort((a, b) => b.author.surname.localeCompare(a.author.surname))
 
   const navigate = useNavigate()
 
@@ -41,6 +41,7 @@ const User = (props: {
     refetchQueries: [{ query: ALL_USERS }, { query: ME }],
     onError: (error) => {
       props.notify({ error: true, message: error.message }, 10)
+      // eslint-disable-next-line no-console
       //console.log(JSON.stringify(error, null, 2))
     },
     onCompleted: () => {

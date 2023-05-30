@@ -104,7 +104,7 @@ const NewBook = (props: {
             },
             (error) => {
               // eslint-disable-next-line no-console
-              console.log(error.text)
+              console.log(error.text, error.message)
             }
           )
       }

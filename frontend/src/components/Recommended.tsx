@@ -48,12 +48,12 @@ const Books = (props: {
   const books = !orderByAuthor
     ? filteredBooks
     : filteredBooks
-        ?.slice()
-        .sort((a: { author: { surname: string } }, b: { author: { surname: string } }) =>
-          orderByAuthorASC
-            ? a.author.surname.localeCompare(b.author.surname)
-            : b.author.surname.localeCompare(a.author.surname)
-        )
+      ?.slice()
+      .sort((a: { author: { surname: string } }, b: { author: { surname: string } }) =>
+        orderByAuthorASC
+          ? a.author.surname.localeCompare(b.author.surname)
+          : b.author.surname.localeCompare(a.author.surname)
+      )
 
   const navigate = useNavigate()
 

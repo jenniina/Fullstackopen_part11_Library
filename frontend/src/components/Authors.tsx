@@ -47,8 +47,8 @@ const Authors = (props: {
   const authors = !orderByBookCount
     ? props.authors?.data?.allAuthors
     : props.authors?.data?.allAuthors
-        ?.slice()
-        .sort((a, b) => (orderByBookCountASC ? b.bookCount - a.bookCount : a.bookCount - b.bookCount))
+      ?.slice()
+      .sort((a, b) => (orderByBookCountASC ? b.bookCount - a.bookCount : a.bookCount - b.bookCount))
 
   const chooseOne = 'Choose one'
 
