@@ -53,6 +53,17 @@ const NewBook = (props: {
           },
         },
       })
+      // const data = cache.readQuery({ query: ALL_BOOKS })
+      // // eslint-disable-next-line no-console
+      // console.log(data)
+      // data.allBooks.push(response.data.createBook)
+      // cache.writeQuery({ query: ALL_BOOKS, data })
+      // cache.updateQuery({ query: FILTER_BOOKS }, ({ allBooks }) => {
+      //   return {
+      //     allBooks: allBooks.concat(response.data),
+      //   }
+      // })
+      //updateCache(cache, { query: ALL_BOOKS }, response.data.createBook)
     },
     onQueryUpdated(observableQuery) {
       return observableQuery.refetch()
