@@ -47,8 +47,8 @@ const Authors = (props: {
   const authors = !orderByBookCount
     ? props.authors?.data?.allAuthors
     : props.authors?.data?.allAuthors
-        ?.slice()
-        .sort((a, b) => (orderByBookCountASC ? b.bookCount - a.bookCount : a.bookCount - b.bookCount))
+      ?.slice()
+      .sort((a, b) => (orderByBookCountASC ? b.bookCount - a.bookCount : a.bookCount - b.bookCount))
 
   const chooseOne = 'Choose one'
 
@@ -184,11 +184,14 @@ const Authors = (props: {
       ) : (
         <>
           <table className="tableauthors">
+            <caption className="screen-reader-text">
+              List of authors, with author name, birth date and book count. Note that anyone can edit the birth dates.
+            </caption>
             <tbody>
               <tr>
                 <th>
                   <button
-                    className="reset"
+                    className="reset has-tooltip"
                     onClick={() => {
                       setOrderByBookCount(false)
                       props.setOrderByAuthors(OrderAuthorsBy.NAME)
@@ -196,11 +199,11 @@ const Authors = (props: {
                         ? props.setOrderDirectionAuthorsName(OrderDirection.DESC)
                         : props.setOrderDirectionAuthorsName(OrderDirection.ASC)
                     }}
-                    aria-describedby="description1"
+                    aria-describedby="tooltip1"
                   >
                     Author
-                    <span className="screen-reader-text" id="description1">
-                      sort by author surname
+                    <span className="tooltip" role="tooltip" id="tooltip1">
+                      sort&nbsp;by author&nbsp;surname
                     </span>{' '}
                     {props.orderByAuthors === OrderAuthorsBy.NAME ? (
                       props.orderDirectionAuthorsName === OrderDirection.ASC ? (
@@ -215,7 +218,7 @@ const Authors = (props: {
                 </th>
                 <th>
                   <button
-                    className="reset"
+                    className="reset has-tooltip"
                     onClick={() => {
                       setOrderByBookCount(false)
                       props.setOrderByAuthors(OrderAuthorsBy.BORN)
@@ -223,11 +226,11 @@ const Authors = (props: {
                         ? props.setOrderDirectionAuthorsBorn(OrderDirection.DESC)
                         : props.setOrderDirectionAuthorsBorn(OrderDirection.ASC)
                     }}
-                    aria-describedby="description2"
+                    aria-describedby="tooltip2"
                   >
                     Born
-                    <span className="screen-reader-text" id="description2">
-                      sort by birth date
+                    <span className="tooltip" role="tooltip" id="tooltip2">
+                      sort&nbsp;by birth&nbsp;date
                     </span>{' '}
                     {props.orderByAuthors === OrderAuthorsBy.BORN ? (
                       props.orderDirectionAuthorsBorn === OrderDirection.ASC ? (
@@ -251,11 +254,11 @@ const Authors = (props: {
                         ? setOrderDirectionAuthorsBookCount(OrderDirection.DESC)
                         : setOrderDirectionAuthorsBookCount(OrderDirection.ASC)
                     }}
-                    aria-describedby="tooltip1"
+                    aria-describedby="tooltip3"
                   >
                     Books
-                    <span className="tooltip" role="tooltip" id="tooltip1">
-                      sort&nbsp;by book&nbsp;count (sorts&nbsp;visible)
+                    <span className="tooltip" role="tooltip" id="tooltip3">
+                      sort&nbsp;by book&nbsp;count <small>(sorts&nbsp;visible)</small>
                     </span>{' '}
                     {props.orderByAuthors === OrderAuthorsBy.BOOKS ? (
                       orderDirectionAuthorsBookCount === OrderDirection.ASC ? (

@@ -48,12 +48,12 @@ const Books = (props: {
   const books = !orderByAuthor
     ? filteredBooks
     : filteredBooks
-        ?.slice()
-        .sort((a: { author: { surname: string } }, b: { author: { surname: string } }) =>
-          orderByAuthorASC
-            ? a.author.surname.localeCompare(b.author.surname)
-            : b.author.surname.localeCompare(a.author.surname)
-        )
+      ?.slice()
+      .sort((a: { author: { surname: string } }, b: { author: { surname: string } }) =>
+        orderByAuthorASC
+          ? a.author.surname.localeCompare(b.author.surname)
+          : b.author.surname.localeCompare(a.author.surname)
+      )
 
   const navigate = useNavigate()
 
@@ -63,10 +63,6 @@ const Books = (props: {
     props.setGenre(genre)
     navigate('/books')
   }
-
-  //const favorite = user?.data?.me?.favoriteGenre
-
-  //const filteredBooks = props.books
 
   const heading = 'Recommendations'
 
@@ -106,11 +102,12 @@ const Books = (props: {
               </>
             ) : (
               <table>
+                <caption className="screen-reader-text">List of book recommendations</caption>
                 <tbody>
                   <tr>
                     <th>
                       <button
-                        className="reset"
+                        className="reset has-tooltip"
                         onClick={() => {
                           setOrderByAuthor(false)
                           props.setOrderByBooks(OrderBooksBy.TITLE)
@@ -118,11 +115,11 @@ const Books = (props: {
                             ? props.setOrderDirectionBooks(OrderDirection.DESC)
                             : props.setOrderDirectionBooks(OrderDirection.ASC)
                         }}
-                        aria-describedby="description1"
+                        aria-describedby="tooltip1"
                       >
                         Title
-                        <span className="screen-reader-text" id="description1">
-                          sort by title
+                        <span className="tooltip" role="tooltip" id="tooltip1">
+                          sort&nbsp;by title
                         </span>{' '}
                         {props.orderByBooks === OrderBooksBy.TITLE ? (
                           props.orderDirectionBooks === OrderDirection.ASC ? (
@@ -150,7 +147,7 @@ const Books = (props: {
                       >
                         Author
                         <span className="tooltip" role="tooltip" id="tooltip2">
-                          sort&nbsp;by author&nbsp;surname (sorts&nbsp;visible)
+                          sort&nbsp;by author&nbsp;surname <small>(sorts&nbsp;visible)</small>
                         </span>{' '}
                         {props.orderByBooks === OrderBooksBy.AUTHOR ? (
                           props.orderDirectionBooks === OrderDirection.ASC ? (
@@ -165,7 +162,7 @@ const Books = (props: {
                     </th>
                     <th>
                       <button
-                        className="reset"
+                        className="reset has-tooltip"
                         onClick={() => {
                           setOrderByAuthor(false)
                           props.setOrderByBooks(OrderBooksBy.PUBLISHED)
@@ -173,11 +170,11 @@ const Books = (props: {
                             ? props.setOrderDirectionBooks(OrderDirection.DESC)
                             : props.setOrderDirectionBooks(OrderDirection.ASC)
                         }}
-                        aria-describedby="description3"
+                        aria-describedby="tooltip3"
                       >
                         Published
-                        <span className="screen-reader-text" id="description3">
-                          sort by publish date
+                        <span className="tooltip" role="tooltip" id="tooltip3">
+                          sort&nbsp;by publish&nbsp;date
                         </span>{' '}
                         {props.orderByBooks === OrderBooksBy.PUBLISHED ? (
                           props.orderDirectionBooks === OrderDirection.ASC ? (

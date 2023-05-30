@@ -10,7 +10,7 @@ type Book {
 
   type Author {
     name: String!
-    surname: String!
+    surname: String
     born: Int
     bookCount:Int!
     id: ID!
@@ -34,12 +34,12 @@ type Book {
 
   type Query {
     bookCount: Int!
-    allBooks(author:String, genre:String, offset: Int, limit: Int, orderDirection: Int!, orderBy: String!): [Book!]!
+    allBooks(author:String, genre:String, offset: Int, limit: Int, orderDirection: Int, orderBy: String): [Book!]!
     findBook(title: String!):Book
     authorCount: Int!
-    allAuthors(offset: Int, limit: Int, orderDirection: Int!, orderBy: String!): [Author!]!
-    allUsers(id:ID, offset: Int, limit: Int, orderDirection: Int!, orderBy: String!): [User!]!
-    findAuthor(name: String! surname:String):Author
+    allAuthors(offset: Int, limit: Int, orderDirection: Int, orderBy: String): [Author!]!
+    allUsers(id:ID, offset: Int, limit: Int, orderDirection: Int, orderBy: String): [User!]!
+    findAuthor(name: String, surname:String):Author
     findUser(id: String!):User
     me: User
 }
@@ -48,7 +48,7 @@ type Mutation {
   createBook(
     title: String!, 
     author: String!, 
-    surname: String!,
+    surname: String,
     published: Int!, 
     genres: [String!]!
     user:ID

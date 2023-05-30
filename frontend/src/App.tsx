@@ -31,23 +31,23 @@ import Exit from './components/Exit'
 import useWindowSize from './hooks/useWindowSize'
 
 export const TEST_MONGODB_URI = import.meta.env.VITE_TEST_MONGODB_URI
-// function that takes care of manipulating cache
-export const updateCache = (cache: ApolloCache<any>, query: { query: DocumentNode }, addedBook: booksProps) => {
-  // helper that is used to eliminate saving same person twice
-  const uniqByName = (a: booksProps[]) => {
-    let seen = new Set()
-    return a.filter((item) => {
-      let k = item.title
-      return seen.has(k) ? false : seen.add(k)
-    })
-  }
 
-  cache.updateQuery(query, ({ allBooks }) => {
-    return {
-      allBooks: uniqByName(allBooks.concat(addedBook)),
-    }
-  })
-}
+// // function that takes care of manipulating cache
+// export const updateCache = (cache: ApolloCache<any>, query: { query: DocumentNode }, addedBook: booksProps) => {
+//   // helper that is used to eliminate saving same person twice
+//   const uniqByName = (a: booksProps[]) => {
+//     let seen = new Set()
+//     return a.filter((item) => {
+//       let k = item.title
+//       return seen.has(k) ? false : seen.add(k)
+//     })
+//   }
+//   cache.updateQuery(query, ({ allBooks }) => {
+//     return {
+//       allBooks: uniqByName(allBooks.concat(addedBook)),
+//     }
+//   })
+// }
 
 export const LIRARY_TOKEN = 'library_token'
 
@@ -75,6 +75,7 @@ const App = () => {
   const [orderByBooks, setOrderByBooks] = useState<OrderBooksBy>(OrderBooksBy.TITLE)
 
   const resultBooks = useQuery(ALL_BOOKS, {
+    fetchPolicy: 'cache-and-network',
     variables: {
       //do not add limit
       orderDirection: OrderDirection.ASC,
@@ -82,6 +83,7 @@ const App = () => {
     },
   })
   const resultAuthors = useQuery(ALL_AUTHORS, {
+    fetchPolicy: 'cache-and-network',
     variables: {
       offset: 0,
       limit: limitAuthors,
@@ -90,6 +92,7 @@ const App = () => {
     },
   })
   const resultUsers = useQuery(ALL_USERS, {
+    fetchPolicy: 'cache-and-network',
     variables: {
       offset: 0,
       limit: limitUsers,
@@ -145,7 +148,8 @@ const App = () => {
         },
         8
       )
-      updateCache(client.cache, { query: ALL_BOOKS }, addedBook)
+
+      // //updateCache(client.cache, { query: ALL_BOOKS }, addedBook)
     },
   })
   const logout = () => {
@@ -286,7 +290,19 @@ const App = () => {
           />
           <Route
             path="/users/:id"
-            element={<User user={user} notify={notify} token={token} me={data?.me} setGenre={setGenre} />}
+            element={
+              <User
+                user={user}
+                notify={notify}
+                token={token}
+                me={data?.me}
+                setGenre={setGenre}
+                orderByBooks={orderByBooks}
+                setOrderByBooks={setOrderByBooks}
+                orderDirectionBooks={orderDirectionBooks}
+                setOrderDirectionBooks={setOrderDirectionBooks}
+              />
+            }
           />
 
           <Route
