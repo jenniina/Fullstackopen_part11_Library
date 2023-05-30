@@ -1,6 +1,5 @@
 import React from 'react'
 import { booksProps } from '../interfaces'
-import { ApolloQueryResult } from '@apollo/client'
 import { Link } from 'react-router-dom'
 
 interface Props {
