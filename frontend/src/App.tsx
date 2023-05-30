@@ -75,7 +75,6 @@ const App = () => {
   const [orderByBooks, setOrderByBooks] = useState<OrderBooksBy>(OrderBooksBy.TITLE)
 
   const resultBooks = useQuery(ALL_BOOKS, {
-    fetchPolicy: 'cache-and-network',
     variables: {
       //do not add limit
       orderDirection: OrderDirection.ASC,
@@ -83,7 +82,6 @@ const App = () => {
     },
   })
   const resultAuthors = useQuery(ALL_AUTHORS, {
-    fetchPolicy: 'cache-and-network',
     variables: {
       offset: 0,
       limit: limitAuthors,
@@ -92,7 +90,6 @@ const App = () => {
     },
   })
   const resultUsers = useQuery(ALL_USERS, {
-    fetchPolicy: 'cache-and-network',
     variables: {
       offset: 0,
       limit: limitUsers,
@@ -148,7 +145,14 @@ const App = () => {
         },
         8
       )
-
+      // client.cache.updateQuery({ query: FILTER_BOOKS }, ({ allBooks }) => {
+      //   return {
+      //     allBooks: allBooks.concat(addedBook),
+      //   }
+      // })
+      // const data1 = client.cache.readQuery({ query: ALL_BOOKS })
+      // data1.allBooks.push(addedBook)
+      // client.cache.writeQuery({ query: ALL_BOOKS, data })
       // //updateCache(client.cache, { query: ALL_BOOKS }, addedBook)
     },
   })
