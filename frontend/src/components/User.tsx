@@ -23,7 +23,6 @@ const User = (props: {
   const [passwordConfirm, setPasswordConfirm] = useState('')
 
   const [orderByTitle, setOrderByTitle] = useState<Boolean>(false)
-  const [orderByAuthor, setOrderByAuthor] = useState<Boolean>(false)
   const [orderByASC, setOrderByASC] = useState<Boolean>(true)
 
   const user = props.user
@@ -32,7 +31,7 @@ const User = (props: {
       ? user?.books?.slice().sort((a, b) => a.title.localeCompare(b.title))
       : orderByTitle && !orderByASC
       ? user?.books?.slice().sort((a, b) => b.title.localeCompare(a.title))
-      : orderByAuthor && orderByASC
+      : !orderByTitle && orderByASC
       ? user?.books?.slice().sort((a, b) => a.author.surname.localeCompare(b.author.surname))
       : user?.books?.slice().sort((a, b) => b.author.surname.localeCompare(a.author.surname))
 
@@ -153,7 +152,6 @@ const User = (props: {
                   <button
                     className="reset has-tooltip"
                     onClick={() => {
-                      setOrderByAuthor(false)
                       setOrderByTitle(true)
                       setOrderByASC((prev) => !prev)
                       props.setOrderByBooks(OrderBooksBy.TITLE)
@@ -182,7 +180,6 @@ const User = (props: {
                   <button
                     className="reset has-tooltip"
                     onClick={() => {
-                      setOrderByAuthor(true)
                       setOrderByTitle(false)
                       setOrderByASC((prev) => !prev)
                       props.setOrderByBooks(OrderBooksBy.AUTHOR)
