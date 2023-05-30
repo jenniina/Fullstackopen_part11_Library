@@ -53,11 +53,6 @@ const NewBook = (props: {
           },
         },
       })
-      // const data = cache.readQuery({ query: ALL_BOOKS })
-      // // eslint-disable-next-line no-console
-      // console.log(data)
-      // data.allBooks.push(response.data.createBook)
-      // cache.writeQuery({ query: ALL_BOOKS, data })
       // cache.updateQuery({ query: FILTER_BOOKS }, ({ allBooks }) => {
       //   return {
       //     allBooks: allBooks.concat(response.data),
@@ -164,12 +159,12 @@ const NewBook = (props: {
   }
   const keyHandlerGenre = (e: KeyboardEvent<HTMLInputElement>) => {
     switch (e.code) {
-      case 'Enter':
-      case 'Tab':
-        e.preventDefault()
-        genreButton.current?.click()
-        addGenre()
-        props.notify({ error: false, message: `Added ${genre} to genres list` }, 10)
+    case 'Enter':
+    case 'Tab':
+      e.preventDefault()
+      genreButton.current?.click()
+      addGenre()
+      props.notify({ error: false, message: `Added ${genre} to genres list` }, 10)
     }
   }
 
