@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client'
-import { OrderAuthorsBy, OrderBooksBy, OrderDirection, booksProps } from '../interfaces'
+import { OrderBooksBy, OrderDirection, booksProps } from '../interfaces'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { ALL_BOOKS } from '../queries'
 import FeedBooks from './FeedBooks'
@@ -34,12 +34,12 @@ const Books = ({ genre, setGenre, booklist }: BookProps) => {
   const books = !orderByAuthor
     ? data?.allBooks
     : data?.allBooks
-        ?.slice()
-        .sort((a: { author: { surname: string } }, b: { author: { surname: string } }) =>
-          orderByAuthorASC
-            ? a.author.surname.localeCompare(b.author.surname)
-            : b.author.surname.localeCompare(a.author.surname)
-        )
+      ?.slice()
+      .sort((a: { author: { surname: string } }, b: { author: { surname: string } }) =>
+        orderByAuthorASC
+          ? a.author.surname.localeCompare(b.author.surname)
+          : b.author.surname.localeCompare(a.author.surname)
+      )
 
   let genres = Array.prototype.concat.apply(
     [],

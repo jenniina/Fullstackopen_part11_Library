@@ -26,8 +26,8 @@ const Users = (props: {
   const users = !orderByBookCount
     ? props.users?.data?.allUsers
     : props.users?.data?.allUsers
-        ?.slice()
-        .sort((a, b) => (orderByBookCountASC ? b.books.length - a.books.length : a.books.length - b.books.length))
+      ?.slice()
+      .sort((a, b) => (orderByBookCountASC ? b.books.length - a.books.length : a.books.length - b.books.length))
 
   const navigate = useNavigate()
 
@@ -37,7 +37,7 @@ const Users = (props: {
     if (!props.token) {
       setTimeout(() => navigate('/login'), 1500)
     }
-  }, [props.token])
+  }, [props.token, navigate])
 
   if (!props.token) {
     return <div>Please log in</div>

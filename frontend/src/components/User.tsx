@@ -30,10 +30,10 @@ const User = (props: {
     orderByTitle && orderByASC
       ? user?.books?.slice().sort((a, b) => a.title.localeCompare(b.title))
       : orderByTitle && !orderByASC
-      ? user?.books?.slice().sort((a, b) => b.title.localeCompare(a.title))
-      : !orderByTitle && orderByASC
-      ? user?.books?.slice().sort((a, b) => a.author.surname.localeCompare(b.author.surname))
-      : user?.books?.slice().sort((a, b) => b.author.surname.localeCompare(a.author.surname))
+        ? user?.books?.slice().sort((a, b) => b.title.localeCompare(a.title))
+        : !orderByTitle && orderByASC
+          ? user?.books?.slice().sort((a, b) => a.author.surname.localeCompare(b.author.surname))
+          : user?.books?.slice().sort((a, b) => b.author.surname.localeCompare(a.author.surname))
 
   const navigate = useNavigate()
 
@@ -113,7 +113,7 @@ const User = (props: {
     if (!props.token) {
       setTimeout(() => navigate('/login'), 1500)
     }
-  }, [props.token])
+  }, [props.token, navigate])
 
   if (!props.token) {
     return <div>Please log in</div>

@@ -37,6 +37,7 @@ const Books = (props: {
       orderBy: props.orderByBooks,
       orderDirection: props.orderDirectionBooks,
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [favorite, props.orderDirectionBooks, props.orderByBooks, resultFilterByFavoriteGenre.refetch])
 
   // extra filtering due to unreliable graphql filter:
@@ -48,12 +49,12 @@ const Books = (props: {
   const books = !orderByAuthor
     ? filteredBooks
     : filteredBooks
-        ?.slice()
-        .sort((a: { author: { surname: string } }, b: { author: { surname: string } }) =>
-          orderByAuthorASC
-            ? a.author.surname.localeCompare(b.author.surname)
-            : b.author.surname.localeCompare(a.author.surname)
-        )
+      ?.slice()
+      .sort((a: { author: { surname: string } }, b: { author: { surname: string } }) =>
+        orderByAuthorASC
+          ? a.author.surname.localeCompare(b.author.surname)
+          : b.author.surname.localeCompare(a.author.surname)
+      )
 
   const navigate = useNavigate()
 
@@ -70,7 +71,7 @@ const Books = (props: {
     if (!props.token) {
       setTimeout(() => navigate('/login'), 1500)
     }
-  }, [props.token])
+  }, [props.token, navigate])
 
   if (!props.token) {
     return <div>Please log in</div>

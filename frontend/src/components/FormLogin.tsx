@@ -47,7 +47,7 @@ const FormLogin = ({ notify, setToken, token }: loginProps) => {
     if (token) {
       setTimeout(() => navigate('/'), 2000)
     }
-  }, [token])
+  }, [token, navigate])
 
   if (token) {
     return <div>Thank you for logging in</div>
