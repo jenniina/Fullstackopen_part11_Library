@@ -32,27 +32,27 @@ jobs:
         run: npm run lint -- --fix
         working-directory: frontend
 
-      # - name: Start MongoDB
-      #   uses: supercharge/mongodb-github-action@1.8.0
-      #   with:
-      #     mongodb-version: '6.0.6'
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@1.8.0
+        with:
+          mongodb-version: '6.0.6'
 
-      # - name: e2e tests
-      #   id: e2e
-      #   uses: cypress-io/github-action@v5
-      #   with:
-      #     browser: chrome
-      #     headed: true
-      #     build: npm run build:test
-      #     start: npm run testmode
-      #     command: npm run test:e2e
-      #     wait-on: 'http://localhost:4000'
-      #   env:
-      #     TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI}}
-      #     PORT: ${{ secrets.PORT }}
-      #     # pass GitHub token to detect new build vs re-run build
-      #     GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      #     CI: true
+      - name: e2e tests
+        id: e2e
+        uses: cypress-io/github-action@v5
+        with:
+          browser: chrome
+          headed: true
+          build: npm run build:test
+          start: npm run testmode
+          command: npm run test:e2e
+          wait-on: 'http://localhost:4000'
+        env:
+          TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI}}
+          PORT: ${{ secrets.PORT }}
+          # pass GitHub token to detect new build vs re-run build
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          CI: true
       #   #continue-on-error: true
 
       - name: build
