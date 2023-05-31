@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { userProps, message, OrderDirection, OrderUsersBy } from '../interfaces'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { FaSortDown, FaSortUp, FaSort } from 'react-icons/fa'
 import { InView } from 'react-intersection-observer'
 
@@ -26,15 +26,20 @@ const Users = (props: {
   const users = !orderByBookCount
     ? props.users?.data?.allUsers
     : props.users?.data?.allUsers
-      ?.slice()
-      .sort((a, b) => (orderByBookCountASC ? b.books.length - a.books.length : a.books.length - b.books.length))
+        ?.slice()
+        .sort((a, b) => (orderByBookCountASC ? b.books.length - a.books.length : a.books.length - b.books.length))
 
   const navigate = useNavigate()
 
   const heading = 'Users'
 
+  useEffect(() => {
+    if (!props.token) {
+      setTimeout(() => navigate('/login'), 1500)
+    }
+  }, [props.token])
+
   if (!props.token) {
-    setTimeout(() => navigate('/login'), 1000)
     return <div>Please log in</div>
   } else if (props.users.loading)
     return (

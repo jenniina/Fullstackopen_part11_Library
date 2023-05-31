@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client'
 import { OrderBooksBy, OrderDirection, booksProps, userProps } from '../interfaces'
-import { FILTER_BOOKS, ME } from '../queries'
+import { ALL_BOOKS, ME } from '../queries'
 import { Link, useNavigate } from 'react-router-dom'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { InView } from 'react-intersection-observer'
@@ -21,7 +21,7 @@ const Books = (props: {
 
   const favorite = props.me?.favoriteGenre
 
-  const resultFilterByFavoriteGenre = useQuery(FILTER_BOOKS, {
+  const resultFilterByFavoriteGenre = useQuery(ALL_BOOKS, {
     variables: {
       genre: favorite,
       offset: 0,
@@ -48,12 +48,12 @@ const Books = (props: {
   const books = !orderByAuthor
     ? filteredBooks
     : filteredBooks
-      ?.slice()
-      .sort((a: { author: { surname: string } }, b: { author: { surname: string } }) =>
-        orderByAuthorASC
-          ? a.author.surname.localeCompare(b.author.surname)
-          : b.author.surname.localeCompare(a.author.surname)
-      )
+        ?.slice()
+        .sort((a: { author: { surname: string } }, b: { author: { surname: string } }) =>
+          orderByAuthorASC
+            ? a.author.surname.localeCompare(b.author.surname)
+            : b.author.surname.localeCompare(a.author.surname)
+        )
 
   const navigate = useNavigate()
 
@@ -66,8 +66,13 @@ const Books = (props: {
 
   const heading = 'Recommendations'
 
+  useEffect(() => {
+    if (!props.token) {
+      setTimeout(() => navigate('/login'), 1500)
+    }
+  }, [props.token])
+
   if (!props.token) {
-    setTimeout(() => navigate('/login'), 1000)
     return <div>Please log in</div>
   } else
     return (

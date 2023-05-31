@@ -12,7 +12,7 @@ import {
   message,
   userProps,
 } from './interfaces'
-import { ALL_AUTHORS, ALL_BOOKS, ALL_USERS, BOOK_ADDED, FILTER_BOOKS, ME } from './queries'
+import { ALL_AUTHORS, ALL_BOOKS, ALL_USERS, BOOK_ADDED, ME } from './queries'
 import FormLogin from './components/FormLogin'
 import { ApolloCache, DocumentNode, useApolloClient, useQuery, useSubscription } from '@apollo/client'
 import { Route, Routes, NavLink, useMatch, Link, useLocation } from 'react-router-dom'
@@ -145,7 +145,7 @@ const App = () => {
         },
         8
       )
-      // client.cache.updateQuery({ query: FILTER_BOOKS }, ({ allBooks }) => {
+      // client.cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
       //   return {
       //     allBooks: allBooks.concat(addedBook),
       //   }

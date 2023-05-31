@@ -47,14 +47,6 @@ export const ALL_USERS = gql`
 `
 
 export const ALL_BOOKS = gql`
-  query allBooks($orderDirection: Int, $orderBy: String, $offset: Int, $limit: Int) {
-    allBooks(orderDirection: $orderDirection, orderBy: $orderBy, offset: $offset, limit: $limit) {
-      ...BookDetails
-    }
-  }
-  ${BOOK_DETAILS}
-`
-export const FILTER_BOOKS = gql`
   query allBooks($orderDirection: Int, $orderBy: String, $genre: String, $offset: Int, $limit: Int) {
     allBooks(orderDirection: $orderDirection, orderBy: $orderBy, genre: $genre, offset: $offset, limit: $limit) {
       ...BookDetails

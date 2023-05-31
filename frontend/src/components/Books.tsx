@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client'
 import { OrderAuthorsBy, OrderBooksBy, OrderDirection, booksProps } from '../interfaces'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { FILTER_BOOKS } from '../queries'
+import { ALL_BOOKS } from '../queries'
 import FeedBooks from './FeedBooks'
 import { InView } from 'react-intersection-observer'
 import { FaSortUp, FaSortDown, FaSort } from 'react-icons/fa'
@@ -20,7 +20,7 @@ const Books = ({ genre, setGenre, booklist }: BookProps) => {
   const [orderByAuthor, setOrderByAuthor] = useState<Boolean>(false)
   const [orderByAuthorASC, setOrderByAuthorASC] = useState<Boolean>(true)
 
-  const { data, loading, error, refetch } = useQuery(FILTER_BOOKS, {
+  const { data, loading, error, refetch } = useQuery(ALL_BOOKS, {
     variables: {
       genre,
       offset: 0,
@@ -34,12 +34,12 @@ const Books = ({ genre, setGenre, booklist }: BookProps) => {
   const books = !orderByAuthor
     ? data?.allBooks
     : data?.allBooks
-      ?.slice()
-      .sort((a: { author: { surname: string } }, b: { author: { surname: string } }) =>
-        orderByAuthorASC
-          ? a.author.surname.localeCompare(b.author.surname)
-          : b.author.surname.localeCompare(a.author.surname)
-      )
+        ?.slice()
+        .sort((a: { author: { surname: string } }, b: { author: { surname: string } }) =>
+          orderByAuthorASC
+            ? a.author.surname.localeCompare(b.author.surname)
+            : b.author.surname.localeCompare(a.author.surname)
+        )
 
   let genres = Array.prototype.concat.apply(
     [],

@@ -42,8 +42,14 @@ const FormLogin = ({ notify, setToken, token }: loginProps) => {
       })
       .catch((error) => notify({ error: true, message: error.message }, 10))
   }
+
+  useEffect(() => {
+    if (token) {
+      setTimeout(() => navigate('/'), 2000)
+    }
+  }, [token])
+
   if (token) {
-    setTimeout(() => navigate('/'), 1500)
     return <div>Thank you for logging in</div>
   } else
     return (

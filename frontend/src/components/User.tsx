@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { userProps, message, OrderBooksBy, OrderDirection } from '../interfaces'
 import { ALL_USERS, EDIT_USER, ME } from '../queries'
 import { useMutation } from '@apollo/client'
-import { useState, FormEvent, Dispatch, SetStateAction } from 'react'
+import { useState, FormEvent, Dispatch, SetStateAction, useEffect } from 'react'
 import { tester } from '../App'
 import { FaSort, FaSortDown, FaSortUp } from 'react-icons/fa'
 
@@ -30,10 +30,10 @@ const User = (props: {
     orderByTitle && orderByASC
       ? user?.books?.slice().sort((a, b) => a.title.localeCompare(b.title))
       : orderByTitle && !orderByASC
-        ? user?.books?.slice().sort((a, b) => b.title.localeCompare(a.title))
-        : !orderByTitle && orderByASC
-          ? user?.books?.slice().sort((a, b) => a.author.surname.localeCompare(b.author.surname))
-          : user?.books?.slice().sort((a, b) => b.author.surname.localeCompare(a.author.surname))
+      ? user?.books?.slice().sort((a, b) => b.title.localeCompare(a.title))
+      : !orderByTitle && orderByASC
+      ? user?.books?.slice().sort((a, b) => a.author.surname.localeCompare(b.author.surname))
+      : user?.books?.slice().sort((a, b) => b.author.surname.localeCompare(a.author.surname))
 
   const navigate = useNavigate()
 
@@ -109,8 +109,13 @@ const User = (props: {
 
   const heading = user?.username
 
+  useEffect(() => {
+    if (!props.token) {
+      setTimeout(() => navigate('/login'), 1500)
+    }
+  }, [props.token])
+
   if (!props.token) {
-    setTimeout(() => navigate('/login'), 1000)
     return <div>Please log in</div>
   } else
     return (

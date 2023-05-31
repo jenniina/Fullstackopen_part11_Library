@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { booksProps, message, userProps } from '../interfaces'
 import { useMutation } from '@apollo/client'
-import { ALL_AUTHORS, ALL_BOOKS, ALL_USERS, DELETE_BOOK, FILTER_BOOKS } from '../queries'
+import { ALL_AUTHORS, ALL_BOOKS, ALL_USERS, DELETE_BOOK } from '../queries'
 import { Dispatch, SetStateAction } from 'react'
 
 const Book = (props: {
@@ -16,7 +16,7 @@ const Book = (props: {
   const navigate = useNavigate()
 
   const [deleteBook] = useMutation(DELETE_BOOK, {
-    refetchQueries: [{ query: FILTER_BOOKS }, { query: ALL_USERS }, { query: ALL_AUTHORS }],
+    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_USERS }, { query: ALL_AUTHORS }],
     onError: (error) => {
       // eslint-disable-next-line no-console
       console.log(JSON.stringify(error, null, 2))

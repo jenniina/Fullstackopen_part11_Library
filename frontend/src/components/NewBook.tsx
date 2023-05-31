@@ -1,6 +1,6 @@
 import { KeyboardEvent, useEffect, useRef, useState, FormEvent } from 'react'
 import { gql, useMutation, useQuery } from '@apollo/client'
-import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS, ALL_USERS, FILTER_BOOKS, ME } from '../queries'
+import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS, ALL_USERS, ME } from '../queries'
 import { RefObject, message, userProps } from '../interfaces'
 import { tester } from '../App'
 import { useNavigate } from 'react-router-dom'
@@ -31,7 +31,7 @@ const NewBook = (props: {
   }, [user])
 
   const [createBook] = useMutation(ADD_BOOK, {
-    refetchQueries: [{ query: FILTER_BOOKS }, { query: ALL_AUTHORS }, { query: ME }, { query: ALL_USERS }],
+    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }, { query: ME }, { query: ALL_USERS }],
     update: (cache, { data: { createBook } }) => {
       cache.modify({
         fields: {
@@ -53,7 +53,7 @@ const NewBook = (props: {
           },
         },
       })
-      // cache.updateQuery({ query: FILTER_BOOKS }, ({ allBooks }) => {
+      // cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
       //   return {
       //     allBooks: allBooks.concat(response.data),
       //   }
@@ -159,17 +159,22 @@ const NewBook = (props: {
   }
   const keyHandlerGenre = (e: KeyboardEvent<HTMLInputElement>) => {
     switch (e.code) {
-    case 'Enter':
-    case 'Tab':
-      e.preventDefault()
-      genreButton.current?.click()
-      addGenre()
-      props.notify({ error: false, message: `Added ${genre} to genres list` }, 10)
+      case 'Enter':
+      case 'Tab':
+        e.preventDefault()
+        genreButton.current?.click()
+        addGenre()
+        props.notify({ error: false, message: `Added ${genre} to genres list` }, 10)
     }
   }
 
+  useEffect(() => {
+    if (!props.token) {
+      setTimeout(() => navigate('/login'), 1500)
+    }
+  }, [props.token])
+
   if (!props.token) {
-    setTimeout(() => navigate('/login'), 1000)
     return <div>Please log in</div>
   } else {
     return (
