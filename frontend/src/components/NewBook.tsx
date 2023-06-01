@@ -159,12 +159,12 @@ const NewBook = (props: {
   }
   const keyHandlerGenre = (e: KeyboardEvent<HTMLInputElement>) => {
     switch (e.code) {
-      case 'Enter':
-      case 'Tab':
-        e.preventDefault()
-        genreButton.current?.click()
-        addGenre()
-        props.notify({ error: false, message: `Added ${genre} to genres list` }, 10)
+    case 'Enter':
+    case 'Tab':
+      e.preventDefault()
+      genreButton.current?.click()
+      addGenre()
+      props.notify({ error: false, message: `Added ${genre} to genres list` }, 10)
     }
   }
 
