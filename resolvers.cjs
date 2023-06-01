@@ -254,10 +254,10 @@ const resolvers = {
     },
     createUser: async (_root, args, context) => {
       const currentUser = context.currentUser
-      const TEST = config.TEST
+      const AUTH = config.AUTH
       if (
         !args.authorization ||
-        TEST !== args.authorization ||
+        AUTH !== args.authorization ||
         (currentUser && currentUser.id === tester)
       ) {
         throw new AuthenticationError('Wrong credentials')

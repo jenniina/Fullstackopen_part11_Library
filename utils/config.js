@@ -13,11 +13,11 @@ const BUILD =
     ? 'frontend/build-test'
     : 'frontend/build'
 
-const TEST = process.env.TEST
+const AUTH = process.env.TEST
 
 module.exports = {
   PORT,
   MONGODB_URI,
   BUILD,
-  TEST,
+  AUTH,
 }

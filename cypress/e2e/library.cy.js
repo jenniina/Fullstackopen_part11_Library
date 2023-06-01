@@ -9,7 +9,7 @@ describe('site function', () => {
       return false
     })
 
-    cy.dropCollection('users', { database: 'testLibrary' }).then((res) => {
+    cy.dropCollection('users', { database: 'test', failSilently: true }).then((res) => {
       cy.log(res)
     })
 
@@ -29,10 +29,10 @@ describe('site function', () => {
           }
         }`,
         variables: {
+          authorization: Cypress.env('secret'),
           username: 'Ano',
           passwordHash: 'Anonymous',
           favoriteGenre: 'design',
-          authorization: 'oSouFs9sbo3haTEbtUbim8d',
         },
       },
     })
@@ -82,11 +82,9 @@ describe('site function', () => {
   })
 
   it('adds and deletes book', { defaultCommandTimeout: 10000 }, () => {
-    cy.dropCollection('books', { database: 'testLibrary', failSilently: true }).then(
-      (res) => {
-        cy.log(res)
-      }
-    )
+    cy.dropCollection('books', { database: 'test', failSilently: true }).then((res) => {
+      cy.log(res)
+    })
 
     cy.get('a').contains('login').click()
     cy.wait(1005)
@@ -191,7 +189,7 @@ describe('site function', () => {
     cy.get('h1').contains('Book by Cypress')
     cy.get('[data-test="deleteBook"]').click()
     cy.wait(5000)
-    cy.get('.tablebooks').contains('Book by Cypress').should('not.exist')
+    cy.get('.tablebooks').should('not.exist')
   })
 })
 

@@ -1,5 +1,6 @@
 const { defineConfig } = require('cypress')
 const mongo = require('cypress-mongodb')
+const config = require('./utils/config')
 
 module.exports = defineConfig({
   e2e: {
@@ -10,7 +11,7 @@ module.exports = defineConfig({
   },
   // env: {
   //   mongodb: {
-  //     uri: '',
+  //     uri: 'mongodb://127.0.0.1:27017',
   //     database: 'testLibrary',
   //   },
   //   secret: '',
