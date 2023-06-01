@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
         with:
           node-version: '16'
 
@@ -64,17 +64,17 @@ jobs:
       #     CI: true
       # #   #continue-on-error: true
 
-      # - name: build
-      #   id: build
-      #   run: npm run build
-      #   env:
-      #     MONGODB_URI: ${{ secrets.MONGODB_URI}}
-      #     VITE_BASE_URI_WS: ${{ secrets.VITE_BASE_URI_WS}}
-      #     VITE_BASE_URI: ${{ secrets.VITE_BASE_URI}}
-      #     VITE_serviceID: ${{ secrets.VITE_SERVICEID}}
-      #     VITE_templateID: ${{ secrets.VITE_TEMPLATEID}}
-      #     VITE_publicKey: ${{ secrets.VITE_PUBLICKEY}}
-      #   working-directory: frontend
+      - name: build
+        id: build
+        run: npm run build
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI}}
+          VITE_BASE_URI_WS: ${{ secrets.VITE_BASE_URI_WS}}
+          VITE_BASE_URI: ${{ secrets.VITE_BASE_URI}}
+          VITE_serviceID: ${{ secrets.VITE_SERVICEID}}
+          VITE_templateID: ${{ secrets.VITE_TEMPLATEID}}
+          VITE_publicKey: ${{ secrets.VITE_PUBLICKEY}}
+        working-directory: frontend
 
       # # - name: deployment server to override test server
       # #   id: deploymentserver
