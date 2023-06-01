@@ -171,7 +171,7 @@ const Authors = (props: {
       <h1>
         <span data-text={heading}>{heading}</span>
       </h1>
-      {authors.length === 0 ? (
+      {authors?.length === 0 ? (
         <div>No authors yet!</div>
       ) : (
         <>

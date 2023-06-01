@@ -88,7 +88,7 @@ export function Select({ instructions, hide, id, className, multiple, value, onC
           break
         }
         const newValue = highlightedIndex + (e.code === 'ArrowDown' ? 1 : -1)
-        if (newValue >= 0 && newValue < options.length) {
+        if (newValue >= 0 && newValue < options?.length) {
           setHighlightedIndex(newValue)
         }
         break

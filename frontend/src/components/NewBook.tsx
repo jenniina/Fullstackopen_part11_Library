@@ -99,7 +99,7 @@ const NewBook = (props: {
         },
         10
       )
-    else if (title.length < 2) props.notify({ error: true, message: 'Title too short' }, 10)
+    else if (title?.length < 2) props.notify({ error: true, message: 'Title too short' }, 10)
     else {
       createBook({
         variables: {

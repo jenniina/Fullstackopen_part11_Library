@@ -67,7 +67,7 @@ const Books = ({ genre, setGenre, booklist }: BookProps) => {
         <h1>
           <span data-text={heading}>{heading}</span>
         </h1>
-        {books.length === 0 ? (
+        {books?.length === 0 ? (
           <div>No books yet!</div>
         ) : (
           <>

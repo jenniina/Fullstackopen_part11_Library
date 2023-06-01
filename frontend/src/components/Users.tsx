@@ -146,7 +146,7 @@ const Users = (props: {
                   <Link to={`/users/${u.id}`}>{u.username}</Link>
                 </td>
                 <td>{u.favoriteGenre}</td>
-                <td>{u.books.length}</td>
+                <td>{u.books?.length}</td>
               </tr>
             ))}
           </tbody>

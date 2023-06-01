@@ -150,7 +150,7 @@ const resolvers = {
     bookCount: async (root) => {
       const author = await Author.findOne({ name: root.name }).populate('bookCount')
       const books = await Book.find({ author: author.id })
-      return books.length
+      return books?.length
     },
   },
 
