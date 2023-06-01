@@ -12,9 +12,9 @@ import {
   message,
   userProps,
 } from './interfaces'
-import { ALL_AUTHORS, ALL_BOOKS, ALL_USERS, BOOK_ADDED, FILTER_BOOKS, ME } from './queries'
+import { ALL_AUTHORS, ALL_BOOKS, ALL_USERS, BOOK_ADDED, ME } from './queries'
 import FormLogin from './components/FormLogin'
-import { ApolloCache, DocumentNode, useApolloClient, useQuery, useSubscription } from '@apollo/client'
+import { useApolloClient, useQuery, useSubscription } from '@apollo/client'
 import { Route, Routes, NavLink, useMatch, Link, useLocation } from 'react-router-dom'
 import Recommended from './components/Recommended'
 import { booksProps } from './interfaces'
@@ -22,7 +22,7 @@ import Users from './components/Users'
 import Book from './components/Book'
 import Author from './components/Author'
 import User from './components/User'
-import NewUser from './components/NewUser'
+//import NewUser from './components/NewUser'
 import { useScrollbarWidth } from './hooks/useScrollbarWidth'
 import { useTheme, useThemeUpdate } from './hooks/useTheme'
 import ThemeToggle from './components/ThemeToggle'
@@ -100,18 +100,22 @@ const App = () => {
 
   useEffect(() => {
     resultAuthors.refetch({ orderBy: orderByAuthors, orderDirection: orderDirectionAuthorsName })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderDirectionAuthorsName, orderByAuthors, resultAuthors.refetch])
 
   useEffect(() => {
     resultAuthors.refetch({ orderBy: orderByAuthors, orderDirection: orderDirectionAuthorsBorn })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderDirectionAuthorsBorn, orderByAuthors, resultAuthors.refetch])
 
   useEffect(() => {
     resultUsers.refetch({ orderBy: orderByUsers, orderDirection: orderDirectionUsers })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderDirectionUsers, orderByUsers, resultUsers.refetch])
 
   useEffect(() => {
     resultBooks.refetch({ orderBy: orderByBooks, orderDirection: orderDirectionBooks })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderDirectionBooks, orderByBooks, resultBooks.refetch])
 
   const { data } = useQuery(ME)
@@ -145,7 +149,7 @@ const App = () => {
         },
         8
       )
-      // client.cache.updateQuery({ query: FILTER_BOOKS }, ({ allBooks }) => {
+      // client.cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
       //   return {
       //     allBooks: allBooks.concat(addedBook),
       //   }

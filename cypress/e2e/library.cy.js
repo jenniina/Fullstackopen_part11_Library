@@ -9,6 +9,34 @@ describe('site function', () => {
       return false
     })
 
+    cy.dropCollection('users', { database: 'test', failSilently: true }).then((res) => {
+      cy.log(res)
+    })
+
+    cy.request({
+      method: 'POST',
+      url: 'http://localhost:4000/gql',
+      body: {
+        operationName: 'createUser',
+        query: `
+          mutation createUser($username: String!, $passwordHash: String!, $favoriteGenre: String!, $authorization: String!) {
+          createUser(username: $username,
+            passwordHash: $passwordHash,
+            favoriteGenre: $favoriteGenre,
+            authorization: $authorization) {
+            username
+            favoriteGenre
+          }
+        }`,
+        variables: {
+          authorization: Cypress.env('secret'),
+          username: 'Ano',
+          passwordHash: 'Anonymous',
+          favoriteGenre: 'design',
+        },
+      },
+    })
+
     // cy.deleteMany({ collection: 'books' }).then((res) => {
     //   // defaults to collection and database from env variables
     //   cy.log(res) // prints '# documents deleted'
@@ -16,27 +44,6 @@ describe('site function', () => {
   })
 
   it('has a user', () => {
-    cy.request({
-      method: 'POST',
-      url: 'http://localhost:4000/gql',
-      body: {
-        operationName: 'createUser',
-        query: `
-        mutation createUser($username: String!, $passwordHash: String!, $favoriteGenre: String!) {
-          createUser(username: $username, passwordHash: $passwordHash, favoriteGenre: $favoriteGenre) {
-            username
-            passwordHash
-            favoriteGenre
-          }
-        }`,
-        variables: {
-          username: 'Ano',
-          password: 'Anonymous',
-          favoriteGenre: 'design',
-        },
-      },
-    })
-
     cy.request({
       method: 'POST',
       url: 'http://localhost:4000/gql',
@@ -182,7 +189,7 @@ describe('site function', () => {
     cy.get('h1').contains('Book by Cypress')
     cy.get('[data-test="deleteBook"]').click()
     cy.wait(5000)
-    cy.get('.tablebooks').contains('Book by Cypress').should('not.exist')
+    cy.get('.tablebooks').should('not.exist')
   })
 })
 

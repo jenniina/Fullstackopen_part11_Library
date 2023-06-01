@@ -60,7 +60,6 @@ const start = async () => {
   app.get('/health', (_req, res) => {
     res.send('ok')
   })
-  app.use('/', express.static('frontend/build'))
   app.use(
     '/gql',
     cors(),
@@ -76,8 +75,9 @@ const start = async () => {
       },
     })
   )
+  app.use('/', express.static(config.BUILD))
   app.get('*', (_req, res) => {
-    res.sendFile(__dirname + '/frontend/build/index.html')
+    res.sendFile(__dirname + `/${config.BUILD}/index.html`)
   })
   const PORT = process.env.PORT || 4000
   httpServer.listen(PORT, () =>

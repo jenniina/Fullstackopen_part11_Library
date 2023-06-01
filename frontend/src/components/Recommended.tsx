@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client'
 import { OrderBooksBy, OrderDirection, booksProps, userProps } from '../interfaces'
-import { FILTER_BOOKS, ME } from '../queries'
+import { ALL_BOOKS, ME } from '../queries'
 import { Link, useNavigate } from 'react-router-dom'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { InView } from 'react-intersection-observer'
@@ -21,7 +21,7 @@ const Books = (props: {
 
   const favorite = props.me?.favoriteGenre
 
-  const resultFilterByFavoriteGenre = useQuery(FILTER_BOOKS, {
+  const resultFilterByFavoriteGenre = useQuery(ALL_BOOKS, {
     variables: {
       genre: favorite,
       offset: 0,
@@ -37,6 +37,7 @@ const Books = (props: {
       orderBy: props.orderByBooks,
       orderDirection: props.orderDirectionBooks,
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [favorite, props.orderDirectionBooks, props.orderByBooks, resultFilterByFavoriteGenre.refetch])
 
   // extra filtering due to unreliable graphql filter:
@@ -66,8 +67,13 @@ const Books = (props: {
 
   const heading = 'Recommendations'
 
+  useEffect(() => {
+    if (!props.token) {
+      setTimeout(() => navigate('/login'), 1500)
+    }
+  }, [props.token, navigate])
+
   if (!props.token) {
-    setTimeout(() => navigate('/login'), 1000)
     return <div>Please log in</div>
   } else
     return (

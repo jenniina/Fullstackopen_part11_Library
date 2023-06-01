@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { userProps, message, OrderDirection, OrderUsersBy } from '../interfaces'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { FaSortDown, FaSortUp, FaSort } from 'react-icons/fa'
 import { InView } from 'react-intersection-observer'
 
@@ -33,8 +33,13 @@ const Users = (props: {
 
   const heading = 'Users'
 
+  useEffect(() => {
+    if (!props.token) {
+      setTimeout(() => navigate('/login'), 1500)
+    }
+  }, [props.token, navigate])
+
   if (!props.token) {
-    setTimeout(() => navigate('/login'), 1000)
     return <div>Please log in</div>
   } else if (props.users.loading)
     return (

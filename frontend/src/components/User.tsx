@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { userProps, message, OrderBooksBy, OrderDirection } from '../interfaces'
 import { ALL_USERS, EDIT_USER, ME } from '../queries'
 import { useMutation } from '@apollo/client'
-import { useState, FormEvent, Dispatch, SetStateAction } from 'react'
+import { useState, FormEvent, Dispatch, SetStateAction, useEffect } from 'react'
 import { tester } from '../App'
 import { FaSort, FaSortDown, FaSortUp } from 'react-icons/fa'
 
@@ -109,8 +109,13 @@ const User = (props: {
 
   const heading = user?.username
 
+  useEffect(() => {
+    if (!props.token) {
+      setTimeout(() => navigate('/login'), 1500)
+    }
+  }, [props.token, navigate])
+
   if (!props.token) {
-    setTimeout(() => navigate('/login'), 1000)
     return <div>Please log in</div>
   } else
     return (

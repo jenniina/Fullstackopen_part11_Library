@@ -8,7 +8,7 @@ jobs:
   healthcheck:
     runs-on: ubuntu-20.04
     steps:
-      - name: Phonebook health check
+      - name: Library health check
         uses: jtalk/url-health-check-action@f3f7bd79e4a64218eea7caad72796a1443896aeb
         with:
           url: ${{ secrets.LIBRARY_BACKEND_HEALTH_URL }}
