@@ -47,8 +47,8 @@ const Authors = (props: {
   const authors = !orderByBookCount
     ? props.authors?.data?.allAuthors
     : props.authors?.data?.allAuthors
-      ?.slice()
-      .sort((a, b) => (orderByBookCountASC ? b.bookCount - a.bookCount : a.bookCount - b.bookCount))
+        ?.slice()
+        .sort((a, b) => (orderByBookCountASC ? b.bookCount - a.bookCount : a.bookCount - b.bookCount))
 
   const chooseOne = 'Choose one'
 
@@ -138,7 +138,7 @@ const Authors = (props: {
   })
   useEffect(() => {
     //Delete authors with no books
-    const noBooks = authors?.find((author: authorProps, _i: number) => author.bookCount === 0)
+    const noBooks = authors?.find((author: authorProps) => author.bookCount === 0)
     if (noBooks) deleteAuthor({ variables: { name: noBooks?.name } })
   }, [authors, deleteAuthor])
 
@@ -164,8 +164,6 @@ const Authors = (props: {
     }
   }
 
-  // eslint-disable-next-line no-console
-
   const heading = 'Authors'
 
   return (
@@ -173,184 +171,191 @@ const Authors = (props: {
       <h1>
         <span data-text={heading}>{heading}</span>
       </h1>
-      <p>
-        It may be wise to take the birth years listed here with a grain of salt, as anyone who is logged in may change
-        them! Even <em>Tester.</em>
-      </p>
-      {props.authors?.loading ? (
-        <div>
-          <big>Loading...</big>
-        </div>
+      {authors.length === 0 ? (
+        <div>No authors yet!</div>
       ) : (
         <>
-          <table className="tableauthors">
-            <caption className="screen-reader-text">
-              List of authors, with author name, birth date and book count. Note that anyone can edit the birth dates.
-            </caption>
-            <tbody>
-              <tr>
-                <th>
-                  <button
-                    className="reset has-tooltip"
-                    onClick={() => {
-                      setOrderByBookCount(false)
-                      props.setOrderByAuthors(OrderAuthorsBy.NAME)
-                      props.orderDirectionAuthorsName === OrderDirection.ASC
-                        ? props.setOrderDirectionAuthorsName(OrderDirection.DESC)
-                        : props.setOrderDirectionAuthorsName(OrderDirection.ASC)
-                    }}
-                    aria-describedby="tooltip1"
-                  >
-                    Author
-                    <span className="tooltip" role="tooltip" id="tooltip1">
-                      sort&nbsp;by author&nbsp;surname
-                    </span>{' '}
-                    {props.orderByAuthors === OrderAuthorsBy.NAME ? (
-                      props.orderDirectionAuthorsName === OrderDirection.ASC ? (
-                        <FaSortUp style={{ marginBottom: -2 }} />
-                      ) : (
-                        <FaSortDown style={{ marginBottom: -2 }} />
-                      )
-                    ) : (
-                      <FaSort style={{ marginBottom: -2 }} />
-                    )}
-                  </button>
-                </th>
-                <th>
-                  <button
-                    className="reset has-tooltip"
-                    onClick={() => {
-                      setOrderByBookCount(false)
-                      props.setOrderByAuthors(OrderAuthorsBy.BORN)
-                      props.orderDirectionAuthorsBorn === OrderDirection.ASC
-                        ? props.setOrderDirectionAuthorsBorn(OrderDirection.DESC)
-                        : props.setOrderDirectionAuthorsBorn(OrderDirection.ASC)
-                    }}
-                    aria-describedby="tooltip2"
-                  >
-                    Born
-                    <span className="tooltip" role="tooltip" id="tooltip2">
-                      sort&nbsp;by birth&nbsp;date
-                    </span>{' '}
-                    {props.orderByAuthors === OrderAuthorsBy.BORN ? (
-                      props.orderDirectionAuthorsBorn === OrderDirection.ASC ? (
-                        <FaSortUp style={{ marginBottom: -2 }} />
-                      ) : (
-                        <FaSortDown style={{ marginBottom: -2 }} />
-                      )
-                    ) : (
-                      <FaSort style={{ marginBottom: -2 }} />
-                    )}
-                  </button>
-                </th>
-                <th>
-                  <button
-                    className="reset has-tooltip"
-                    onClick={() => {
-                      setOrderByBookCount(true)
-                      props.setOrderByAuthors(OrderAuthorsBy.BOOKS)
-                      setOrderByBookCountASC((prev) => !prev)
-                      orderDirectionAuthorsBookCount === OrderDirection.ASC
-                        ? setOrderDirectionAuthorsBookCount(OrderDirection.DESC)
-                        : setOrderDirectionAuthorsBookCount(OrderDirection.ASC)
-                    }}
-                    aria-describedby="tooltip3"
-                  >
-                    Books
-                    <span className="tooltip" role="tooltip" id="tooltip3">
-                      sort&nbsp;by book&nbsp;count <small>(sorts&nbsp;visible)</small>
-                    </span>{' '}
-                    {props.orderByAuthors === OrderAuthorsBy.BOOKS ? (
-                      orderDirectionAuthorsBookCount === OrderDirection.ASC ? (
-                        <FaSortUp style={{ marginBottom: -2 }} />
-                      ) : (
-                        <FaSortDown style={{ marginBottom: -2 }} />
-                      )
-                    ) : (
-                      <FaSort style={{ marginBottom: -2 }} />
-                    )}
-                  </button>
-                </th>
-              </tr>
-              {authors?.slice().map((a: authorProps) => (
-                <tr key={a.name}>
-                  <td>
-                    <Link to={`/authors/${a.id}`}>{a.name}</Link>
-                  </td>
-                  <td>{a.born && a.born < 0 ? `${Math.abs(a.born)} BC` : a.born}</td>
-                  <td>{a.bookCount}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {authors && (
-            <InView
-              onChange={async (inView) => {
-                if (inView) {
-                  props.setLimitAuthors((prev) => prev + 20)
-                }
-              }}
-            />
-          )}
-        </>
-      )}{' '}
-      {!props.token ? (
-        ''
-      ) : (
-        <>
-          {authorsWithoutBorn?.length > 1 ? (
-            <form ref={addRef} className="form-authors" onSubmit={handleSubmit}>
-              <legend>Add birthyear</legend>
-              <label className="top">
-                <span className="padding">Author:</span>
-                <Select
-                  id="single"
-                  className=""
-                  instructions="Please choose an author to add their birth date"
-                  hide
-                  options={authorsWithoutBornObjects}
-                  value={name1}
-                  onChange={(e) => {
-                    setName1(e)
+          <p>
+            It may be wise to take the birth years listed here with a grain of salt, as anyone who is logged in may
+            change them! Even <em>Tester.</em>
+          </p>
+          {props.authors?.loading ? (
+            <div>
+              <big>Loading...</big>
+            </div>
+          ) : (
+            <>
+              <table className="tableauthors">
+                <caption className="screen-reader-text">
+                  List of authors, with author name, birth date and book count. Note that anyone can edit the birth
+                  dates.
+                </caption>
+                <tbody>
+                  <tr>
+                    <th>
+                      <button
+                        className="reset has-tooltip"
+                        onClick={() => {
+                          setOrderByBookCount(false)
+                          props.setOrderByAuthors(OrderAuthorsBy.NAME)
+                          props.orderDirectionAuthorsName === OrderDirection.ASC
+                            ? props.setOrderDirectionAuthorsName(OrderDirection.DESC)
+                            : props.setOrderDirectionAuthorsName(OrderDirection.ASC)
+                        }}
+                        aria-describedby="tooltip1"
+                      >
+                        Author
+                        <span className="tooltip" role="tooltip" id="tooltip1">
+                          sort&nbsp;by author&nbsp;surname
+                        </span>{' '}
+                        {props.orderByAuthors === OrderAuthorsBy.NAME ? (
+                          props.orderDirectionAuthorsName === OrderDirection.ASC ? (
+                            <FaSortUp style={{ marginBottom: -2 }} />
+                          ) : (
+                            <FaSortDown style={{ marginBottom: -2 }} />
+                          )
+                        ) : (
+                          <FaSort style={{ marginBottom: -2 }} />
+                        )}
+                      </button>
+                    </th>
+                    <th>
+                      <button
+                        className="reset has-tooltip"
+                        onClick={() => {
+                          setOrderByBookCount(false)
+                          props.setOrderByAuthors(OrderAuthorsBy.BORN)
+                          props.orderDirectionAuthorsBorn === OrderDirection.ASC
+                            ? props.setOrderDirectionAuthorsBorn(OrderDirection.DESC)
+                            : props.setOrderDirectionAuthorsBorn(OrderDirection.ASC)
+                        }}
+                        aria-describedby="tooltip2"
+                      >
+                        Born
+                        <span className="tooltip" role="tooltip" id="tooltip2">
+                          sort&nbsp;by birth&nbsp;date
+                        </span>{' '}
+                        {props.orderByAuthors === OrderAuthorsBy.BORN ? (
+                          props.orderDirectionAuthorsBorn === OrderDirection.ASC ? (
+                            <FaSortUp style={{ marginBottom: -2 }} />
+                          ) : (
+                            <FaSortDown style={{ marginBottom: -2 }} />
+                          )
+                        ) : (
+                          <FaSort style={{ marginBottom: -2 }} />
+                        )}
+                      </button>
+                    </th>
+                    <th>
+                      <button
+                        className="reset has-tooltip"
+                        onClick={() => {
+                          setOrderByBookCount(true)
+                          props.setOrderByAuthors(OrderAuthorsBy.BOOKS)
+                          setOrderByBookCountASC((prev) => !prev)
+                          orderDirectionAuthorsBookCount === OrderDirection.ASC
+                            ? setOrderDirectionAuthorsBookCount(OrderDirection.DESC)
+                            : setOrderDirectionAuthorsBookCount(OrderDirection.ASC)
+                        }}
+                        aria-describedby="tooltip3"
+                      >
+                        Books
+                        <span className="tooltip" role="tooltip" id="tooltip3">
+                          sort&nbsp;by book&nbsp;count <small>(sorts&nbsp;visible)</small>
+                        </span>{' '}
+                        {props.orderByAuthors === OrderAuthorsBy.BOOKS ? (
+                          orderDirectionAuthorsBookCount === OrderDirection.ASC ? (
+                            <FaSortUp style={{ marginBottom: -2 }} />
+                          ) : (
+                            <FaSortDown style={{ marginBottom: -2 }} />
+                          )
+                        ) : (
+                          <FaSort style={{ marginBottom: -2 }} />
+                        )}
+                      </button>
+                    </th>
+                  </tr>
+                  {authors?.slice().map((a: authorProps) => (
+                    <tr key={a.name}>
+                      <td>
+                        <Link to={`/authors/${a.id}`}>{a.name}</Link>
+                      </td>
+                      <td>{a.born && a.born < 0 ? `${Math.abs(a.born)} BC` : a.born}</td>
+                      <td>{a.bookCount}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {authors && (
+                <InView
+                  onChange={async (inView) => {
+                    if (inView) {
+                      props.setLimitAuthors((prev) => prev + 20)
+                    }
                   }}
                 />
-              </label>
-              <div className="input-wrap">
-                <label>
-                  <input type="number" name="born" required onChange={({ target }) => setBorn(target.value)} />
-                  <span>Birth Year:</span>
-                </label>
-              </div>
-              <button type="submit">submit</button>
-            </form>
-          ) : (
+              )}
+            </>
+          )}{' '}
+          {!props.token ? (
             ''
-          )}
+          ) : (
+            <>
+              {authorsWithoutBorn?.length > 1 ? (
+                <form ref={addRef} className="form-authors" onSubmit={handleSubmit}>
+                  <legend>Add birthyear</legend>
+                  <label className="top">
+                    <span className="padding">Author:</span>
+                    <Select
+                      id="single"
+                      className=""
+                      instructions="Please choose an author to add their birth date"
+                      hide
+                      options={authorsWithoutBornObjects}
+                      value={name1}
+                      onChange={(e) => {
+                        setName1(e)
+                      }}
+                    />
+                  </label>
+                  <div className="input-wrap">
+                    <label>
+                      <input type="number" name="born" required onChange={({ target }) => setBorn(target.value)} />
+                      <span>Birth Year:</span>
+                    </label>
+                  </div>
+                  <button type="submit">submit</button>
+                </form>
+              ) : (
+                ''
+              )}
 
-          <form ref={changeRef} className="form-authors" onSubmit={handleSubmit2}>
-            <legend>Change birthyear</legend>
-            <label className="top">
-              <span className="padding">Author:</span>
-              <Select
-                id="single"
-                className=""
-                instructions="Please choose an author to change their birth date"
-                hide
-                options={authorsWITHBornObjects}
-                value={name2}
-                onChange={(e) => {
-                  setName2(e)
-                }}
-              />
-            </label>
-            <div className="input-wrap">
-              <label>
-                <input type="number" name="born" required onChange={({ target }) => setBorn2(target.value)} />
-                <span>Birth Year:</span>
-              </label>
-            </div>
-            <button type="submit">submit</button>
-          </form>
+              <form ref={changeRef} className="form-authors" onSubmit={handleSubmit2}>
+                <legend>Change birthyear</legend>
+                <label className="top">
+                  <span className="padding">Author:</span>
+                  <Select
+                    id="single"
+                    className=""
+                    instructions="Please choose an author to change their birth date"
+                    hide
+                    options={authorsWITHBornObjects}
+                    value={name2}
+                    onChange={(e) => {
+                      setName2(e)
+                    }}
+                  />
+                </label>
+                <div className="input-wrap">
+                  <label>
+                    <input type="number" name="born" required onChange={({ target }) => setBorn2(target.value)} />
+                    <span>Birth Year:</span>
+                  </label>
+                </div>
+                <button type="submit">submit</button>
+              </form>
+            </>
+          )}
         </>
       )}
     </div>
