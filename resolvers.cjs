@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken')
 const { PubSub } = require('graphql-subscriptions')
 const pubsub = new PubSub()
 const bcrypt = require('bcryptjs')
+const config = require('./utils/config')
 
 const tester = '64673513aaa627ac7b5a37ec'
 const resolvers = {
@@ -253,10 +254,15 @@ const resolvers = {
     },
     createUser: async (_root, args, context) => {
       const currentUser = context.currentUser
-      if (!currentUser || currentUser.id === tester) {
-        throw new AuthenticationError('Please log in')
+      const TEST = config.TEST
+      if (
+        !args.authorization ||
+        TEST !== args.authorization ||
+        (currentUser && currentUser.id === tester)
+      ) {
+        throw new AuthenticationError('Wrong credentials')
       }
-      const user = await User.findOne({ id: args.username })
+      const user = await User.findOne({ username: args.username })
       const passwordHashh = await bcrypt.hash(args.passwordHash, 10)
       const newUser = new User({
         ...args,

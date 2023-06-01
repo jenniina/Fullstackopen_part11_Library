@@ -137,8 +137,13 @@ export const BOOK_ADDED = gql`
   ${BOOK_DETAILS}
 `
 export const CREATE_USER = gql`
-  mutation createUser($username: String!, $passwordHash: String!, $favoriteGenre: String!) {
-    createUser(username: $username, passwordHash: $passwordHash, favoriteGenre: $favoriteGenre) {
+  mutation createUser($username: String!, $passwordHash: String!, $favoriteGenre: String!, $authorization: String!) {
+    createUser(
+      username: $username
+      passwordHash: $passwordHash
+      favoriteGenre: $favoriteGenre
+      authorization: $authorization
+    ) {
       username
       favoriteGenre
     }

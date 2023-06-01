@@ -9,6 +9,34 @@ describe('site function', () => {
       return false
     })
 
+    cy.dropCollection('users', { database: 'testLibrary' }).then((res) => {
+      cy.log(res)
+    })
+
+    cy.request({
+      method: 'POST',
+      url: 'http://localhost:4000/gql',
+      body: {
+        operationName: 'createUser',
+        query: `
+          mutation createUser($username: String!, $passwordHash: String!, $favoriteGenre: String!, $authorization: String!) {
+          createUser(username: $username,
+            passwordHash: $passwordHash,
+            favoriteGenre: $favoriteGenre,
+            authorization: $authorization) {
+            username
+            favoriteGenre
+          }
+        }`,
+        variables: {
+          username: 'Ano',
+          passwordHash: 'Anonymous',
+          favoriteGenre: 'design',
+          authorization: 'oSouFs9sbo3haTEbtUbim8d',
+        },
+      },
+    })
+
     // cy.deleteMany({ collection: 'books' }).then((res) => {
     //   // defaults to collection and database from env variables
     //   cy.log(res) // prints '# documents deleted'
@@ -16,27 +44,6 @@ describe('site function', () => {
   })
 
   it('has a user', () => {
-    cy.request({
-      method: 'POST',
-      url: 'http://localhost:4000/gql',
-      body: {
-        operationName: 'createUser',
-        query: `
-        mutation createUser($username: String!, $passwordHash: String!, $favoriteGenre: String!) {
-          createUser(username: $username, passwordHash: $passwordHash, favoriteGenre: $favoriteGenre) {
-            username
-            passwordHash
-            favoriteGenre
-          }
-        }`,
-        variables: {
-          username: 'Ano',
-          password: 'Anonymous',
-          favoriteGenre: 'design',
-        },
-      },
-    })
-
     cy.request({
       method: 'POST',
       url: 'http://localhost:4000/gql',
@@ -75,9 +82,11 @@ describe('site function', () => {
   })
 
   it('adds and deletes book', { defaultCommandTimeout: 10000 }, () => {
-    cy.dropCollection('books', { database: 'test', failSilently: true }).then((res) => {
-      cy.log(res)
-    })
+    cy.dropCollection('books', { database: 'testLibrary', failSilently: true }).then(
+      (res) => {
+        cy.log(res)
+      }
+    )
 
     cy.get('a').contains('login').click()
     cy.wait(1005)
