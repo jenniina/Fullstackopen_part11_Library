@@ -34,12 +34,12 @@ const Books = ({ genre, setGenre, booklist }: BookProps) => {
   const books = !orderByAuthor
     ? data?.allBooks
     : data?.allBooks
-      ?.slice()
-      .sort((a: { author: { surname: string } }, b: { author: { surname: string } }) =>
-        orderByAuthorASC
-          ? a.author.surname.localeCompare(b.author.surname)
-          : b.author.surname.localeCompare(a.author.surname)
-      )
+        ?.slice()
+        .sort((a: { author: { surname: string } }, b: { author: { surname: string } }) =>
+          orderByAuthorASC
+            ? a.author.surname.localeCompare(b.author.surname)
+            : b.author.surname.localeCompare(a.author.surname)
+        )
 
   let genres = Array.prototype.concat.apply(
     [],
@@ -67,7 +67,7 @@ const Books = ({ genre, setGenre, booklist }: BookProps) => {
         <h1>
           <span data-text={heading}>{heading}</span>
         </h1>
-        {books.length === 0 ? (
+        {books?.length === 0 ? (
           <div>No books yet!</div>
         ) : (
           <>

@@ -33,7 +33,7 @@ const NewUser = (props: {
 
   const submit = async (event: FormEvent) => {
     event.preventDefault()
-    if (username.length > 15) props.notify({ error: false, message: 'Please try a shorter username' }, 5)
+    if (username?.length > 15) props.notify({ error: false, message: 'Please try a shorter username' }, 5)
     else {
       const user: userProps = {
         username,

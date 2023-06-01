@@ -99,7 +99,7 @@ const NewBook = (props: {
         },
         10
       )
-    else if (title.length < 2) props.notify({ error: true, message: 'Title too short' }, 10)
+    else if (title?.length < 2) props.notify({ error: true, message: 'Title too short' }, 10)
     else {
       createBook({
         variables: {
@@ -159,12 +159,12 @@ const NewBook = (props: {
   }
   const keyHandlerGenre = (e: KeyboardEvent<HTMLInputElement>) => {
     switch (e.code) {
-    case 'Enter':
-    case 'Tab':
-      e.preventDefault()
-      genreButton.current?.click()
-      addGenre()
-      props.notify({ error: false, message: `Added ${genre} to genres list` }, 10)
+      case 'Enter':
+      case 'Tab':
+        e.preventDefault()
+        genreButton.current?.click()
+        addGenre()
+        props.notify({ error: false, message: `Added ${genre} to genres list` }, 10)
     }
   }
 
