@@ -13,7 +13,7 @@ const BUILD =
     ? 'frontend/build-test'
     : 'frontend/build'
 
-const AUTH = process.env.TEST
+const AUTH = process.env.AUTH
 
 module.exports = {
   PORT,
