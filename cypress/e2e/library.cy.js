@@ -13,6 +13,8 @@ describe('site function', () => {
       cy.log(res)
     })
 
+    cy.createCollection('users', { database: 'test' }) // creates both collection and database
+
     cy.request({
       method: 'POST',
       url: 'http://localhost:4000/gql',
