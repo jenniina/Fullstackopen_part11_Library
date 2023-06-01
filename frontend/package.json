@@ -7,7 +7,7 @@
     "dev": "vite",
     "npx-dev": "npx vite --host",
     "build": "tsc && vite build",
-    "build:test": "tsc && cross-env NODE_ENV=test vite build --mode testing",
+    "build:test": "tsc && cross-env NODE_ENV=test vite build --mode testing --outDir './build-test'",
     "preview": "vite preview",
     "server": "cd .. && npm run testmode",
     "lint": "eslint ."
