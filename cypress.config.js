@@ -1,6 +1,5 @@
 const { defineConfig } = require('cypress')
 const mongo = require('cypress-mongodb')
-const config = require('./utils/config')
 
 module.exports = defineConfig({
   e2e: {
