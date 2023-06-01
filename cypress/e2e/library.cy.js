@@ -16,40 +16,39 @@ describe('site function', () => {
 
     cy.createCollection('users', { database: 'test' }) // creates both collection and database
 
-    const user = {
-      username: 'Ano',
-      passwordHash: '$2a$10$yJ5nawUSTGooo8zkdAwofOrXNxmsWkHHSZSFVanPoenqN8yclNNli',
-      favoriteGenre: 'design',
-      books: [],
-    }
-
-    cy.insertOne(user, { collection: 'users', database: 'test' }).then((result) => {
-      cy.log(result) // prints the _id of inserted document
-    })
-
-    // cy.request({
-    //   method: 'POST',
-    //   url: 'http://localhost:4000/gql',
-    //   body: {
-    //     operationName: 'createUser',
-    //     query: `
-    //       mutation createUser($username: String!, $passwordHash: String!, $favoriteGenre: String!, $authorization: String!) {
-    //       createUser(username: $username,
-    //         passwordHash: $passwordHash,
-    //         favoriteGenre: $favoriteGenre,
-    //         authorization: $authorization) {
-    //         username
-    //         favoriteGenre
-    //       }
-    //     }`,
-    //     variables: {
-    //       authorization: Cypress.env('secret'),
-    //       username: 'Ano',
-    //       passwordHash: 'Anonymous',
-    //       favoriteGenre: 'design',
-    //     },
-    //   },
+    // const user = {
+    //   username: 'Ano',
+    //   passwordHash: '$2a$10$yJ5nawUSTGooo8zkdAwofOrXNxmsWkHHSZSFVanPoenqN8yclNNli',
+    //   favoriteGenre: 'design',
+    //   books: [],
+    // }
+    // cy.insertOne(user, { collection: 'users', database: 'test' }).then((result) => {
+    //   cy.log(result) // prints the _id of inserted document
     // })
+
+    cy.request({
+      method: 'POST',
+      url: 'http://localhost:4000/gql',
+      body: {
+        operationName: 'createUser',
+        query: `
+          mutation createUser($username: String!, $passwordHash: String!, $favoriteGenre: String!, $authorization: String!) {
+          createUser(username: $username,
+            passwordHash: $passwordHash,
+            favoriteGenre: $favoriteGenre,
+            authorization: $authorization) {
+            username
+            favoriteGenre
+          }
+        }`,
+        variables: {
+          authorization: Cypress.env('secret'),
+          username: 'Ano',
+          passwordHash: 'Anonymous',
+          favoriteGenre: 'design',
+        },
+      },
+    })
 
     // cy.deleteMany({ collection: 'books' }, { database: 'test' }).then((res) => {
     //   // defaults to collection and database from env variables
