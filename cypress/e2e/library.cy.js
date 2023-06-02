@@ -1,7 +1,7 @@
 /// <reference types="cypress" /
 /* eslint-disable cypress/no-unnecessary-waiting */
 
-// cy.createCollection('test_collection', { database: 'test' }) // creates both collection and database
+// cy.createCollection('test_collection', { database: 'testLibrary' }) // creates both collection and database
 
 describe('site function', () => {
   beforeEach(function () {
@@ -10,11 +10,13 @@ describe('site function', () => {
       return false
     })
 
-    cy.dropCollection('users', { database: 'test', failSilently: true }).then((res) => {
-      cy.log(res)
-    })
+    cy.dropCollection('users', { database: 'testLibrary', failSilently: true }).then(
+      (res) => {
+        cy.log(res)
+      }
+    )
 
-    cy.createCollection('users', { database: 'test' }) // creates both collection and database
+    cy.createCollection('users', { database: 'testLibrary' }) // creates both collection and database
 
     const user = {
       username: 'Ano',
@@ -23,9 +25,11 @@ describe('site function', () => {
       books: [],
     }
 
-    cy.insertOne(user, { collection: 'users', database: 'test' }).then((result) => {
-      cy.log(result) // prints the _id of inserted document
-    })
+    cy.insertOne(user, { collection: 'users', database: 'testLibrary' }).then(
+      (result) => {
+        cy.log(result) // prints the _id of inserted document
+      }
+    )
 
     // cy.request({
     //   method: 'POST',
@@ -51,7 +55,7 @@ describe('site function', () => {
     //   },
     // })
 
-    // cy.deleteMany({ collection: 'books' }, { database: 'test' }).then((res) => {
+    // cy.deleteMany({ collection: 'books' }, { database: 'testLibrary' }).then((res) => {
     //   // defaults to collection and database from env variables
     //   cy.log(res) // prints '# documents deleted'
     // })
@@ -96,9 +100,11 @@ describe('site function', () => {
   })
 
   it('adds and deletes book', { defaultCommandTimeout: 10000 }, () => {
-    cy.dropCollection('books', { database: 'test', failSilently: true }).then((res) => {
-      cy.log(res)
-    })
+    cy.dropCollection('books', { database: 'testLibrary', failSilently: true }).then(
+      (res) => {
+        cy.log(res)
+      }
+    )
 
     cy.get('a').contains('login').click()
     cy.wait(1005)
