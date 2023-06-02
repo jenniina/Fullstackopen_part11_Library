@@ -22,6 +22,7 @@ describe('site function', () => {
     //   favoriteGenre: 'design',
     //   books: [],
     // }
+
     // cy.insertOne(user, { collection: 'users', database: 'test' }).then((result) => {
     //   cy.log(result) // prints the _id of inserted document
     // })

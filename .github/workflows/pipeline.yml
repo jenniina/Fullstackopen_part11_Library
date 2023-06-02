@@ -32,10 +32,10 @@ jobs:
         run: npm run lint -- --fix
         working-directory: frontend
 
-      - name: Start MongoDB
-        uses: supercharge/mongodb-github-action@1.8.0
-        with:
-          mongodb-version: '6.0.6'
+      # - name: Start MongoDB
+      #   uses: supercharge/mongodb-github-action@1.8.0
+      #   with:
+      #     mongodb-version: '6.0.6'
 
       - name: Write the cypress.env.json file
         # use quotes around the secret, as its value
