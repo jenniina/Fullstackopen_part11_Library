@@ -9,10 +9,4 @@ module.exports = defineConfig({
       mongo.configurePlugin(on)
     },
   },
-  // env: {
-  //   mongodb: {
-  //     uri: 'mongodb://127.0.0.1:27017',
-  //     database: 'test',
-  //   },
-  // },
 })
