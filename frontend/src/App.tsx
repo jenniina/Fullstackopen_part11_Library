@@ -73,6 +73,8 @@ const App = () => {
   const [orderByAuthors, setOrderByAuthors] = useState<OrderAuthorsBy>(OrderAuthorsBy.NAME)
   const [orderByUsers, setOrderByUsers] = useState<OrderUsersBy>(OrderUsersBy.BOOKS)
   const [orderByBooks, setOrderByBooks] = useState<OrderBooksBy>(OrderBooksBy.TITLE)
+  const [activeLeft, setActiveLeft] = useState<boolean>(false)
+  const [activeRight, setActiveRight] = useState<boolean>(false)
 
   const resultBooks = useQuery(ALL_BOOKS, {
     variables: {
@@ -195,6 +197,15 @@ const App = () => {
 
   return (
     <div style={style}>
+      <button className={`edge edgeleft ${activeLeft ? 'poked' : ''}`} onClick={() => setActiveLeft((prev) => !prev)}>
+        <span className="screen-reader-text">tap to pull curtain aside</span>
+      </button>
+      <button
+        className={`edge edgeright ${activeRight ? 'poked' : ''}`}
+        onClick={() => setActiveRight((prev) => !prev)}
+      >
+        <span className="screen-reader-text">tap to pull curtain aside</span>
+      </button>
       <ul className={`main-navigation ${windowWidth < 800 ? 'small-screen' : ''}`}>
         <li>
           <NavLink to="/exit">&laquo;&nbsp;Exit</NavLink>
