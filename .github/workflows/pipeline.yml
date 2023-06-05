@@ -12,9 +12,9 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
         with:
-          node-version: '16'
+          node-version: '16.20'
 
       - name: Install dependencies to frontend
         run: npm install
@@ -32,10 +32,10 @@ jobs:
         run: npm run lint -- --fix
         working-directory: frontend
 
-      # - name: Start MongoDB
-      #   uses: supercharge/mongodb-github-action@1.8.0
-      #   with:
-      #     mongodb-version: '6.0.6'
+      # # - name: Start MongoDB
+      # #   uses: supercharge/mongodb-github-action@1.8.0
+      # #   with:
+      # #     mongodb-version: '6.0.6'
 
       # - name: Write the cypress.env.json file
       #   # use quotes around the secret, as its value
@@ -64,17 +64,17 @@ jobs:
       #     CI: true
       # #   #continue-on-error: true
 
-      # - name: build
-      #   id: build
-      #   run: npm run build
-      #   env:
-      #     MONGODB_URI: ${{ secrets.MONGODB_URI}}
-      #     VITE_BASE_URI_WS: ${{ secrets.VITE_BASE_URI_WS}}
-      #     VITE_BASE_URI: ${{ secrets.VITE_BASE_URI}}
-      #     VITE_serviceID: ${{ secrets.VITE_SERVICEID}}
-      #     VITE_templateID: ${{ secrets.VITE_TEMPLATEID}}
-      #     VITE_publicKey: ${{ secrets.VITE_PUBLICKEY}}
-      #   working-directory: frontend
+      - name: build
+        id: build
+        run: npm run build
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI}}
+          VITE_BASE_URI_WS: ${{ secrets.VITE_BASE_URI_WS}}
+          VITE_BASE_URI: ${{ secrets.VITE_BASE_URI}}
+          VITE_serviceID: ${{ secrets.VITE_SERVICEID}}
+          VITE_templateID: ${{ secrets.VITE_TEMPLATEID}}
+          VITE_publicKey: ${{ secrets.VITE_PUBLICKEY}}
+        working-directory: frontend
 
       # # - name: deployment server to override test server
       # #   id: deploymentserver
@@ -136,7 +136,7 @@ jobs:
           fetch-depth: '0'
       - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
         with:
-          node-version: '16'
+          node-version: '16.20'
       - name: Bump version and push tag
         if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
         uses: anothrNick/github-tag-action@8c8163ef62cf9c4677c8e800f36270af27930f42

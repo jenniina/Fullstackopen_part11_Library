@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client'
 import { OrderAuthorsBy, OrderDirection, authorProps, message, userProps } from '../interfaces'
-import { useEffect, useRef, useState, FormEvent, useMemo, Dispatch, SetStateAction } from 'react'
+import { useEffect, useRef, useState, FormEvent, Dispatch, SetStateAction, RefObject } from 'react'
 import { EDIT_BORN, ALL_AUTHORS, DELETE_AUTHOR } from '../queries'
 import { Link } from 'react-router-dom'
 import { Select, SelectOption } from './Select/Select'
@@ -61,63 +61,45 @@ const Authors = (props: {
   //   value: value,
   // }))
 
-  let authorsWithoutBornObjects: SelectOption[] = useMemo(
-    () => [
-      {
-        label: chooseOne,
-        value: 'nothing chosen',
-      },
-    ],
-    []
-  )
+  const authorsWithoutBornObjects = useRef([
+    {
+      label: chooseOne,
+      value: 'nothing chosen',
+    },
+  ]) as RefObject<SelectOption[]>
 
   useEffect(() => {
-    if (authorsWithoutBornObjects?.length < authorsWithoutBorn?.length) {
-      authorsWithoutBornObjects = [
-        {
-          label: chooseOne,
-          value: 'nothing chosen',
-        },
-      ]
-
-      for (let object in authorsWithoutBorn) {
-        authorsWithoutBornObjects.push({
-          label: authorsWithoutBorn[object],
-          value: authorsWithoutBorn[object],
-        })
+    if (authorsWithoutBornObjects?.current)
+      if (authorsWithoutBornObjects?.current?.length < authorsWithoutBorn?.length) {
+        for (let object in authorsWithoutBorn) {
+          authorsWithoutBornObjects.current.push({
+            label: authorsWithoutBorn[object],
+            value: authorsWithoutBorn[object],
+          })
+        }
       }
-    }
-  }, [authorsWithoutBorn?.length, authorsWithoutBornObjects?.length])
+  }, [authorsWithoutBorn, authorsWithoutBornObjects])
 
   const authorsWithBorn = authors?.map((a) => (!a.born ? null : `${a.name}: ${a.born}`)).filter((a) => a !== null)
 
-  let authorsWITHBornObjects: SelectOption[] = useMemo(
-    () => [
-      {
-        label: chooseOne,
-        value: 'nothing chosen',
-      },
-    ],
-    []
-  )
+  const authorsWITHBornObjects = useRef([
+    {
+      label: chooseOne,
+      value: 'nothing chosen',
+    },
+  ]) as RefObject<SelectOption[]>
 
   useEffect(() => {
-    if (authorsWITHBornObjects?.length < authorsWithBorn?.length) {
-      authorsWITHBornObjects = [
-        {
-          label: chooseOne,
-          value: 'nothing chosen',
-        },
-      ]
-
-      for (let object in authorsWithBorn) {
-        authorsWITHBornObjects.push({
-          label: authorsWithBorn[object],
-          value: authorsWithBorn[object],
-        })
+    if (authorsWITHBornObjects?.current)
+      if (authorsWITHBornObjects?.current?.length < authorsWithBorn?.length) {
+        for (let object in authorsWithBorn) {
+          authorsWITHBornObjects?.current.push({
+            label: authorsWithBorn[object],
+            value: authorsWithBorn[object],
+          })
+        }
       }
-    }
-  }, [authorsWithBorn?.length, authorsWITHBornObjects?.length])
+  }, [authorsWithBorn, authorsWITHBornObjects])
 
   const [editAuthorBornYear] = useMutation(EDIT_BORN, {
     refetchQueries: [{ query: ALL_AUTHORS }],
@@ -311,7 +293,7 @@ const Authors = (props: {
                       className=""
                       instructions="Please choose an author to add their birth date"
                       hide
-                      options={authorsWithoutBornObjects}
+                      options={authorsWithoutBornObjects?.current || []}
                       value={name1}
                       onChange={(e) => {
                         setName1(e)
@@ -339,7 +321,7 @@ const Authors = (props: {
                     className=""
                     instructions="Please choose an author to change their birth date"
                     hide
-                    options={authorsWITHBornObjects}
+                    options={authorsWITHBornObjects?.current || []}
                     value={name2}
                     onChange={(e) => {
                       setName2(e)

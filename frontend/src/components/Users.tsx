@@ -53,112 +53,118 @@ const Users = (props: {
         <h1>
           <span data-text={heading}>{heading}</span>
         </h1>
-        <table>
-          <caption className="screen-reader-text">List of users</caption>
-          <tbody>
-            <tr>
-              <th>
-                <button
-                  className="reset has-tooltip"
-                  onClick={() => {
-                    setOrderByBookCount(false)
-                    props.setOrderByUsers(OrderUsersBy.USERNAME)
-                    props.orderDirectionUsers === OrderDirection.ASC
-                      ? props.setOrderDirectionUsers(OrderDirection.DESC)
-                      : props.setOrderDirectionUsers(OrderDirection.ASC)
-                  }}
-                  aria-describedby="tooltip1"
-                >
-                  Username
-                  <span className="tooltip" role="tooltip" id="tooltip1">
-                    sort&nbsp;by username
-                  </span>{' '}
-                  {props.orderByUsers === OrderUsersBy.USERNAME ? (
-                    props.orderDirectionUsers === OrderDirection.ASC ? (
-                      <FaSortUp style={{ marginBottom: -2 }} />
-                    ) : (
-                      <FaSortDown style={{ marginBottom: -2 }} />
-                    )
-                  ) : (
-                    <FaSort style={{ marginBottom: -2 }} />
-                  )}
-                </button>
-              </th>
-              <th>
-                <button
-                  className="reset has-tooltip"
-                  onClick={() => {
-                    setOrderByBookCount(false)
-                    props.setOrderByUsers(OrderUsersBy.GENRE)
-                    props.orderDirectionUsers === OrderDirection.ASC
-                      ? props.setOrderDirectionUsers(OrderDirection.DESC)
-                      : props.setOrderDirectionUsers(OrderDirection.ASC)
-                  }}
-                  aria-describedby="tooltip2"
-                >
-                  Favorite genre
-                  <span className="tooltip" role="tooltip" id="tooltip2">
-                    sort&nbsp;by favorite&nbsp;genre
-                  </span>{' '}
-                  {props.orderByUsers === OrderUsersBy.GENRE ? (
-                    props.orderDirectionUsers === OrderDirection.ASC ? (
-                      <FaSortUp style={{ marginBottom: -2 }} />
-                    ) : (
-                      <FaSortDown style={{ marginBottom: -2 }} />
-                    )
-                  ) : (
-                    <FaSort style={{ marginBottom: -2 }} />
-                  )}
-                </button>
-              </th>
-              <th>
-                <button
-                  className="reset has-tooltip"
-                  onClick={() => {
-                    setOrderByBookCount(true)
-                    props.setOrderByUsers(OrderUsersBy.BOOKS)
-                    setOrderByBookCountASC((prev) => !prev)
-                    orderDirectionUsersBookCount === OrderDirection.ASC
-                      ? setOrderDirectionUsersBookCount(OrderDirection.DESC)
-                      : setOrderDirectionUsersBookCount(OrderDirection.ASC)
-                  }}
-                  aria-describedby="tooltip3"
-                >
-                  Books added
-                  <span className="tooltip" role="tooltip" id="tooltip3">
-                    sort&nbsp;by book&nbsp;count <small>(sorts&nbsp;visible)</small>
-                  </span>{' '}
-                  {props.orderByUsers === OrderUsersBy.BOOKS ? (
-                    orderDirectionUsersBookCount === OrderDirection.ASC ? (
-                      <FaSortUp style={{ marginBottom: -2 }} />
-                    ) : (
-                      <FaSortDown style={{ marginBottom: -2 }} />
-                    )
-                  ) : (
-                    <FaSort style={{ marginBottom: -2 }} />
-                  )}
-                </button>
-              </th>
-            </tr>
-            {users?.map((u: userProps) => (
-              <tr key={u.username}>
-                <td>
-                  <Link to={`/users/${u.id}`}>{u.username}</Link>
-                </td>
-                <td>{u.favoriteGenre}</td>
-                <td>{u.books?.length}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {users && (
-          <InView
-            onChange={async (inView) => {
-              if (inView) {
-                props.setLimitUsers((prev) => prev + 6)
-              }
-            }}
-          />
+        {users?.length === 0 ? (
+          <div>No users yet!</div>
+        ) : (
+          <>
+            <table>
+              <caption className="screen-reader-text">List of users</caption>
+              <tbody>
+                <tr>
+                  <th>
+                    <button
+                      className="reset has-tooltip"
+                      onClick={() => {
+                        setOrderByBookCount(false)
+                        props.setOrderByUsers(OrderUsersBy.USERNAME)
+                        props.orderDirectionUsers === OrderDirection.ASC
+                          ? props.setOrderDirectionUsers(OrderDirection.DESC)
+                          : props.setOrderDirectionUsers(OrderDirection.ASC)
+                      }}
+                      aria-describedby="tooltip1"
+                    >
+                      Username
+                      <span className="tooltip" role="tooltip" id="tooltip1">
+                        sort&nbsp;by username
+                      </span>{' '}
+                      {props.orderByUsers === OrderUsersBy.USERNAME ? (
+                        props.orderDirectionUsers === OrderDirection.ASC ? (
+                          <FaSortUp style={{ marginBottom: -2 }} />
+                        ) : (
+                          <FaSortDown style={{ marginBottom: -2 }} />
+                        )
+                      ) : (
+                        <FaSort style={{ marginBottom: -2 }} />
+                      )}
+                    </button>
+                  </th>
+                  <th>
+                    <button
+                      className="reset has-tooltip"
+                      onClick={() => {
+                        setOrderByBookCount(false)
+                        props.setOrderByUsers(OrderUsersBy.GENRE)
+                        props.orderDirectionUsers === OrderDirection.ASC
+                          ? props.setOrderDirectionUsers(OrderDirection.DESC)
+                          : props.setOrderDirectionUsers(OrderDirection.ASC)
+                      }}
+                      aria-describedby="tooltip2"
+                    >
+                      Favorite genre
+                      <span className="tooltip" role="tooltip" id="tooltip2">
+                        sort&nbsp;by favorite&nbsp;genre
+                      </span>{' '}
+                      {props.orderByUsers === OrderUsersBy.GENRE ? (
+                        props.orderDirectionUsers === OrderDirection.ASC ? (
+                          <FaSortUp style={{ marginBottom: -2 }} />
+                        ) : (
+                          <FaSortDown style={{ marginBottom: -2 }} />
+                        )
+                      ) : (
+                        <FaSort style={{ marginBottom: -2 }} />
+                      )}
+                    </button>
+                  </th>
+                  <th>
+                    <button
+                      className="reset has-tooltip"
+                      onClick={() => {
+                        setOrderByBookCount(true)
+                        props.setOrderByUsers(OrderUsersBy.BOOKS)
+                        setOrderByBookCountASC((prev) => !prev)
+                        orderDirectionUsersBookCount === OrderDirection.ASC
+                          ? setOrderDirectionUsersBookCount(OrderDirection.DESC)
+                          : setOrderDirectionUsersBookCount(OrderDirection.ASC)
+                      }}
+                      aria-describedby="tooltip3"
+                    >
+                      Books added
+                      <span className="tooltip" role="tooltip" id="tooltip3">
+                        sort&nbsp;by book&nbsp;count <small>(sorts&nbsp;visible)</small>
+                      </span>{' '}
+                      {props.orderByUsers === OrderUsersBy.BOOKS ? (
+                        orderDirectionUsersBookCount === OrderDirection.ASC ? (
+                          <FaSortUp style={{ marginBottom: -2 }} />
+                        ) : (
+                          <FaSortDown style={{ marginBottom: -2 }} />
+                        )
+                      ) : (
+                        <FaSort style={{ marginBottom: -2 }} />
+                      )}
+                    </button>
+                  </th>
+                </tr>
+                {users?.map((u: userProps) => (
+                  <tr key={u.username}>
+                    <td>
+                      <Link to={`/users/${u.id}`}>{u.username}</Link>
+                    </td>
+                    <td>{u.favoriteGenre}</td>
+                    <td>{u.books?.length}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {users && (
+              <InView
+                onChange={async (inView) => {
+                  if (inView) {
+                    props.setLimitUsers((prev) => prev + 6)
+                  }
+                }}
+              />
+            )}
+          </>
         )}
       </div>
     )

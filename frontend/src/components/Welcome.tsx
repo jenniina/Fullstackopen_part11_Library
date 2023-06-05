@@ -2,12 +2,67 @@ import { userProps, message } from '../interfaces'
 import Contact from './Contact'
 import { tester } from '../App'
 import Accordion from './Accordion'
+import { FC, useMemo } from 'react'
+import styles from './welcome.module.css'
+import { useTheme } from '../hooks/useTheme'
+
+interface colorProps {
+  i: number
+  e: number
+  background: string
+}
+
+const ColorComponent: FC<{ array: colorProps[] }> = ({ array }) => {
+  const lightTheme = useTheme()
+  return (
+    <ul style={{ marginTop: '3em' }} className={`fullwidth1 ${styles['color-ul']}`}>
+      {array.map((item, index: number) => {
+        const itemStyle: React.CSSProperties = {
+          backgroundColor: `${item.background}`,
+          color: lightTheme
+            ? item.i < 14
+              ? 'var(--color-primary-20)'
+              : 'var(--color-primary-1)'
+            : item.i < 9
+              ? 'var(--color-primary-20)'
+              : 'var(--color-primary-1)',
+          ['--i' as string]: `${item.i}`,
+          ['--e' as string]: `${item.e}`,
+        }
+        const spanStyle: React.CSSProperties = {
+          ['--i' as string]: `${item.i}`,
+          ['--e' as string]: `${item.e}`,
+        }
+
+        return (
+          <li key={`${item.background}${index}`} className={styles.shape} style={itemStyle}>
+            <span style={spanStyle}>{itemStyle.backgroundColor}</span>
+          </li>
+        )
+      })}
+    </ul>
+  )
+}
 
 const Welcome = (props: {
   notify: ({ error, message }: message, seconds: number) => void
   token: string | null
   me: userProps
 }) => {
+  const colorsArray: colorProps[] = []
+
+  const setupColorblocks: colorProps[] = useMemo(() => {
+    for (let i: number = 1; i <= 20; i++) {
+      const item: colorProps = {
+        i: i,
+        e: 21 - i,
+        background: `var(--color-primary-${i})`,
+      }
+      colorsArray.push(item)
+    }
+    return colorsArray
+  }, [])
+
   const heading = 'Welcome'
 
   return (
@@ -255,6 +310,25 @@ const Welcome = (props: {
       <Accordion className="center" text="contact me">
         <Contact notify={props.notify} />
       </Accordion>
+
+      <section className={`fullwidth ${styles.sectioncolor}`}>
+        <div className={styles.colortextwrap}>
+          <div>
+            <div className="wide">
+              <h3 id="color" className="left" style={{ marginTop: 0 }}>
+                Site Colors
+              </h3>
+              <p>
+                The site colors' lightnesses switch in light mode, wherein var(--color-primary-1) becomes the lightest
+                color instead of the darkest.{' '}
+              </p>
+              <p>Animated clip-paths and text rotation on hover, with dynamic delay.</p>
+            </div>
+          </div>
+        </div>
+
+        <ColorComponent array={setupColorblocks} />
+      </section>
     </div>
   )
 }
