@@ -24,8 +24,8 @@ const ColorComponent: FC<{ array: colorProps[] }> = ({ array }) => {
               ? 'var(--color-primary-20)'
               : 'var(--color-primary-1)'
             : item.i < 9
-              ? 'var(--color-primary-20)'
-              : 'var(--color-primary-1)',
+            ? 'var(--color-primary-20)'
+            : 'var(--color-primary-1)',
           ['--i' as string]: `${item.i}`,
           ['--e' as string]: `${item.e}`,
         }
@@ -147,8 +147,8 @@ const Welcome = (props: {
         address.
       </p>
       <p>
-        The web service is hosted at Render.com for free, with 512 MB RAM and 0.1 CPU, hence requiring a little patience
-        to browse.
+        The web service used to be hosted at Render.com for free, with 512 MB RAM and 0.1 CPU, hence requiring a little
+        patience to browse, but I have since moved it to Azure Static Web Apps.
       </p>
       <h3>Backend</h3>
       <p>
