@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
     "types": [
-      "vitest/globals"
+      "vite/client",
+      "vitest/globals",
+      "node"
     ],
     "target": "ESNext",
     "useDefineForClassFields": true,
