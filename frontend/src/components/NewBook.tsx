@@ -118,7 +118,7 @@ const NewBook = (props: {
         console.log(JSON.stringify(error, null, 2))
         props.notify({ error: true, message: error.message }, 10)
       })
-      if (form && import.meta.env.PROD && (props.me?.username !== 'Ano' || title !== 'Book by Cypress')) {
+      if (form && (props.me?.username !== 'Ano' || title !== 'Book by Cypress')) {
         const message = `\n\n${message_}, in the genres: ${genres.join(', ')}. \n\n${
           props.me?.username
         } added it. \n\n ${title}, \n ${author}, \n ${surname}`
