@@ -7,7 +7,7 @@
     "start": "node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "dev:test": "cd frontend && npm run npx-dev",
-    "build": "cd frontend && npm run build",
+    "build": "cd frontend && npm run lint -- --fix && npm run build",
     "build:test": "cd frontend && npm run build:test",
     "testmode": "cross-env NODE_ENV=test node index.js",
     "cypress:open": "cross-env NODE_ENV=test cypress open",
@@ -15,7 +15,7 @@
     "lint": "eslint ."
   },
   "author": "Jenniina Laine",
-  "license": "ISC",
+  "license": "UNLICENSED",
   "dependencies": {
     "@apollo/server": "^4.10.0",
     "@graphql-tools/schema": "^9.0.18",
