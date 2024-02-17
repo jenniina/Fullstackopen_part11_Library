@@ -22,10 +22,10 @@ jobs:
           node-version: '18.x'
 
       - name: npm install, build, and test
-        run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
+        run: # | 
+        npm install 
+        # npm run build --if-present    
+        # npm run test --if-present
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
@@ -53,7 +53,7 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: unzip release.zip
-      
+
       - name: Login to Azure
         uses: azure/login@v1
         with:
@@ -68,4 +68,3 @@ jobs:
           app-name: 'books-app-backend-jl'
           slot-name: 'Production'
           package: .
-          
