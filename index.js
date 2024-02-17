@@ -76,7 +76,7 @@ const start = async () => {
       },
     })
   )
-  app.use('/mail', emailRouter)
+  app.use('/email', emailRouter)
   app.use('/', express.static(config.BUILD))
   app.get('*', (_req, res) => {
     res.sendFile(__dirname + `/${config.BUILD}/index.html`)
