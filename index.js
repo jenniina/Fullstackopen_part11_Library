@@ -15,6 +15,7 @@ const { useServer } = require('graphql-ws/lib/use/ws')
 require('dotenv').config()
 const resolvers = require('./resolvers.cjs')
 const typeDefs = require('./schema.cjs')
+const emailRouter = require('./mailRoutes.js')
 
 const config = require('./utils/config')
 
@@ -75,6 +76,7 @@ const start = async () => {
       },
     })
   )
+  app.use('/mail', emailRouter)
   app.use('/', express.static(config.BUILD))
   app.get('*', (_req, res) => {
     res.sendFile(__dirname + `/${config.BUILD}/index.html`)

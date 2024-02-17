@@ -4,7 +4,7 @@ import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS, ALL_USERS, ME } from '../queries'
 import { RefObject, message, userProps } from '../interfaces'
 import { tester } from '../App'
 import { useNavigate } from 'react-router-dom'
-import emailjs from '@emailjs/browser'
+import { sendEmail } from '../email'
 
 const NewBook = (props: {
   notify: ({ error, message }: message, seconds: number) => void
@@ -18,6 +18,8 @@ const NewBook = (props: {
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState<string[]>([])
   const [userId, setUser] = useState('')
+
+  const [message_, setMessage] = useState('' as string)
 
   const genreButton = useRef<HTMLButtonElement>(null)
   const form = useRef() as RefObject<HTMLFormElement>
@@ -117,23 +119,19 @@ const NewBook = (props: {
         props.notify({ error: true, message: error.message }, 10)
       })
       if (form && import.meta.env.PROD && (props.me?.username !== 'Ano' || title !== 'Book by Cypress')) {
-        emailjs
-          .sendForm(
-            import.meta.env.VITE_serviceID,
-            import.meta.env.VITE_templateID,
-            form.current,
-            import.meta.env.VITE_publicKey
-          )
-          .then(
-            (result) => {
-              // eslint-disable-next-line no-console
-              console.log(result.text)
-            },
-            (error) => {
-              // eslint-disable-next-line no-console
-              console.log(error.text, error.message)
-            }
-          )
+        const message = `\n\n${message_}, in the genres: ${genres.join(', ')}. \n\n${
+          props.me?.username
+        } added it. \n\n ${title}, \n ${author}, \n ${surname}`
+        sendEmail('sdl.gkh.sdg@lakdasghashiha.com', 'A new book was added. ', message).then(
+          (result) => {
+            // eslint-disable-next-line no-console
+            console.log(result)
+          },
+          (error) => {
+            // eslint-disable-next-line no-console
+            console.log(error.text, error.message)
+          }
+        )
       }
     }
   }
@@ -259,7 +257,12 @@ const NewBook = (props: {
               <small>clear&nbsp;genres</small>
             </button>
           </div>
-          <input type="hidden" name="message" value={`A new book was added: ${title} by ${props.me?.username}`} />
+          <input
+            type="hidden"
+            name="message"
+            value={`A new book was added: ${title} by ${props.me?.username}`}
+            onChange={(event) => setMessage(event.target.value)}
+          />
           <button type="submit">create&nbsp;book</button>
         </form>
       </div>

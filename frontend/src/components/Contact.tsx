@@ -1,36 +1,37 @@
-import { useRef, FormEvent } from 'react'
-import emailjs from '@emailjs/browser'
+import { useRef, FormEvent, useState } from 'react'
 import { RefObject, message } from '../interfaces'
+import { sendEmail } from '../email'
 
 interface contactProps {
   notify: ({ error, message }: message, seconds: number) => void
 }
 function Contact(props: contactProps) {
+  const [email, setEmail] = useState('' as string)
+  const [message_, setMessage] = useState('' as string)
+  const [subject, setSubject] = useState('' as string)
+  const [name, setName] = useState('' as string)
+  const [lastname, setLastname] = useState('' as string)
+
   const form = useRef() as RefObject<HTMLFormElement>
 
   const submit = async (event: FormEvent) => {
     event.preventDefault()
-    if (form)
-      emailjs
-        .sendForm(
-          import.meta.env.VITE_serviceID,
-          import.meta.env.VITE_templateID,
-          form.current,
-          import.meta.env.VITE_publicKey
-        )
-        .then(
-          (result) => {
-            // eslint-disable-next-line no-console
-            console.log(result.text)
-            props.notify({ error: false, message: 'Thank you for your message!' }, 10)
-            form.current?.reset()
-          },
-          (error) => {
-            // eslint-disable-next-line no-console
-            console.log(error.message)
-            props.notify({ error: true, message: 'There was an error sending the message!' }, 10)
-          }
-        )
+    if (form) {
+      const message = `Name: ${name} ${lastname}\nEmail: ${email}\n\n${subject}\n\n${message_}`
+      sendEmail(email, subject, message).then(
+        (result) => {
+          // eslint-disable-next-line no-console
+          console.log(result)
+          props.notify({ error: false, message: 'Thank you for your message!' }, 10)
+          form.current?.reset()
+        },
+        (error) => {
+          // eslint-disable-next-line no-console
+          console.log(error.message)
+          props.notify({ error: true, message: 'There was an error sending the message!' }, 10)
+        }
+      )
+    }
   }
 
   return (
@@ -40,14 +41,26 @@ function Contact(props: contactProps) {
       <span className="flex stretch">
         <span className="input-wrap">
           <label>
-            <input name="firstname" required type="text" />
+            <input
+              name="firstname"
+              required
+              type="text"
+              autoComplete="given-name"
+              onChange={(event) => setName(event.target.value)}
+            />
             <span>First Name </span>
           </label>
         </span>
 
         <span className="input-wrap">
           <label>
-            <input name="lastname" required type="text" />
+            <input
+              name="lastname"
+              required
+              type="text"
+              autoComplete="family-name"
+              onChange={(event) => setLastname(event.target.value)}
+            />
             <span>Last name </span>
           </label>
         </span>
@@ -55,24 +68,46 @@ function Contact(props: contactProps) {
 
       <span className="input-wrap">
         <label>
-          <input name="email" required type="email" />
+          <input
+            name="email"
+            required
+            type="email"
+            autoComplete="email"
+            onChange={(event) => setEmail(event.target.value)}
+          />
           <span>Email </span>
         </label>
       </span>
 
       <span className="input-wrap">
         <label>
-          <input name="message-subject" required type="text" />
+          <input
+            name="message-subject"
+            required
+            type="text"
+            autoComplete="off"
+            onChange={(event) => setSubject(event.target.value)}
+          />
           <span>Subject </span>
         </label>
       </span>
 
       <label className="message-label">
         <span>Message: </span>
-        <textarea name="message" required></textarea>
+        <textarea
+          name="message"
+          required
+          autoComplete="off"
+          onChange={(event) => setMessage(event.target.value)}
+        ></textarea>
       </label>
 
-      <input type="hidden" name="address" value={window.location.href} />
+      <input
+        type="hidden"
+        name="address"
+        value={window.location.href}
+        onChange={(event) => setMessage((prev) => prev + '\n' + event.target.value)}
+      />
 
       <button type="submit">send&nbsp;message</button>
     </form>

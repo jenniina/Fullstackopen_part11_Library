@@ -24,8 +24,8 @@ const ColorComponent: FC<{ array: colorProps[] }> = ({ array }) => {
               ? 'var(--color-primary-20)'
               : 'var(--color-primary-1)'
             : item.i < 9
-            ? 'var(--color-primary-20)'
-            : 'var(--color-primary-1)',
+              ? 'var(--color-primary-20)'
+              : 'var(--color-primary-1)',
           ['--i' as string]: `${item.i}`,
           ['--e' as string]: `${item.e}`,
         }
@@ -49,9 +49,8 @@ const Welcome = (props: {
   token: string | null
   me: userProps
 }) => {
-  const colorsArray: colorProps[] = []
-
   const setupColorblocks: colorProps[] = useMemo(() => {
+    let colorsArray: colorProps[] = []
     for (let i: number = 1; i <= 20; i++) {
       const item: colorProps = {
         i: i,
@@ -263,9 +262,6 @@ const Welcome = (props: {
             </li>
             <li>
               <a href="https://github.com/remix-run/react-router#readme">react-router-dom</a>
-            </li>
-            <li>
-              <a href="https://www.emailjs.com">emailjs</a>
             </li>
           </ul>
         </div>
