@@ -31,6 +31,18 @@ const httpLink = createHttpLink({
 const wsLink = new GraphQLWsLink(
   createClient({
     url: VITE_BASE_URI_WS ?? 'ws://localhost:4000',
+    on: {
+      // This will be called if the WebSocket connection encounters an error
+      error: (error) => {
+        // eslint-disable-next-line no-console
+        console.error('WebSocket error:', error)
+      },
+      // This will be called when the WebSocket connection is closed
+      closed: () => {
+        // eslint-disable-next-line no-console
+        console.error('WebSocket connection closed')
+      },
+    },
   })
 )
 

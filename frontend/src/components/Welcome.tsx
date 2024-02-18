@@ -141,18 +141,11 @@ const Welcome = (props: {
       <h3>CI/CD</h3>
       <p>
         I used <a href="https://github.com/features/actions">GitHub Actions</a> to set up the deployment pipeline,
-        deploying the Apollo server backend as a <a href="https://render.com/">Render.com</a> web service and the
-        frontend as a static site, until I realized that I can use express to serve the static site from the same
-        address.
-      </p>
-      <p>
-        The web service used to be hosted at Render.com for free, with 512 MB RAM and 0.1 CPU, hence requiring a little
-        patience to browse, but I have since moved it to Azure Static Web Apps.
+        deploying the site as a Azure web app.
       </p>
       <h3>Backend</h3>
       <p>
-        The Apollo server is hosted as a render.com web service, using GraphQL and JavaScript, connecting to a{' '}
-        <a href="https://www.mongodb.com/atlas/database">MongoDB Atlas database</a>.
+        The Apollo server is connected to a <a href="https://www.mongodb.com/atlas/database">MongoDB Atlas database</a>.
       </p>
       <div className="flex">
         <div>
@@ -234,10 +227,6 @@ const Welcome = (props: {
         </div>
       </div>
       <h3>Frontend</h3>
-      <p>
-        The frontend was originally hosted on render.com as a static site, but is now hosted at the same domain as the
-        backend, after some refactoring.
-      </p>
       <div className="flex">
         <div>
           <label htmlFor="dep-frontend">Dependencies:</label>
