@@ -19,8 +19,8 @@ describe('site function', () => {
     cy.createCollection('users', { database: 'testLibrary', failSilently: true }) // creates both collection and database
 
     const user = {
-      username: Cypress.env('username'),
-      passwordHash: Cypress.env('hash'),
+      username: Cypress.env('USERNAME'),
+      passwordHash: Cypress.env('HASH'),
       favoriteGenre: 'design',
       books: [],
     }
@@ -47,9 +47,9 @@ describe('site function', () => {
     //       }
     //     }`,
     //     variables: {
-    //       authorization: Cypress.env('secret'),
-    //       username: Cypress.env('username'),
-    //       passwordHash: Cypress.env('password'),
+    //       authorization: Cypress.env('SECRET'),
+    //       username: Cypress.env('USERNAME'),
+    //       passwordHash: Cypress.env('PASSWORD'),
     //       favoriteGenre: 'design',
     //     },
     //   },
@@ -90,10 +90,10 @@ describe('site function', () => {
     cy.wait(1000)
     cy.get('[data-test="username"]').click()
     cy.wait(1005)
-    cy.get('input[name*="username"]').type(Cypress.env('username'))
+    cy.get('input[name*="username"]').type(Cypress.env('USERNAME'))
     cy.get('[data-test="password"]').click()
     cy.wait(1005)
-    cy.get('input[name*="password"]').type(Cypress.env('password'))
+    cy.get('input[name*="password"]').type(Cypress.env('PASSWORD'))
     cy.get('button[type="submit"]').click()
     cy.wait(4000)
     cy.get('.main-navigation').contains('logout')
@@ -114,10 +114,10 @@ describe('site function', () => {
     cy.get('a').contains('login').click()
     cy.wait(1005)
     cy.get('[data-test="username"]').click()
-    cy.get('input[name*="username"]').type(Cypress.env('username'))
+    cy.get('input[name*="username"]').type(Cypress.env('USERNAME'))
     cy.get('[data-test="password"]').click()
     cy.wait(1005)
-    cy.get('input[name*="password"]').type(Cypress.env('password'))
+    cy.get('input[name*="password"]').type(Cypress.env('PASSWORD'))
     cy.get('button[type="submit"]').click()
 
     cy.wait(5000)
@@ -229,8 +229,8 @@ describe('site function', () => {
 //     }
 //       `,
 //     variables: {
-//       username: Cypress.env('username'),
-//       password: Cypress.env('password'),
+//       username: Cypress.env('USERNAME'),
+//       password: Cypress.env('PASSWORD'),
 //     },
 //   },
 // })
@@ -274,7 +274,7 @@ describe('site function', () => {
 //       }
 //       `,
 //     variables: {
-//       name: Cypress.env('password'),
+//       name: Cypress.env('PASSWORD'),
 //     },
 //   },
 // })
