@@ -2,7 +2,7 @@ const express = require('express')
 const nodemailer = require('nodemailer')
 const router = express.Router()
 
-router.post('/email', async (req, res) => {
+router.post('/', async (req, res) => {
   let { from, subject, text } = req.body
 
   const transporter = nodemailer.createTransport({
