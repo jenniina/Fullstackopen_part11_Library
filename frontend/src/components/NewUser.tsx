@@ -18,7 +18,7 @@ const NewUser = (props: {
     onError: (error) => {
       props.notify({ error: true, message: error.message }, 10)
       // eslint-disable-next-line no-console
-      //console.log(JSON.stringify(error, null, 2))
+      //console.error(JSON.stringify(error, null, 2))
     },
     onCompleted: () => {
       zero()
@@ -50,7 +50,7 @@ const NewUser = (props: {
         .catch((error) => {
           props.notify({ error: true, message: error.message }, 10)
           // eslint-disable-next-line no-console
-          console.log(JSON.stringify(error.message, null, 2))
+          console.error(JSON.stringify(error.message, null, 2))
         })
     }
   }
@@ -61,7 +61,7 @@ const NewUser = (props: {
     refetchQueries: [{ query: ME }],
     onError: (error) => {
       // eslint-disable-next-line no-console
-      //console.log(JSON.stringify(error, null, 2))
+      //console.error(JSON.stringify(error, null, 2))
       props.notify({ error: true, message: error.message }, 10)
     },
     onCompleted: () => {

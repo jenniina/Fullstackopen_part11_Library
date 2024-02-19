@@ -352,7 +352,7 @@ const resolvers = {
       }
       await User.deleteOne({ username: args.username }).catch(function (error) {
         // eslint-disable-next-line no-console
-        console.log(JSON.stringify(error, null, 2)) // Failure
+        console.error(JSON.stringify(error, null, 2)) // Failure
       })
     },
     deleteBook: async (_root, args, context) => {
@@ -374,7 +374,7 @@ const resolvers = {
           )
           .catch(function (error) {
             // eslint-disable-next-line no-console
-            console.log(JSON.stringify(error, null, 2)) // Failure
+            console.error(JSON.stringify(error, null, 2)) // Failure
           })
       //for cypress:
       if (args.title) {
@@ -388,7 +388,7 @@ const resolvers = {
       }
       await Author.deleteOne({ name: args.name }).catch(function (error) {
         // eslint-disable-next-line no-console
-        console.log(JSON.stringify(error, null, 2)) // Failure
+        console.error(JSON.stringify(error, null, 2)) // Failure
       })
     },
   },

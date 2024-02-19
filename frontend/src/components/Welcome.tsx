@@ -196,6 +196,12 @@ const Welcome = (props: {
             <li>
               <a href="https://github.com/apollostack/graphql-subscriptions#readme">graphql-subscriptions</a>
             </li>
+            <li>
+              <a href="https://github.com/kentcdodds/cross-env#readme">cross-env</a>
+            </li>
+            <li>
+              <a href="https://nodemailer.com/">nodemailer</a>
+            </li>
           </ul>
         </div>
         <div>
@@ -204,9 +210,6 @@ const Welcome = (props: {
           <ul id="dev-backend">
             <li>
               <a href="https://nodemon.io">nodemon</a>
-            </li>
-            <li>
-              <a href="https://github.com/kentcdodds/cross-env#readme">cross-env</a>
             </li>
             <li>
               <a href="https://github.com/cypress-io/cypress">cypress</a>

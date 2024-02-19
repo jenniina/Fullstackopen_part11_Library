@@ -55,7 +55,7 @@ const Books = ({ genre, setGenre, booklist }: BookProps) => {
 
   if (error) {
     // eslint-disable-next-line no-console
-    console.log(JSON.stringify(error, null, 2))
+    console.error(JSON.stringify(error, null, 2))
     return (
       <div>
         <big>There was an error loading the books</big>

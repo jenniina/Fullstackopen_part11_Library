@@ -42,7 +42,7 @@ const User = (props: {
     onError: (error) => {
       props.notify({ error: true, message: error.message }, 10)
       // eslint-disable-next-line no-console
-      //console.log(JSON.stringify(error, null, 2))
+      //console.error(JSON.stringify(error, null, 2))
     },
     onCompleted: () => {
       props.notify({ error: false, message: 'User edited!' }, 5)

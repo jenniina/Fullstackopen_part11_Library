@@ -65,7 +65,7 @@ const NewBook = (props: {
     },
     onError: (error) => {
       //eslint-disable-next-line no-console
-      console.log(JSON.stringify(error, null, 2))
+      console.error(JSON.stringify(error, null, 2))
       props.notify({ error: true, message: error.message }, 10)
     },
     onCompleted: () => {
@@ -113,28 +113,17 @@ const NewBook = (props: {
         refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }, { query: ME }, { query: ALL_USERS }],
       }).catch((error) => {
         // eslint-disable-next-line no-console
-        console.log(JSON.stringify(error, null, 2))
+        console.error(JSON.stringify(error, null, 2))
         props.notify({ error: true, message: error.message }, 10)
       })
       if (form && (props.me?.username !== 'Ano' || title !== 'Book by Cypress')) {
-        const text = `\n\n A new book was added: ${title} by ${props.me?.username}, in the genres: ${genres.join(
-          ', '
-        )}. \n\n${props.me?.username} added it. \n\n ${title}, \n ${author}, \n ${surname}`
-        sendEmail('A new book was added. ', text)
-          .then(
-            (result) => {
-              // eslint-disable-next-line no-console
-              console.log(result)
-            },
-            (error) => {
-              // eslint-disable-next-line no-console
-              console.log(error.text, error.message)
-            }
-          )
-          .catch((error) => {
-            // eslint-disable-next-line no-console
-            console.log(error.text, error.message)
-          })
+        const text = `\n\n A new book was added: ${title} by ${author} by the user ${
+          props.me?.username
+        }, in the genres: ${genres.join(', ')}.`
+        sendEmail(`A new book was added by ${props.me?.username}`, text).catch((error) => {
+          // eslint-disable-next-line no-console
+          console.error(error.text, error.message)
+        })
       }
     }
   }

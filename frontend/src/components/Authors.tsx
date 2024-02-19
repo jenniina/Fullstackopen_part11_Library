@@ -115,7 +115,7 @@ const Authors = (props: {
     refetchQueries: [{ query: ALL_AUTHORS }],
     onError: (error) => {
       // eslint-disable-next-line no-console
-      console.log(JSON.stringify(error, null, 2))
+      console.error(JSON.stringify(error, null, 2))
     },
   })
   useEffect(() => {

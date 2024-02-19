@@ -17,8 +17,8 @@ function Contact(props: contactProps) {
   const submit = async (event: FormEvent) => {
     event.preventDefault()
     if (form) {
-      const text = `Name: ${name} ${lastname}\nEmail: ${email}\n\n${subject}\n\n${message_}`
-      sendEmail(subject, text)
+      const text = `From the books app: \n\nName: ${name} ${lastname}\nEmail: ${email}\n\n${subject}\n\n${message_}`
+      sendEmail(`New message from ${name} ${lastname}`, text)
         .then(
           () => {
             props.notify({ error: false, message: 'Thank you for your message!' }, 10)
@@ -26,7 +26,7 @@ function Contact(props: contactProps) {
           },
           (error) => {
             // eslint-disable-next-line no-console
-            console.log(error.message)
+            console.error(error.message)
             props.notify({ error: true, message: 'There was an error sending the message!' }, 10)
           }
         )
