@@ -19,8 +19,8 @@ describe('site function', () => {
     cy.createCollection('users', { database: 'testLibrary' }) // creates both collection and database
 
     const user = {
-      username: 'Ano',
-      passwordHash: '$2a$10$yJ5nawUSTGooo8zkdAwofOrXNxmsWkHHSZSFVanPoenqN8yclNNli',
+      username: Cypress.env('username'),
+      passwordHash: Cypress.env('password'),
       favoriteGenre: 'design',
       books: [],
     }
@@ -48,8 +48,8 @@ describe('site function', () => {
     //     }`,
     //     variables: {
     //       authorization: Cypress.env('secret'),
-    //       username: 'Ano',
-    //       passwordHash: 'Anonymous',
+    //       username: Cypress.env('username'),
+    //       passwordHash: Cypress.env('password'),
     //       favoriteGenre: 'design',
     //     },
     //   },
@@ -90,10 +90,10 @@ describe('site function', () => {
     cy.wait(1000)
     cy.get('[data-test="username"]').click()
     cy.wait(1005)
-    cy.get('input[name*="username"]').type('Ano')
+    cy.get('input[name*="username"]').type(Cypress.env('username'))
     cy.get('[data-test="password"]').click()
     cy.wait(1005)
-    cy.get('input[name*="password"]').type('Anonymous')
+    cy.get('input[name*="password"]').type(Cypress.env('password'))
     cy.get('button[type="submit"]').click()
     cy.wait(4000)
     cy.get('.main-navigation').contains('logout')
@@ -109,10 +109,10 @@ describe('site function', () => {
     cy.get('a').contains('login').click()
     cy.wait(1005)
     cy.get('[data-test="username"]').click()
-    cy.get('input[name*="username"]').type('Ano')
+    cy.get('input[name*="username"]').type(Cypress.env('username'))
     cy.get('[data-test="password"]').click()
     cy.wait(1005)
-    cy.get('input[name*="password"]').type('Anonymous')
+    cy.get('input[name*="password"]').type(Cypress.env('password'))
     cy.get('button[type="submit"]').click()
 
     cy.wait(5000)
@@ -123,7 +123,7 @@ describe('site function', () => {
     cy.get('input[name*="title"]').type('Book by Cypress')
     cy.get('[data-test="author"]').click()
     cy.wait(1005)
-    cy.get('input[name*="author"]').type('Anonymous')
+    cy.get('input[name*="author"]').type(Cypress.env('password'))
     cy.get('[data-test="published"]').click()
     cy.wait(1005)
     cy.get('input[name*="published"]').type('2020')
@@ -146,7 +146,9 @@ describe('site function', () => {
     cy.get('button[type="submit"]').click()
     cy.wait(2000)
     cy.contains(
-      'Book by Cypress by Anonymous added, in the genres: crime, design, horror'
+      `Book by Cypress by ${Cypress.env(
+        'username'
+      )} added, in the genres: crime, design, horror`
     )
     cy.get('[data-test="Books"]').click()
     cy.wait(5000)
@@ -199,7 +201,7 @@ describe('site function', () => {
 
     cy.get('.main-navigation').contains('Authors').click()
     cy.wait(5000)
-    cy.get('.tableauthors').contains('Anonymous')
+    cy.get('.tableauthors').contains(Cypress.env('password'))
     cy.get('.tableauthors').contains('1')
 
     cy.get('a').contains('Books').click()
@@ -226,8 +228,8 @@ describe('site function', () => {
 //     }
 //       `,
 //     variables: {
-//       username: 'Ano',
-//       password: 'Anonymous',
+//       username: Cypress.env('username'),
+//       password: Cypress.env('password'),
 //     },
 //   },
 // })
@@ -271,7 +273,7 @@ describe('site function', () => {
 //       }
 //       `,
 //     variables: {
-//       name: 'Anonymous',
+//       name: Cypress.env('password'),
 //     },
 //   },
 // })
