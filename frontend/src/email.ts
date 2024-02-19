@@ -7,10 +7,8 @@ export const sendEmail = async (from: string, subject: string, text: string) => 
     text,
   }
 
-  const VITE_URI = import.meta.env.VITE_RENDER_URI
-
   try {
-    await axios.post(`${VITE_URI}/email`, emailData)
+    await axios.post(`/email`, emailData)
     //console.log(response.data.message)
   } catch (error) {
     // eslint-disable-next-line no-console
