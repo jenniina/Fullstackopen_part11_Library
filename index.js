@@ -40,7 +40,16 @@ const start = async () => {
   })
 
   const schema = makeExecutableSchema({ typeDefs, resolvers })
-  const serverCleanup = useServer({ schema }, wsServer)
+  //const serverCleanup = useServer({ schema }, wsServer)
+  const serverCleanup = useServer(
+    {
+      schema,
+      onConnect: (ctx) => console.log('Client connected:', ctx.extra.request.headers),
+      onDisconnect: () => console.log('Client disconnected'),
+      onError: (err) => console.error('Error occurred:', err),
+    },
+    wsServer
+  )
 
   const server = new ApolloServer({
     schema,
