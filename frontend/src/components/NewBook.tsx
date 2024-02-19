@@ -122,16 +122,21 @@ const NewBook = (props: {
         const message = `\n\n${message_}, in the genres: ${genres.join(', ')}. \n\n${
           props.me?.username
         } added it. \n\n ${title}, \n ${author}, \n ${surname}`
-        sendEmail('sdl.gkh.sdg@lakdasghashiha.com', 'A new book was added. ', message).then(
-          (result) => {
-            // eslint-disable-next-line no-console
-            console.log(result)
-          },
-          (error) => {
+        sendEmail('sdl.gkh.sdg@lakdasghashiha.com', 'A new book was added. ', message)
+          .then(
+            (result) => {
+              // eslint-disable-next-line no-console
+              console.log(result)
+            },
+            (error) => {
+              // eslint-disable-next-line no-console
+              console.log(error.text, error.message)
+            }
+          )
+          .catch((error) => {
             // eslint-disable-next-line no-console
             console.log(error.text, error.message)
-          }
-        )
+          })
       }
     }
   }
