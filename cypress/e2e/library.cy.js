@@ -16,7 +16,7 @@ describe('site function', () => {
       }
     )
 
-    cy.createCollection('users', { database: 'testLibrary' }) // creates both collection and database
+    cy.createCollection('users', { database: 'testLibrary', failSilently: true }) // creates both collection and database
 
     const user = {
       username: Cypress.env('username'),
