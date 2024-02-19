@@ -19,8 +19,6 @@ const NewBook = (props: {
   const [genres, setGenres] = useState<string[]>([])
   const [userId, setUser] = useState('')
 
-  const [message_, setMessage] = useState('' as string)
-
   const genreButton = useRef<HTMLButtonElement>(null)
   const form = useRef() as RefObject<HTMLFormElement>
 
@@ -119,10 +117,10 @@ const NewBook = (props: {
         props.notify({ error: true, message: error.message }, 10)
       })
       if (form && (props.me?.username !== 'Ano' || title !== 'Book by Cypress')) {
-        const message = `\n\n${message_}, in the genres: ${genres.join(', ')}. \n\n${
-          props.me?.username
-        } added it. \n\n ${title}, \n ${author}, \n ${surname}`
-        sendEmail('sdl.gkh.sdg@lakdasghashiha.com', 'A new book was added. ', message)
+        const text = `\n\n A new book was added: ${title} by ${props.me?.username}, in the genres: ${genres.join(
+          ', '
+        )}. \n\n${props.me?.username} added it. \n\n ${title}, \n ${author}, \n ${surname}`
+        sendEmail('A new book was added. ', text)
           .then(
             (result) => {
               // eslint-disable-next-line no-console
@@ -262,12 +260,6 @@ const NewBook = (props: {
               <small>clear&nbsp;genres</small>
             </button>
           </div>
-          <input
-            type="hidden"
-            name="message"
-            value={`A new book was added: ${title} by ${props.me?.username}`}
-            onChange={(event) => setMessage(event.target.value)}
-          />
           <button type="submit">create&nbsp;book</button>
         </form>
       </div>

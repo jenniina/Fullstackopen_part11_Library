@@ -3,7 +3,7 @@ const nodemailer = require('nodemailer')
 const router = express.Router()
 
 router.post('/', async (req, res) => {
-  let { from, subject, text } = req.body
+  let { subject, text } = req.body
 
   const transporter = nodemailer.createTransport({
     host: process.env.NODEMAILER_HOST,
