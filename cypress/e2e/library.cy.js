@@ -20,7 +20,7 @@ describe('site function', () => {
 
     const user = {
       username: Cypress.env('username'),
-      passwordHash: Cypress.env('password'),
+      passwordHash: Cypress.env('hash'),
       favoriteGenre: 'design',
       books: [],
     }
