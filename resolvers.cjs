@@ -1,4 +1,4 @@
-const { AuthenticationError } = require('apollo-server-core')
+const { AuthenticationError, ApolloError } = require('apollo-server-core')
 const { GraphQLError } = require('graphql')
 const Book = require('./models/book')
 const Author = require('./models/author')
@@ -14,143 +14,177 @@ const resolvers = {
   Query: {
     bookCount: () => Book.collection.countDocuments(),
     allBooks: async (_root, args) => {
-      const orderBy = args.orderBy || 'title'
-      const orderDirection = args.orderDirection || 1
-      //const options = { sort: [['author.surname', orderDirection]] }
-      if (args.author) {
-        const author = await Author.findOne({ name: args.author })
-        if (author) {
-          if (args.genre && orderBy === 'title') {
-            return await Book.find({
-              author: author.id,
-              genres: { $in: [args.genre] },
-            })
+      try {
+        const orderBy = args.orderBy || 'title'
+        const orderDirection = args.orderDirection || 1
+        //const options = { sort: [['author.surname', orderDirection]] }
+        if (args.author) {
+          const author = await Author.findOne({ name: args.author })
+          if (author) {
+            if (args.genre && orderBy === 'title') {
+              return await Book.find({
+                author: author.id,
+                genres: { $in: [args.genre] },
+              })
+                .sort({ title: orderDirection })
+                .populate('author')
+            } else if (orderBy === 'published') {
+              return await Book.find({
+                author: author.id,
+                genres: { $in: [args.genre] },
+              })
+                .populate('author')
+                .sort({ published: orderDirection })
+            } else return await Book.find({ author: author.id }).populate('author')
+          }
+        }
+
+        if (args.genre) {
+          if (orderBy === 'title') {
+            return await Book.find({ genres: { $in: [args.genre] } })
               .sort({ title: orderDirection })
               .populate('author')
           } else if (orderBy === 'published') {
-            return await Book.find({
-              author: author.id,
-              genres: { $in: [args.genre] },
-            })
+            return await Book.find({ genres: { $in: [args.genre] } })
               .populate('author')
               .sort({ published: orderDirection })
-          } else return await Book.find({ author: author.id }).populate('author')
+          } else await Book.find({ genres: { $in: [args.genre] } }).populate('author')
         }
-      }
 
-      if (args.genre) {
         if (orderBy === 'title') {
-          return await Book.find({ genres: { $in: [args.genre] } })
-            .sort({ title: orderDirection })
-            .populate('author')
+          return Book.find({}).sort({ title: orderDirection }).populate('author')
         } else if (orderBy === 'published') {
-          return await Book.find({ genres: { $in: [args.genre] } })
-            .populate('author')
-            .sort({ published: orderDirection })
-        } else await Book.find({ genres: { $in: [args.genre] } }).populate('author')
-      }
-
-      if (orderBy === 'title') {
-        return Book.find({}).sort({ title: orderDirection }).populate('author')
-      } else if (orderBy === 'published') {
-        return Book.find({}).populate('author').sort({ published: orderDirection })
-      } else {
-        // return Book.find({}).populate({
-        //   path: 'author',
-        //   select: 'surname name',
-        //   //options: options,
-        // })
-        return Book.find({}).populate('author')
+          return Book.find({}).populate('author').sort({ published: orderDirection })
+        } else {
+          // return Book.find({}).populate({
+          //   path: 'author',
+          //   select: 'surname name',
+          //   //options: options,
+          // })
+          return Book.find({}).populate('author')
+        }
+      } catch (error) {
+        throw new ApolloError('Error fetching books: ', error.message)
       }
     },
     findBook: async (_root, args) => {
-      if (args.author) {
-        const author = await Author.findOne({ name: args.author })
-        if (author) {
-          if (args.genre) {
-            return await Book.find({
-              author: author.id,
-              genres: { $in: [args.genre] },
-            }).populate('author')
-          }
-          return await Book.find({ author: author.id }).populate('author')
-        } else return null
-      }
+      try {
+        if (args.author) {
+          const author = await Author.findOne({ name: args.author })
+          if (author) {
+            if (args.genre) {
+              return await Book.find({
+                author: author.id,
+                genres: { $in: [args.genre] },
+              }).populate('author')
+            }
+            return await Book.find({ author: author.id }).populate('author')
+          } else return null
+        }
 
-      if (args.genre) {
-        return Book.find({ genres: { $in: [args.genre] } }).populate('author')
-      }
+        if (args.genre) {
+          return Book.find({ genres: { $in: [args.genre] } }).populate('author')
+        }
 
-      if (args.title) {
-        return Book.findOne({ title: args.title }).populate('author')
-      }
+        if (args.title) {
+          return Book.findOne({ title: args.title }).populate('author')
+        }
 
-      return Book.find({}).populate('author')
+        return Book.find({}).populate('author')
+      } catch (error) {
+        throw new ApolloError('Error fetching book: ', error.message)
+      }
     },
 
     authorCount: () => Author.collection.countDocuments(),
     allAuthors: async (_root, args) => {
-      const orderBy = args.orderBy || 'surname'
-      const orderDirection = args.orderDirection || 1
-      if (orderBy === 'surname') {
-        return await Author.find({})
-          .sort({ surname: orderDirection })
-          .populate('bookCount')
-      } else if (orderBy === 'born') {
-        return await Author.find({}).sort({ born: orderDirection }).populate('bookCount')
-      } //else return await Author.find({}).populate('bookCount')
-      else {
-        // const author = await Author.find({}).populate('bookCount').exec()
-        // return [...author].sort((a, b) => a.bookCount - b.bookCount)
-        return await Author.find({}).populate('bookCount').exec()
+      try {
+        const orderBy = args.orderBy || 'surname'
+        const orderDirection = args.orderDirection || 1
+        if (orderBy === 'surname') {
+          return await Author.find({})
+            .sort({ surname: orderDirection })
+            .populate('bookCount')
+        } else if (orderBy === 'born') {
+          return await Author.find({})
+            .sort({ born: orderDirection })
+            .populate('bookCount')
+        } //else return await Author.find({}).populate('bookCount')
+        else {
+          // const author = await Author.find({}).populate('bookCount').exec()
+          // return [...author].sort((a, b) => a.bookCount - b.bookCount)
+          return await Author.find({}).populate('bookCount').exec()
+        }
+      } catch (error) {
+        throw new ApolloError('Error fetching authors: ', error.message)
       }
     },
     //allUsers: async () => await User.find({}).populate('books'),
     allUsers: async (_root, args) => {
-      const orderBy = args.orderBy || 'username'
-      const orderDirection = args.orderDirection || 1
-      if (args.id) {
-        return User.find({ id: args.id })
-          .populate({
+      try {
+        const orderBy = args.orderBy || 'username'
+        const orderDirection = args.orderDirection || 1
+        if (args.id) {
+          return User.find({ id: args.id })
+            .populate({
+              path: 'books',
+              select: 'id title author',
+              populate: [{ path: 'author' }],
+            })
+            .exec()
+        } else if (orderBy === 'username') {
+          return User.find({})
+            .sort({ username: orderDirection })
+            .populate({
+              path: 'books',
+              select: 'id title author',
+              populate: [{ path: 'author' }],
+            })
+        } else if (orderBy === 'favoriteGenre') {
+          return User.find({})
+            .sort({ favoriteGenre: orderDirection })
+            .populate({
+              path: 'books',
+              select: 'id title author',
+              populate: [{ path: 'author' }],
+            })
+        } else
+          return User.find({}).populate({
             path: 'books',
             select: 'id title author',
             populate: [{ path: 'author' }],
           })
-          .exec()
-      } else if (orderBy === 'username') {
-        return User.find({})
-          .sort({ username: orderDirection })
-          .populate({
-            path: 'books',
-            select: 'id title author',
-            populate: [{ path: 'author' }],
-          })
-      } else if (orderBy === 'favoriteGenre') {
-        return User.find({})
-          .sort({ favoriteGenre: orderDirection })
-          .populate({
-            path: 'books',
-            select: 'id title author',
-            populate: [{ path: 'author' }],
-          })
-      } else
-        return User.find({}).populate({
-          path: 'books',
-          select: 'id title author',
-          populate: [{ path: 'author' }],
-        })
+      } catch (error) {
+        throw new ApolloError('Error fetching users: ', error.message)
+      }
     },
-    findAuthor: async (root) => await Author.findOne({ name: root.name }),
-    findUser: async (root) => await User.findById(root),
+    findAuthor: async (root) => {
+      try {
+        await Author.findOne({ name: root.name })
+      } catch (error) {
+        throw new ApolloError('Error fetching author: ', error.message)
+      }
+    },
+    findUser: async (root) => {
+      try {
+        await User.findById(root)
+      } catch (error) {
+        throw new ApolloError('Error fetching user: ', error.message)
+      }
+    },
     me: (_root, _args, context) => {
       return context.currentUser
     },
   },
   Author: {
     bookCount: async (root) => {
-      const author = await Author.findOne({ name: root.name }).populate('bookCount')
-      const books = await Book.find({ author: author.id })
-      return books?.length
+      try {
+        const author = await Author.findOne({ name: root.name }).populate('bookCount')
+        const books = await Book.find({ author: author.id })
+        return books?.length
+      } catch (error) {
+        throw new ApolloError('Error fetching book count: ', error.message)
+      }
     },
   },
 
@@ -233,7 +267,11 @@ const resolvers = {
         return null
       } else {
         author.born = args.setBornTo
-        await author.save()
+        try {
+          await author.save()
+        } catch (error) {
+          throw new GraphQLError(error.message)
+        }
       }
 
       return author
@@ -243,13 +281,17 @@ const resolvers = {
       if (!currentUser || currentUser.id === tester) {
         throw new AuthenticationError('Please log in')
       }
-      if (args.setGenre)
-        await User.findByIdAndUpdate(args.id, { favoriteGenre: args.setGenre })
-      if (args.setUsername)
-        await User.findByIdAndUpdate(args.id, { username: args.setUsername })
-      if (args.setPassword) {
-        const passwordHashh = await bcrypt.hash(args.setPassword, 10)
-        await User.findByIdAndUpdate(args.id, { passwordHash: passwordHashh })
+      try {
+        if (args.setGenre)
+          await User.findByIdAndUpdate(args.id, { favoriteGenre: args.setGenre })
+        if (args.setUsername)
+          await User.findByIdAndUpdate(args.id, { username: args.setUsername })
+        if (args.setPassword) {
+          const passwordHashh = await bcrypt.hash(args.setPassword, 10)
+          await User.findByIdAndUpdate(args.id, { passwordHash: passwordHashh })
+        }
+      } catch (error) {
+        throw new GraphQLError(error.message)
       }
     },
     createUser: async (_root, args, context) => {

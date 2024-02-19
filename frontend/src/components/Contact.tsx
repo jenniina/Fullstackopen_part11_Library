@@ -20,9 +20,7 @@ function Contact(props: contactProps) {
       const text = `Name: ${name} ${lastname}\nEmail: ${email}\n\n${subject}\n\n${message_}`
       sendEmail(subject, text)
         .then(
-          (result) => {
-            // eslint-disable-next-line no-console
-            console.log(result)
+          () => {
             props.notify({ error: false, message: 'Thank you for your message!' }, 10)
             form.current?.reset()
           },
