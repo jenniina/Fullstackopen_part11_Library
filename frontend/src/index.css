@@ -139,6 +139,62 @@ body {
   padding: 0.2em;
   text-align: center;
 }
+button {
+  border-radius: var(--radius-medium);
+  border: 1px solid transparent;
+  border-bottom-color: var(--color-primary-5);
+  padding: var(--button-padding);
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--color-primary-3);
+  color: var(--color-primary-20);
+  cursor: pointer;
+  transition: border-color 0.25s;
+  margin-top: 0.2em;
+}
+button + button {
+  margin-left: 0.2em;
+}
+/*Reset button appearance:*/
+button.logout,
+button.logout:hover,
+button.logout:focus,
+button.link-btn,
+button.link-btn:focus,
+button.reset,
+button.reset:hover,
+button.reset:focus {
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  outline-offset: 3px;
+}
+button.reset,
+button.reset:hover,
+button.reset:focus {
+  font-weight: inherit;
+}
+button:hover,
+button.active {
+  border-color: var(--color-primary-14);
+  color: var(--color-primary-20);
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+.genresButtons {
+  padding: 1em;
+}
+.genresButtons button {
+  font-size: 0.8em;
+}
+button.edge {
+  display: none;
+}
 @media (min-width: 400px) {
   body {
     justify-content: center;
@@ -159,6 +215,7 @@ body {
   .edgeleft::after,
   .edgeright::after {
     --width: clamp(40px, 6vw, 70px);
+    display: block;
     content: '';
     position: fixed;
     top: calc(var(--width) / -8);
@@ -260,59 +317,6 @@ body {
   }
 }
 
-button {
-  border-radius: var(--radius-medium);
-  border: 1px solid transparent;
-  border-bottom-color: var(--color-primary-5);
-  padding: var(--button-padding);
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: var(--color-primary-3);
-  color: var(--color-primary-20);
-  cursor: pointer;
-  transition: border-color 0.25s;
-  margin-top: 0.2em;
-}
-button + button {
-  margin-left: 0.2em;
-}
-/*Reset button appearance:*/
-button.logout,
-button.logout:hover,
-button.logout:focus,
-button.link-btn,
-button.link-btn:focus,
-button.reset,
-button.reset:hover,
-button.reset:focus {
-  border: 0;
-  border-radius: 0;
-  background-color: transparent;
-  padding: 0;
-  margin: 0;
-  outline-offset: 3px;
-}
-button.reset,
-button.reset:hover,
-button.reset:focus {
-  font-weight: inherit;
-}
-button:hover,
-button.active {
-  border-color: var(--color-primary-14);
-  color: var(--color-primary-20);
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-.genresButtons {
-  padding: 1em;
-}
-.genresButtons button {
-  font-size: 0.8em;
-}
 table,
 form {
   box-shadow: 0 0 3px -1px currentColor;

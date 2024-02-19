@@ -2,8 +2,8 @@ import axios from 'axios'
 
 export const sendEmail = async (subject: string, text: string) => {
   const emailData = {
-    subject,
-    text,
+    subject: subject,
+    text: text,
   }
 
   try {
