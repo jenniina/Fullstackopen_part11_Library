@@ -105,6 +105,11 @@ describe('site function', () => {
         cy.log(res)
       }
     )
+    cy.dropCollection('authors', { database: 'testLibrary', failSilently: true }).then(
+      (res) => {
+        cy.log(res)
+      }
+    )
 
     cy.get('a').contains('login').click()
     cy.wait(1005)
@@ -123,7 +128,7 @@ describe('site function', () => {
     cy.get('input[name*="title"]').type('Book by Cypress')
     cy.get('[data-test="author"]').click()
     cy.wait(1005)
-    cy.get('input[name*="author"]').type(Cypress.env('password'))
+    cy.get('input[name*="author"]').type('Authora')
     cy.get('[data-test="published"]').click()
     cy.wait(1005)
     cy.get('input[name*="published"]').type('2020')
@@ -145,11 +150,7 @@ describe('site function', () => {
     cy.get('#genres').contains('genres: crime design horror')
     cy.get('button[type="submit"]').click()
     cy.wait(2000)
-    cy.contains(
-      `Book by Cypress by ${Cypress.env(
-        'username'
-      )} added, in the genres: crime, design, horror`
-    )
+    cy.contains(`Book by Cypress by Authora added, in the genres: crime, design, horror`)
     cy.get('[data-test="Books"]').click()
     cy.wait(5000)
     cy.get('.tablebooks').contains('Book by Cypress')
@@ -201,7 +202,7 @@ describe('site function', () => {
 
     cy.get('.main-navigation').contains('Authors').click()
     cy.wait(5000)
-    cy.get('.tableauthors').contains(Cypress.env('password'))
+    cy.get('.tableauthors').contains('Authora')
     cy.get('.tableauthors').contains('1')
 
     cy.get('a').contains('Books').click()
