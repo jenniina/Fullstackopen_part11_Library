@@ -45,9 +45,18 @@ const start = async () => {
     const serverCleanup = useServer(
       {
         schema,
-        onConnect: (ctx) => console.log('Client connected:', ctx.extra.request.headers),
-        onDisconnect: () => console.log('Client disconnected'),
-        onError: (err) => console.error('Error occurred:', err),
+        onConnect: (ctx) => {
+          // eslint-disable-next-line no-console
+          console.log('Client connected:', ctx.extra.request.headers)
+        },
+        onDisconnect: () => {
+          // eslint-disable-next-line no-console
+          console.log('Client disconnected')
+        },
+        onError: (err) => {
+          // eslint-disable-next-line no-console
+          console.error('Error occurred:', err)
+        },
       },
       wsServer
     )
