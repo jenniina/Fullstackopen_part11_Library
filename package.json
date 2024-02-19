@@ -4,7 +4,7 @@
   "description": "For Fullstack Open part 11",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node --trace-warnings index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "dev:test": "cd frontend && npm run npx-dev",
     "build": "cd frontend && npm run lint -- --fix && npm run build",

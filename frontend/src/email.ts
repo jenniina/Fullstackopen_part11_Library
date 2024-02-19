@@ -5,6 +5,8 @@ export const sendEmail = async (subject: string, text: string) => {
     subject: subject,
     text: text,
   }
+  // eslint-disable-next-line no-console
+  console.log('emailData', emailData)
 
   try {
     await axios.post('/email', emailData)
