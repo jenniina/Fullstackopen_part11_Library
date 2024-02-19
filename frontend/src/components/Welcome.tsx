@@ -241,9 +241,6 @@ const Welcome = (props: {
               <a href="https://react.dev/">React</a>
             </li>
             <li>
-              <a href="https://vitejs.dev/guide/why.html">Vite</a>
-            </li>
-            <li>
               <a href="https://reactjs.org/">react-dom</a>
             </li>
             <li>
@@ -255,19 +252,19 @@ const Welcome = (props: {
             <li>
               <a href="https://github.com/remix-run/react-router#readme">react-router-dom</a>
             </li>
+            <li>
+              <a href="https://github.com/kentcdodds/cross-env#readme">cross-env</a>
+            </li>
           </ul>
         </div>
         <div>
           <label htmlFor="dev-frontend">Dev-dependencies:</label>
           <ul id="dev-frontend">
             <li>
+              <a href="https://vitejs.dev/guide/why.html">Vite</a>
+            </li>
+            <li>
               <a href="https://github.com/vitest-dev/vitest#readme">vitest</a>
-            </li>
-            <li>
-              <a href="https://github.com/bahmutov/start-server-and-test#readme">start-server-and-test</a>
-            </li>
-            <li>
-              <a href="https://github.com/kentcdodds/cross-env#readme">cross-env</a>
             </li>
             <li>
               <a href="https://eslint.org">eslint</a>

@@ -37,32 +37,35 @@ jobs:
       # #   with:
       # #     mongodb-version: '6.0.6'
 
-      # - name: Write the cypress.env.json file
-      #   # use quotes around the secret, as its value
-      #   # is simply inserted as a string into the command
-      #   run: |
-      #     echo "$CYPRESS_ENV_CI" > cypress.env.json
-      #   shell: bash
-      #   env:
-      #     CYPRESS_ENV_CI: ${{ secrets.CYPRESS_ENV_CI }}
+      - name: Write the cypress.env.json file
+        # use quotes around the secret, as its value
+        # is simply inserted as a string into the command
+        run: |
+          echo "$CYPRESS_ENV_CI" > cypress.env.json
+        shell: bash
+        env:
+          CYPRESS_ENV_CI: ${{ secrets.CYPRESS_ENV_CI }}
 
-      # - name: e2e tests
-      #   id: e2e
-      #   uses: cypress-io/github-action@v5
-      #   with:
-      #     browser: chrome
-      #     headed: true
-      #     build: npm run build:test
-      #     start: npm run testmode
-      #     command: npm run test:e2e
-      #     wait-on: 'http://localhost:4000'
-      #   env:
-      #     TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI}}
-      #     PORT: ${{ secrets.PORT }}
-      #     # pass GitHub token to detect new build vs re-run build
-      #     GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      #     CI: true
-      # #   #continue-on-error: true
+      - name: e2e tests
+        id: e2e
+        uses: cypress-io/github-action@v5
+        with:
+          browser: chrome
+          headed: true
+          build: npm run build:test
+          start: npm run testmode
+          command: npm run test:e2e
+          wait-on: 'http://localhost:4000'
+        env:
+          TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI}}
+          CYPRESS_SECRET: ${{ secrets.CYPRESS_SECRET }}
+          CYPRESS_USERNAME: ${{ secrets.CYPRESS_USERNAME }}
+          CYPRESS_PASSWORD: ${{ secrets.CYPRESS_PASSWORD }}
+          PORT: ${{ secrets.PORT }}
+          # pass GitHub token to detect new build vs re-run build
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          CI: true
+          #continue-on-error: true
 
       - name: build
         id: build
@@ -80,15 +83,15 @@ jobs:
           NODEMAILER_PORT: ${{ secrets.NODEMAILER_PORT}}
         working-directory: frontend
 
-      # # - name: deployment server to override test server
-      # #   id: deploymentserver
-      # #   run: |
-      # #     npm run start &
-      # #     sleep 10
-      # #     exit 0
-      # #   env:
-      # #     MONGODB_URI: ${{ secrets.MONGODB_URI}}
-      # #     JWT_SECRET: ${{ secrets.JWT_SECRET}}
+      - name: deployment server to override test server
+        id: deploymentserver
+        run: |
+          npm run start &
+          sleep 10
+          exit 0
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI}}
+          JWT_SECRET: ${{ secrets.JWT_SECRET}}
 
       - name: Deploy backend
         id: deployB
