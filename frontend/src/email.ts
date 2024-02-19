@@ -8,7 +8,7 @@ export const sendEmail = async (from: string, subject: string, text: string) => 
   }
 
   try {
-    await axios.post(`/email`, emailData)
+    await axios.post('/email', emailData)
     //console.log(response.data.message)
   } catch (error) {
     // eslint-disable-next-line no-console
