@@ -18,6 +18,17 @@ jobs:
       matrix:
         containers: [1, 2] # Uses 2 parallel instances
     steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18.19'
+
+      - name: Install dependencies to frontend
+        run: npm install
+        working-directory: frontend
+
+      - name: Install dependencies to backend
+        run: npm install
+
       - name: Write the cypress.env.json file
         # use quotes around the secret, as its value
         # is simply inserted as a string into the command
@@ -176,11 +187,11 @@ jobs:
     needs: [deployment]
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.sha }}
           fetch-depth: '0'
-      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
+      - uses: actions/setup-node@v4
         with:
           node-version: '18.19'
       - name: Bump version and push tag
