@@ -54,10 +54,11 @@ jobs:
           headed: false
           record: true
           build: npm run build:test
-          start: DEBUG=cypress:* npm run testmode
+          start: npm run testmode
           command: npm run test:e2e
           wait-on: 'http://localhost:4000'
         env:
+          DEBUG: 'cypress:*'
           TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI}}
           CYPRESS_SECRET: ${{ secrets.CYPRESS_SECRET }}
           CYPRESS_USERNAME: ${{ secrets.CYPRESS_USERNAME }}
