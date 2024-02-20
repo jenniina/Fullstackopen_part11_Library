@@ -32,10 +32,10 @@ jobs:
         run: npm run lint -- --fix
         working-directory: frontend
 
-      # # - name: Start MongoDB
-      # #   uses: supercharge/mongodb-github-action@1.8.0
-      # #   with:
-      # #     mongodb-version: '6.0.6'
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@1.8.0
+        with:
+          mongodb-version: '6.0.6'
 
       - name: Write the cypress.env.json file
         # use quotes around the secret, as its value
@@ -51,7 +51,7 @@ jobs:
         uses: cypress-io/github-action@v5
         with:
           browser: chrome
-          headed: true
+          headed: false
           build: npm run build:test
           start: npm run testmode
           command: npm run test:e2e

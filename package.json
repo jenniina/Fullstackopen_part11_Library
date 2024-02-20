@@ -9,7 +9,7 @@
     "dev:test": "cd frontend && npm run npx-dev",
     "build": "cd frontend && npm run lint -- --fix && npm run build",
     "build:test": "cd frontend && npm run lint -- --fix && npm run build:test",
-    "testmode": "cross-env NODE_ENV=test node index.js",
+    "testmode": "cross-env NODE_ENV=test node --trace-warnings index.js",
     "cypress:open": "cross-env NODE_ENV=test cypress open",
     "test:e2e": "cross-env NODE_ENV=test cypress run --browser chrome",
     "lint": "eslint ."
