@@ -87,7 +87,7 @@ describe('site function', () => {
 
   it('logs in', { defaultCommandTimeout: 10000 }, () => {
     cy.get('[data-test="login"]').click()
-    cy.wait(1000)
+    cy.wait(1005)
     cy.get('[data-test="username"]').click()
     cy.wait(1005)
     cy.get('input[name*="username"]').type(Cypress.env('USERNAME'))
@@ -95,7 +95,7 @@ describe('site function', () => {
     cy.wait(1005)
     cy.get('input[name*="password"]').type(Cypress.env('PASSWORD'))
     cy.get('button[type="submit"]').click()
-    cy.wait(4000)
+    cy.wait(6000)
     cy.get('.main-navigation').contains('logout')
   })
 
@@ -120,9 +120,9 @@ describe('site function', () => {
     cy.get('input[name*="password"]').type(Cypress.env('PASSWORD'))
     cy.get('button[type="submit"]').click()
 
-    cy.wait(5000)
+    cy.wait(6000)
     cy.get('.addbook').click()
-    cy.wait(2000)
+    cy.wait(2005)
     cy.get('[data-test="title"]').click()
     cy.wait(2005)
     cy.get('input[name*="title"]').type('Book by Cypress')
@@ -136,12 +136,12 @@ describe('site function', () => {
     cy.wait(1005)
     cy.get('input[name*="genre"]').type('crime')
     cy.get('button').contains('add genre').click()
-    cy.wait(1000)
+    cy.wait(1005)
     cy.get('[data-test="genreLabel"]').click()
     cy.wait(1005)
     cy.get('input[name*="genre"]').type('design')
     cy.get('button').contains('add genre').click()
-    cy.wait(1000)
+    cy.wait(1005)
     cy.get('[data-test="genreLabel"]').click()
     cy.wait(1005)
     cy.get('input[name*="genre"]').type('horror')
@@ -152,7 +152,7 @@ describe('site function', () => {
     cy.wait(2000)
     cy.contains(`Book by Cypress by Authora added, in the genres: crime, design, horror`)
     cy.get('[data-test="Books"]').click()
-    cy.wait(5000)
+    cy.wait(6000)
     cy.get('.tablebooks').contains('Book by Cypress')
     cy.get('.genresButtons').contains('horror')
 

@@ -11,8 +11,8 @@ jobs:
   deployment:
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
-      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '18.19'
 
@@ -48,12 +48,13 @@ jobs:
 
       - name: e2e tests
         id: e2e
-        uses: cypress-io/github-action@v5
+        uses: cypress-io/github-action@v6
         with:
-          browser: chrome
+          #browser: chrome
           headed: false
+          record: true
           build: npm run build:test
-          start: npm run testmode
+          start: DEBUG=cypress:* npm run testmode
           command: npm run test:e2e
           wait-on: 'http://localhost:4000'
         env:
@@ -62,10 +63,18 @@ jobs:
           CYPRESS_USERNAME: ${{ secrets.CYPRESS_USERNAME }}
           CYPRESS_PASSWORD: ${{ secrets.CYPRESS_PASSWORD }}
           PORT: ${{ secrets.PORT }}
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           # pass GitHub token to detect new build vs re-run build
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
           CI: true
           #continue-on-error: true
+
+      - name: Upload videos
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: cypress-videos
+          path: cypress/videos
 
       - name: build
         id: build
