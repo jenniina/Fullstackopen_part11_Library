@@ -10,6 +10,10 @@ on:
 jobs:
   deployment:
     runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false # https://github.com/cypress-io/github-action/issues/48
+      matrix:
+        containers: [1, 2] # Uses 2 parallel instances
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -52,11 +56,12 @@ jobs:
         with:
           #browser: chrome
           headed: false
-          record: true
           build: npm run build:test
           start: npm run testmode
           command: npm run test:e2e
           wait-on: 'http://localhost:4000'
+          record: true
+          parallel: true # Runs test in parallel using settings above
         env:
           DEBUG: 'cypress:*'
           TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI}}
@@ -69,13 +74,6 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
           CI: true
           #continue-on-error: true
-
-      - name: Upload videos
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: cypress-videos
-          path: cypress/videos
 
       - name: build
         id: build
