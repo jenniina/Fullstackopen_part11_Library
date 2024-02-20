@@ -18,16 +18,23 @@ jobs:
       matrix:
         containers: [1, 2] # Uses 2 parallel instances
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: '18.19'
 
-      - name: Install dependencies to frontend
-        run: npm install
-        working-directory: frontend
+      - name: List directory contents
+        run: ls -la
 
       - name: Install dependencies to backend
         run: npm install
+
+      - name: Install dependencies to frontend
+        run: |
+          cd frontend
+          npm install
 
       - name: Write the cypress.env.json file
         # use quotes around the secret, as its value
@@ -38,8 +45,6 @@ jobs:
         env:
           CYPRESS_ENV_CI: ${{ secrets.CYPRESS_ENV_CI }}
 
-      - name: Checkout
-        uses: actions/checkout@v4
       - name: Cypress run
         # Uses the official Cypress GitHub action https://github.com/cypress-io/github-action
         uses: cypress-io/github-action@v6
