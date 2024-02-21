@@ -10,26 +10,26 @@ describe('site function', () => {
       return false
     })
 
-    cy.dropCollection('users', { database: 'testLibrary', failSilently: true }).then(
-      (res) => {
-        cy.log(res)
-      }
-    )
+    //   cy.dropCollection('users', { database: 'testLibrary', failSilently: true }).then(
+    //     (res) => {
+    //       cy.log(res)
+    //     }
+    //   )
 
-    cy.createCollection('users', { database: 'testLibrary', failSilently: true }) // creates both collection and database
+    //   cy.createCollection('users', { database: 'testLibrary', failSilently: true }) // creates both collection and database
 
-    const user = {
-      username: Cypress.env('USERNAME'),
-      passwordHash: Cypress.env('HASH'),
-      favoriteGenre: 'design',
-      books: [],
-    }
+    //   const user = {
+    //     username: Cypress.env('USERNAME'),
+    //     passwordHash: Cypress.env('HASH'),
+    //     favoriteGenre: 'design',
+    //     books: [],
+    //   }
 
-    cy.insertOne(user, { collection: 'users', database: 'testLibrary' }).then(
-      (result) => {
-        cy.log(result) // prints the _id of inserted document
-      }
-    )
+    //   cy.insertOne(user, { collection: 'users', database: 'testLibrary' }).then(
+    //     (result) => {
+    //       cy.log(result) // prints the _id of inserted document
+    //     }
+    //   )
 
     // cy.request({
     //   method: 'POST',
@@ -53,13 +53,14 @@ describe('site function', () => {
     //       favoriteGenre: 'design',
     //     },
     //   },
-    // })
-
-    // cy.deleteMany({ collection: 'books' }, { database: 'testLibrary' }).then((res) => {
-    //   // defaults to collection and database from env variables
-    //   cy.log(res) // prints '# documents deleted'
-    // })
   })
+
+  // cy.deleteMany({ collection: 'books' }, { database: 'testLibrary' }).then((res) => {
+  //   // defaults to collection and database from env variables
+  //   cy.log(res) // prints '# documents deleted'
+  // })
+
+  // })
 
   it('has a user', () => {
     cy.request({
