@@ -192,7 +192,7 @@ button:focus-visible {
 .genresButtons button {
   font-size: 0.8em;
 }
-button.edge {
+.edge {
   display: none;
 }
 @media (min-width: 400px) {

@@ -24,5 +24,6 @@ dist-ssr
 *.sw?
 *.env
 .env.testing
+.env.development
 cypress.env.json
 videos

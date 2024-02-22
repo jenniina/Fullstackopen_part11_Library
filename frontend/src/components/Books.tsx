@@ -12,7 +12,7 @@ interface BookProps {
   booklist: booksProps[]
 }
 const Books = ({ genre, setGenre, booklist }: BookProps) => {
-  const [limit, setLimit] = useState(15)
+  const [limit, setLimit] = useState(10)
   const [orderDirection, setOrderDirection] = useState<OrderDirection>(OrderDirection.ASC)
   const [orderBy, setOrderBy] = useState<OrderBooksBy>(OrderBooksBy.TITLE)
   const [currentGenre, setCurrentGenre] = useState(genre)
@@ -201,7 +201,7 @@ const Books = ({ genre, setGenre, booklist }: BookProps) => {
                   <InView
                     onChange={async (inView) => {
                       if (inView) {
-                        setLimit((prev) => prev + 20)
+                        setLimit((prev) => prev + 10)
                       }
                     }}
                   />

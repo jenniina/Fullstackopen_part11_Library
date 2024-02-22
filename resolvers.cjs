@@ -235,7 +235,7 @@ const resolvers = {
           { _id: currentUser._id },
           {
             $push: {
-              books: newBook,
+              books: newBook._id,
             },
           },
           { new: true, runValidators: true, context: 'query' }

@@ -69,6 +69,7 @@ const NewBook = (props: {
       props.notify({ error: true, message: error.message }, 10)
     },
     onCompleted: () => {
+      // If you edit this, change the text in library.cy.js as well
       props.notify({ error: false, message: `${title} by ${author} added, in the genres: ${genres.join(', ')}` }, 6)
       zero()
     },
@@ -111,20 +112,23 @@ const NewBook = (props: {
           user: userId,
         },
         refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }, { query: ME }, { query: ALL_USERS }],
-      }).catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error(JSON.stringify(error, null, 2))
-        props.notify({ error: true, message: error.message }, 10)
       })
-      if (form && (props.me?.username !== 'Ano' || title !== 'Book by Cypress')) {
-        const text = `\n\n A new book was added: ${title} by ${author} by the user ${
-          props.me?.username
-        }, in the genres: ${genres.join(', ')}.`
-        sendEmail(`A new book was added by ${props.me?.username}`, text).catch((error) => {
-          // eslint-disable-next-line no-console
-          console.error(error.text, error.message)
+        .then(() => {
+          if (title !== 'Book by Cypress') {
+            const text = `\n\n A new book was added: ${title} by ${author} by the user ${
+              props.me?.username
+            }, in the genres: ${genres.join(', ')}.`
+            sendEmail(`A new book was added by ${props.me?.username}`, text).catch((error) => {
+              // eslint-disable-next-line no-console
+              console.error(error.text, error.message)
+            })
+          }
         })
-      }
+        .catch((error) => {
+          // eslint-disable-next-line no-console
+          console.error(JSON.stringify(error, null, 2))
+          props.notify({ error: true, message: error.message }, 10)
+        })
     }
   }
 
