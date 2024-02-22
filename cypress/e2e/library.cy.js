@@ -21,9 +21,14 @@ describe('site function', () => {
       cy.log(res)
     })
 
-    cy.request('POST', 'http://localhost:4000/dropIndex', {
-      indexName: 'username_1',
-      collectionName: 'users',
+    cy.request({
+      method: 'POST',
+      url: 'http://localhost:4000/dropIndex',
+      body: {
+        indexName: 'username_1',
+        collectionName: 'users',
+      },
+      failOnStatusCode: false,
     }).then((response) => {
       cy.log(response.body)
     })
