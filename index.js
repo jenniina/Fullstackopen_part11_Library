@@ -114,6 +114,22 @@ const start = async () => {
         }
       })
     }
+
+    // // delete accrued unused books from users
+    // const Book = require('./models/book')
+    // const users = await User.find({})
+    // for (let user of users) {
+    //   user.books = await Promise.all(
+    //     user.books.map(async (bookId) => {
+    //       const bookExists = await Book.exists({ _id: bookId })
+    //       return bookExists ? bookId : null
+    //     })
+    //   )
+    //   // Remove null values
+    //   user.books = user.books.filter((bookId) => bookId !== null)
+
+    //   await user.save()
+    // }
     app.use('/', express.static(config.BUILD))
     app.get('*', (_req, res) => {
       res.sendFile(__dirname + `/${config.BUILD}/index.html`)

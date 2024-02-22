@@ -5,13 +5,14 @@
   "main": "index.js",
   "scripts": {
     "start": "node --trace-warnings index.js",
-    "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "dev": "cross-env NODE_ENV=development npm run build:dev && cross-env NODE_ENV=development nodemon index.js",
     "dev:test": "cd frontend && npm run npx-dev",
     "build": "cd frontend && npm run lint -- --fix && npm run build",
+    "build:dev": "cd frontend && npm run lint -- --fix && npm run build:dev",
     "build:test": "cd frontend && npm run lint -- --fix && npm run build:test",
     "testmode": "cross-env NODE_ENV=test node --trace-warnings index.js",
     "cypress:open": "cross-env NODE_ENV=test cypress open",
-    "test:e2e": "cross-env NODE_ENV=test cypress run --record",
+    "test:e2e": "cross-env NODE_ENV=test cypress run",
     "lint": "eslint ."
   },
   "author": "Jenniina Laine",

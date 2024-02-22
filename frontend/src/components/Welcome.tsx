@@ -140,8 +140,9 @@ const Welcome = (props: {
       )}
       <h3>CI/CD</h3>
       <p>
-        I used <a href="https://github.com/features/actions">GitHub Actions</a> to set up the deployment pipeline,
-        deploying the site as a Azure web app.
+        I used <a href="https://github.com/features/actions">GitHub Actions</a> to set up the deployment pipeline. The
+        web service is hosted at Render.com for free, with 512 MB RAM and 0.1 CPU, hence requiring a little patience to
+        browse..
       </p>
       <h3>Backend</h3>
       <p>
@@ -231,6 +232,7 @@ const Welcome = (props: {
       </div>
       <h3>Frontend</h3>
       <div className="flex">
+        <p>The React frontend is build with Vite and is served as a static site by the backend.</p>
         <div>
           <label htmlFor="dep-frontend">Dependencies:</label>
           <ul id="dep-frontend">

@@ -6,7 +6,6 @@ const schema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
-    unique: true,
     minlength: 2,
   },
   published: {
@@ -24,6 +23,8 @@ const schema = new mongoose.Schema({
     ref: 'User',
   },
 })
+
+schema.index({ title: 1, author: 1 }, { unique: true })
 
 schema.set('toJSON', {
   transform: (_document, returnedObject) => {
