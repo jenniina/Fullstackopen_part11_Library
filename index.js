@@ -96,6 +96,24 @@ const start = async () => {
       })
     )
     app.use('/email', express.json(), emailRouter)
+    if (process.env.NODE_ENV === 'test') {
+      app.post('/dropIndex', express.json(), async (req, res) => {
+        const { indexName, collectionName } = req.body
+
+        try {
+          const db = mongoose.connection.db
+          const collection = db.collection(collectionName)
+
+          await collection.dropIndex(indexName)
+
+          res.status(200).send({
+            message: `Index ${indexName} dropped successfully from collection ${collectionName}`,
+          })
+        } catch (error) {
+          res.status(500).send({ error: error.toString() })
+        }
+      })
+    }
     app.use('/', express.static(config.BUILD))
     app.get('*', (_req, res) => {
       res.sendFile(__dirname + `/${config.BUILD}/index.html`)

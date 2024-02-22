@@ -21,11 +21,11 @@ describe('site function', () => {
       cy.log(res)
     })
 
-    cy.dropIndex(
-      'username_1', // Index name
-      { collection: 'users', database: 'testLibrary' } // Options
-    ).then((result) => {
-      cy.log(result)
+    cy.request('POST', 'http://localhost:4000/dropIndex', {
+      indexName: 'username_1',
+      collectionName: 'users',
+    }).then((response) => {
+      cy.log(response.body)
     })
 
     const user = {
