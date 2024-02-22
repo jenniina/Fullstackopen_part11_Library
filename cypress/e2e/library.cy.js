@@ -53,6 +53,14 @@ describe('site function', () => {
     //       favoriteGenre: 'design',
     //     },
     //   },
+
+    cy.updateMany(
+      {}, // Filter (empty to match all documents)
+      { $set: { books: [] } }, // Update (set 'books' to an empty array)
+      { collection: 'users', database: 'testLibrary' } // Options
+    ).then((result) => {
+      cy.log(result) // prints the result of the update operation
+    })
   })
 
   // cy.deleteMany({ collection: 'books' }, { database: 'testLibrary' }).then((res) => {

@@ -46,6 +46,11 @@ jobs:
         env:
           CYPRESS_ENV_CI: ${{ secrets.CYPRESS_ENV_CI }}
 
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@1.8.0
+        with:
+          mongodb-version: '5.9.2'
+
       - name: Cypress run
         # Uses the official Cypress GitHub action https://github.com/cypress-io/github-action
         uses: cypress-io/github-action@v6
@@ -64,15 +69,22 @@ jobs:
           # For recording and parallelization to work you must set your CYPRESS_RECORD_KEY
           # in GitHub repo → Settings → Secrets → Actions
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          DEBUG: 'cypress:*'
+          #DEBUG: 'cypress:*'
           TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI}}
           CYPRESS_SECRET: ${{ secrets.CYPRESS_SECRET }}
           CYPRESS_USERNAME: ${{ secrets.CYPRESS_USERNAME }}
           CYPRESS_PASSWORD: ${{ secrets.CYPRESS_PASSWORD }}
-          PORT: ${{ secrets.PORT }}
           CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
+          PORT: ${{ secrets.PORT }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET}}
+          AUTH: ${{ secrets.AUTH}}
+          NODEMAILER_USER: ${{ secrets.NODEMAILER_USER}}
+          NODEMAILER_PASSWORD: ${{ secrets.NODEMAILER_PASSWORD}}
+          NODEMAILER_HOST: ${{ secrets.NODEMAILER_HOST}}
+          NODEMAILER_PORT: ${{ secrets.NODEMAILER_PORT}}
           # Creating a token https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       # - name: e2e tests
       #   id: e2e
       #   uses: cypress-io/github-action@v6
@@ -119,25 +131,22 @@ jobs:
         id: lint
         run: npm run lint -- --fix
 
-      - name: Lint frontend
-        id: lintfrontend
-        run: npm run lint -- --fix
-        working-directory: frontend
-
       - name: build
         id: build
         run: npm run build
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI}}
-          TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI}}
-          VITE_BASE_URI_WS: ${{ secrets.VITE_BASE_URI_WS}}
-          VITE_BASE_URI: ${{ secrets.VITE_BASE_URI}}
           JWT_SECRET: ${{ secrets.JWT_SECRET}}
           AUTH: ${{ secrets.AUTH}}
           NODEMAILER_USER: ${{ secrets.NODEMAILER_USER}}
           NODEMAILER_PASSWORD: ${{ secrets.NODEMAILER_PASSWORD}}
           NODEMAILER_HOST: ${{ secrets.NODEMAILER_HOST}}
           NODEMAILER_PORT: ${{ secrets.NODEMAILER_PORT}}
+        #working-directory: frontend
+
+      - name: Lint frontend
+        id: lintfrontend
+        run: npm run lint -- --fix
         working-directory: frontend
 
       - name: deployment server to override test server
@@ -149,6 +158,11 @@ jobs:
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI}}
           JWT_SECRET: ${{ secrets.JWT_SECRET}}
+          AUTH: ${{ secrets.AUTH}}
+          NODEMAILER_USER: ${{ secrets.NODEMAILER_USER}}
+          NODEMAILER_PASSWORD: ${{ secrets.NODEMAILER_PASSWORD}}
+          NODEMAILER_HOST: ${{ secrets.NODEMAILER_HOST}}
+          NODEMAILER_PORT: ${{ secrets.NODEMAILER_PORT}}
 
       - name: Deploy backend
         id: deployB
@@ -182,13 +196,13 @@ jobs:
           details: New commit ${{ github.event.commits[0].url }} by ${{ github.event.commits[0].committer.username }}
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
-      - name: Test Failure
-        uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
-        if: failure()
-        with:
-          severity: error
-          details: Deployment failed! The commit ${{ github.event.commits[0].url }} by ${{ github.event.commits[0].committer.username }} broke something
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      # - name: Test Failure
+      #   uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
+      #   if: failure()
+      #   with:
+      #     severity: error
+      #     details: Deployment failed! The commit ${{ github.event.commits[0].url }} by ${{ github.event.commits[0].committer.username }} broke something
+      #     webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
   tag_release:
     needs: [deployment]
