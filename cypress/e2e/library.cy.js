@@ -10,65 +10,76 @@ describe('site function', () => {
       return false
     })
 
-    //   cy.dropCollection('users', { database: 'testLibrary', failSilently: true }).then(
-    //     (res) => {
-    //       cy.log(res)
-    //     }
-    //   )
+    cy.createCollection('users', { database: 'testLibrary', failSilently: true })
+    cy.createCollection('books', { database: 'testLibrary', failSilently: true })
+    cy.createCollection('authors', { database: 'testLibrary', failSilently: true })
 
-    //   cy.createCollection('users', { database: 'testLibrary', failSilently: true }) // creates both collection and database
-
-    //   const user = {
-    //     username: Cypress.env('USERNAME'),
-    //     passwordHash: Cypress.env('HASH'),
-    //     favoriteGenre: 'design',
-    //     books: [],
-    //   }
-
-    //   cy.insertOne(user, { collection: 'users', database: 'testLibrary' }).then(
-    //     (result) => {
-    //       cy.log(result) // prints the _id of inserted document
-    //     }
-    //   )
-
-    // cy.request({
-    //   method: 'POST',
-    //   url: 'http://localhost:4000/gql',
-    //   body: {
-    //     operationName: 'createUser',
-    //     query: `
-    //       mutation createUser($username: String!, $passwordHash: String!, $favoriteGenre: String!, $authorization: String!) {
-    //       createUser(username: $username,
-    //         passwordHash: $passwordHash,
-    //         favoriteGenre: $favoriteGenre,
-    //         authorization: $authorization) {
-    //         username
-    //         favoriteGenre
-    //       }
-    //     }`,
-    //     variables: {
-    //       authorization: Cypress.env('SECRET'),
-    //       username: Cypress.env('USERNAME'),
-    //       passwordHash: Cypress.env('PASSWORD'),
-    //       favoriteGenre: 'design',
-    //     },
-    //   },
-
-    cy.updateMany(
+    cy.deleteMany(
       {}, // Filter (empty to match all documents)
-      { $set: { books: [] } }, // Update (set 'books' to an empty array)
       { collection: 'users', database: 'testLibrary' } // Options
-    ).then((result) => {
-      cy.log(result) // prints the result of the update operation
+    ).then((res) => {
+      cy.log(res)
     })
+
+    const user = {
+      username: Cypress.env('USERNAME'),
+      passwordHash: Cypress.env('HASH'),
+      favoriteGenre: 'design',
+      books: [],
+    }
+
+    cy.insertOne(user, { collection: 'users', database: 'testLibrary' }).then(
+      (result) => {
+        cy.log(result) // prints the _id of inserted document
+      }
+    )
+
+    cy.request({
+      method: 'POST',
+      url: 'http://localhost:4000/gql',
+      body: {
+        operationName: 'createUser',
+        query: `
+          mutation createUser($username: String!, $passwordHash: String!, $favoriteGenre: String!, $authorization: String!) {
+          createUser(username: $username,
+            passwordHash: $passwordHash,
+            favoriteGenre: $favoriteGenre,
+            authorization: $authorization) {
+            username
+            favoriteGenre
+          }
+        }`,
+        variables: {
+          authorization: Cypress.env('SECRET'),
+          username: Cypress.env('USERNAME'),
+          passwordHash: Cypress.env('PASSWORD'),
+          favoriteGenre: 'design',
+        },
+      },
+    })
+
+    cy.deleteMany(
+      {}, // Filter (empty to match all documents)
+      { collection: 'books', database: 'testLibrary' } // Options
+    ).then((res) => {
+      cy.log(res)
+    })
+
+    cy.deleteMany(
+      {}, // Filter (empty to match all documents)
+      { collection: 'authors', database: 'testLibrary' } // Options
+    ).then((res) => {
+      cy.log(res)
+    })
+
+    // cy.updateMany(
+    //   {}, // Filter (empty to match all documents)
+    //   { $set: { books: [] } }, // Update (set 'books' to an empty array)
+    //   { collection: 'users', database: 'testLibrary' } // Options
+    // ).then((result) => {
+    //   cy.log(result) // prints the result of the update operation
+    // })
   })
-
-  // cy.deleteMany({ collection: 'books' }, { database: 'testLibrary' }).then((res) => {
-  //   // defaults to collection and database from env variables
-  //   cy.log(res) // prints '# documents deleted'
-  // })
-
-  // })
 
   it('has a user', () => {
     cy.request({
@@ -109,17 +120,6 @@ describe('site function', () => {
   })
 
   it('adds and deletes book', { defaultCommandTimeout: 10000 }, () => {
-    cy.dropCollection('books', { database: 'testLibrary', failSilently: true }).then(
-      (res) => {
-        cy.log(res)
-      }
-    )
-    cy.dropCollection('authors', { database: 'testLibrary', failSilently: true }).then(
-      (res) => {
-        cy.log(res)
-      }
-    )
-
     cy.get('a').contains('login').click()
     cy.wait(1005)
     cy.get('[data-test="username"]').click()
