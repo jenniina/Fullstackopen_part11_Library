@@ -34,14 +34,14 @@ const Exit = () => {
           <RiHomeSmileLine />
           Go to Main Site
           <span className="tooltip" role="tooltip" id="tooltip-home">
-            go to https://jenniina.fi
+            go to jenniina.fi
           </span>
         </a>
-        <a href="https://react.jenniina.fi" className="has-tooltip" aria-describedby="tooltip-react">
+        <a href="https://react.jenniina.fi/portfolio/graphql" className="has-tooltip" aria-describedby="tooltip-react">
           <FaReact />
-          Go to React Site
+          Go back to React Site
           <span className="tooltip" role="tooltip" id="tooltip-react">
-            go to https://react.jenniina.fi
+            go to react.jenniina.fi
           </span>
         </a>
         <NavLink to="/" className="has-tooltip" aria-describedby="tooltip-back">
