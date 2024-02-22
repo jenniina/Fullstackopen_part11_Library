@@ -21,6 +21,13 @@ describe('site function', () => {
       cy.log(res)
     })
 
+    cy.dropIndex(
+      'username_1', // Index name
+      { collection: 'users', database: 'testLibrary' } // Options
+    ).then((result) => {
+      cy.log(result)
+    })
+
     const user = {
       username: Cypress.env('USERNAME'),
       passwordHash: Cypress.env('HASH'),
