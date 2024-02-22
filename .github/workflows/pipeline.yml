@@ -62,10 +62,11 @@ jobs:
           start: npm run testmode
           command: npm run test:e2e
           wait-on: 'http://localhost:4000'
-          # Records to Cypress Cloud
-          # https://docs.cypress.io/guides/cloud/projects#Set-up-a-project-to-record
-          record: true
-          parallel: true # Runs test in parallel using settings above
+          ## Records to Cypress Cloud
+          ## https://docs.cypress.io/guides/cloud/projects#Set-up-a-project-to-record
+          #record: true
+          #continue-on-error: true
+          #parallel: true # Runs test in parallel using settings above
         env:
           # For recording and parallelization to work you must set your CYPRESS_RECORD_KEY
           # in GitHub repo → Settings → Secrets → Actions
@@ -85,32 +86,6 @@ jobs:
           NODEMAILER_PORT: ${{ secrets.NODEMAILER_PORT}}
           # Creating a token https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # - name: e2e tests
-      #   id: e2e
-      #   uses: cypress-io/github-action@v6
-      #   with:
-      #     #browser: chrome
-      #     headed: false
-      #     build: npm run build:test
-      #     start: npm run testmode
-      #     command: npm run test:e2e
-      #     wait-on: 'http://localhost:4000'
-      #     record: true
-      #     parallel: true # Runs test in parallel using settings above
-      #   env:
-      #     DEBUG: 'cypress:*'
-      #     TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI}}
-      #     CYPRESS_SECRET: ${{ secrets.CYPRESS_SECRET }}
-      #     CYPRESS_USERNAME: ${{ secrets.CYPRESS_USERNAME }}
-      #     CYPRESS_PASSWORD: ${{ secrets.CYPRESS_PASSWORD }}
-      #     PORT: ${{ secrets.PORT }}
-      #     CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
-      #     CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-      #     # pass GitHub token to detect new build vs re-run build
-      #     GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      #     CI: true
-      #     #continue-on-error: true
 
   deployment:
     if: github.event_name == 'pull_request' || github.event_name == 'push'
