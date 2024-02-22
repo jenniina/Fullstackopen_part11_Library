@@ -15,9 +15,12 @@ const BUILD =
 
 const AUTH = process.env.AUTH
 
+const CYPRESS_PROJECT_ID = process.env.CYPRESS_PROJECT_ID
+
 module.exports = {
   PORT,
   MONGODB_URI,
   BUILD,
   AUTH,
+  CYPRESS_PROJECT_ID,
 }

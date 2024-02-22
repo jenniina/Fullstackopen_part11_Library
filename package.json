@@ -8,10 +8,10 @@
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "dev:test": "cd frontend && npm run npx-dev",
     "build": "cd frontend && npm run lint -- --fix && npm run build",
-    "build:test": "cd frontend && npm run build:test",
-    "testmode": "cross-env NODE_ENV=test node index.js",
+    "build:test": "cd frontend && npm run lint -- --fix && npm run build:test",
+    "testmode": "cross-env NODE_ENV=test node --trace-warnings index.js",
     "cypress:open": "cross-env NODE_ENV=test cypress open",
-    "test:e2e": "cross-env NODE_ENV=test cypress run --headed --browser chrome",
+    "test:e2e": "cross-env NODE_ENV=test cypress run --record",
     "lint": "eslint ."
   },
   "author": "Jenniina Laine",

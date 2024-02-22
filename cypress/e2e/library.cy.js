@@ -10,17 +10,32 @@ describe('site function', () => {
       return false
     })
 
-    cy.dropCollection('users', { database: 'testLibrary', failSilently: true }).then(
-      (res) => {
-        cy.log(res)
-      }
-    )
+    cy.createCollection('users', { database: 'testLibrary', failSilently: true })
+    cy.createCollection('books', { database: 'testLibrary', failSilently: true })
+    cy.createCollection('authors', { database: 'testLibrary', failSilently: true })
 
-    cy.createCollection('users', { database: 'testLibrary' }) // creates both collection and database
+    cy.deleteMany(
+      {}, // Filter (empty to match all documents)
+      { collection: 'users', database: 'testLibrary' } // Options
+    ).then((res) => {
+      cy.log(res)
+    })
+
+    cy.request({
+      method: 'POST',
+      url: 'http://localhost:4000/dropIndex',
+      body: {
+        indexName: 'username_1',
+        collectionName: 'users',
+      },
+      failOnStatusCode: false,
+    }).then((response) => {
+      cy.log(response.body)
+    })
 
     const user = {
-      username: 'Ano',
-      passwordHash: '$2a$10$yJ5nawUSTGooo8zkdAwofOrXNxmsWkHHSZSFVanPoenqN8yclNNli',
+      username: Cypress.env('USERNAME'),
+      passwordHash: Cypress.env('HASH'),
       favoriteGenre: 'design',
       books: [],
     }
@@ -31,33 +46,50 @@ describe('site function', () => {
       }
     )
 
-    // cy.request({
-    //   method: 'POST',
-    //   url: 'http://localhost:4000/gql',
-    //   body: {
-    //     operationName: 'createUser',
-    //     query: `
-    //       mutation createUser($username: String!, $passwordHash: String!, $favoriteGenre: String!, $authorization: String!) {
-    //       createUser(username: $username,
-    //         passwordHash: $passwordHash,
-    //         favoriteGenre: $favoriteGenre,
-    //         authorization: $authorization) {
-    //         username
-    //         favoriteGenre
-    //       }
-    //     }`,
-    //     variables: {
-    //       authorization: Cypress.env('secret'),
-    //       username: 'Ano',
-    //       passwordHash: 'Anonymous',
-    //       favoriteGenre: 'design',
-    //     },
-    //   },
-    // })
+    cy.request({
+      method: 'POST',
+      url: 'http://localhost:4000/gql',
+      body: {
+        operationName: 'createUser',
+        query: `
+          mutation createUser($username: String!, $passwordHash: String!, $favoriteGenre: String!, $authorization: String!) {
+          createUser(username: $username,
+            passwordHash: $passwordHash,
+            favoriteGenre: $favoriteGenre,
+            authorization: $authorization) {
+            username
+            favoriteGenre
+          }
+        }`,
+        variables: {
+          authorization: Cypress.env('SECRET'),
+          username: Cypress.env('USERNAME'),
+          passwordHash: Cypress.env('PASSWORD'),
+          favoriteGenre: 'design',
+        },
+      },
+    })
 
-    // cy.deleteMany({ collection: 'books' }, { database: 'testLibrary' }).then((res) => {
-    //   // defaults to collection and database from env variables
-    //   cy.log(res) // prints '# documents deleted'
+    cy.deleteMany(
+      {}, // Filter (empty to match all documents)
+      { collection: 'books', database: 'testLibrary' } // Options
+    ).then((res) => {
+      cy.log(res)
+    })
+
+    cy.deleteMany(
+      {}, // Filter (empty to match all documents)
+      { collection: 'authors', database: 'testLibrary' } // Options
+    ).then((res) => {
+      cy.log(res)
+    })
+
+    // cy.updateMany(
+    //   {}, // Filter (empty to match all documents)
+    //   { $set: { books: [] } }, // Update (set 'books' to an empty array)
+    //   { collection: 'users', database: 'testLibrary' } // Options
+    // ).then((result) => {
+    //   cy.log(result) // prints the result of the update operation
     // })
   })
 
@@ -87,43 +119,37 @@ describe('site function', () => {
 
   it('logs in', { defaultCommandTimeout: 10000 }, () => {
     cy.get('[data-test="login"]').click()
-    cy.wait(1000)
+    cy.wait(1005)
     cy.get('[data-test="username"]').click()
     cy.wait(1005)
-    cy.get('input[name*="username"]').type('Ano')
+    cy.get('input[name*="username"]').type(Cypress.env('USERNAME'))
     cy.get('[data-test="password"]').click()
     cy.wait(1005)
-    cy.get('input[name*="password"]').type('Anonymous')
+    cy.get('input[name*="password"]').type(Cypress.env('PASSWORD'))
     cy.get('button[type="submit"]').click()
-    cy.wait(4000)
+    cy.wait(6000)
     cy.get('.main-navigation').contains('logout')
   })
 
   it('adds and deletes book', { defaultCommandTimeout: 10000 }, () => {
-    cy.dropCollection('books', { database: 'testLibrary', failSilently: true }).then(
-      (res) => {
-        cy.log(res)
-      }
-    )
-
     cy.get('a').contains('login').click()
     cy.wait(1005)
     cy.get('[data-test="username"]').click()
-    cy.get('input[name*="username"]').type('Ano')
+    cy.get('input[name*="username"]').type(Cypress.env('USERNAME'))
     cy.get('[data-test="password"]').click()
     cy.wait(1005)
-    cy.get('input[name*="password"]').type('Anonymous')
+    cy.get('input[name*="password"]').type(Cypress.env('PASSWORD'))
     cy.get('button[type="submit"]').click()
 
-    cy.wait(5000)
+    cy.wait(6000)
     cy.get('.addbook').click()
-    cy.wait(2000)
+    cy.wait(2005)
     cy.get('[data-test="title"]').click()
     cy.wait(2005)
     cy.get('input[name*="title"]').type('Book by Cypress')
     cy.get('[data-test="author"]').click()
     cy.wait(1005)
-    cy.get('input[name*="author"]').type('Anonymous')
+    cy.get('input[name*="author"]').type('Authora')
     cy.get('[data-test="published"]').click()
     cy.wait(1005)
     cy.get('input[name*="published"]').type('2020')
@@ -131,12 +157,12 @@ describe('site function', () => {
     cy.wait(1005)
     cy.get('input[name*="genre"]').type('crime')
     cy.get('button').contains('add genre').click()
-    cy.wait(1000)
+    cy.wait(1005)
     cy.get('[data-test="genreLabel"]').click()
     cy.wait(1005)
     cy.get('input[name*="genre"]').type('design')
     cy.get('button').contains('add genre').click()
-    cy.wait(1000)
+    cy.wait(1005)
     cy.get('[data-test="genreLabel"]').click()
     cy.wait(1005)
     cy.get('input[name*="genre"]').type('horror')
@@ -145,11 +171,9 @@ describe('site function', () => {
     cy.get('#genres').contains('genres: crime design horror')
     cy.get('button[type="submit"]').click()
     cy.wait(2000)
-    cy.contains(
-      'Book by Cypress by Anonymous added, in the genres: crime, design, horror'
-    )
+    cy.contains(`Book by Cypress by Authora added, in the genres: crime, design, horror`)
     cy.get('[data-test="Books"]').click()
-    cy.wait(5000)
+    cy.wait(6000)
     cy.get('.tablebooks').contains('Book by Cypress')
     cy.get('.genresButtons').contains('horror')
 
@@ -199,7 +223,7 @@ describe('site function', () => {
 
     cy.get('.main-navigation').contains('Authors').click()
     cy.wait(5000)
-    cy.get('.tableauthors').contains('Anonymous')
+    cy.get('.tableauthors').contains('Authora')
     cy.get('.tableauthors').contains('1')
 
     cy.get('a').contains('Books').click()
@@ -226,8 +250,8 @@ describe('site function', () => {
 //     }
 //       `,
 //     variables: {
-//       username: 'Ano',
-//       password: 'Anonymous',
+//       username: Cypress.env('USERNAME'),
+//       password: Cypress.env('PASSWORD'),
 //     },
 //   },
 // })
@@ -271,7 +295,7 @@ describe('site function', () => {
 //       }
 //       `,
 //     variables: {
-//       name: 'Anonymous',
+//       name: Cypress.env('PASSWORD'),
 //     },
 //   },
 // })
