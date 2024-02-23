@@ -88,7 +88,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   deployment:
-    if: github.event_name == 'pull_request' || github.event_name == 'push'
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4

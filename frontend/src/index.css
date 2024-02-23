@@ -73,6 +73,11 @@ button.link-btn {
   font-weight: 700;
   color: var(--color-primary-14);
   outline-offset: 3px;
+  -webkit-transition: color 0.3s ease-in-out;
+  -o-transition: color 0.3s ease-in-out;
+  -moz-transition: color 0.3s ease-in-out;
+  -ms-transition: color 0.3s ease-in-out;
+  transition: color 0.3s ease-in-out;
 }
 a,
 button.link-btn {
@@ -135,7 +140,7 @@ body {
 }
 #root {
   max-width: 1280px;
-  margin: 0;
+  margin: 0 auto;
   padding: 0.2em;
   text-align: center;
 }
@@ -329,6 +334,7 @@ table {
   position: relative;
   border-radius: var(--radius-medium) var(--radius-medium) var(--radius-small) var(--radius-small);
 }
+
 @media (min-width: 400px) {
   table {
     margin: 0 auto 4em;
@@ -366,6 +372,7 @@ th:first-of-type {
 th:last-of-type {
   border-radius: 0 var(--radius-medium) 0 0;
 }
+
 form {
   --padding: 1em;
   display: flex;
@@ -504,6 +511,27 @@ form input {
   padding-left: 0.5em;
   padding-top: 0.5em;
 }
+@media (max-width: 299px) {
+  table.users td {
+    text-align: center;
+  }
+  tr:first-of-type > th {
+    padding-top: 0.5em;
+    vertical-align: bottom;
+    border-radius: 0;
+  }
+  tr:first-of-type > th:first-child {
+    border-radius: var(--radius-medium) var(--radius-medium) 0 0;
+  }
+  tr > * {
+    min-width: 1pc;
+    display: flex;
+    flex-flow: column nowrap;
+  }
+  form {
+    --padding: 0.2em;
+  }
+}
 ul {
   list-style: '// ';
 }
@@ -540,7 +568,8 @@ ul.main-navigation + p {
   color: currentColor;
   position: relative;
 }
-ul.main-navigation a::before {
+ul.main-navigation a::before,
+button.logout::before {
   content: '';
   position: absolute;
   bottom: -0.3em;
@@ -556,7 +585,11 @@ ul.main-navigation a::before {
   opacity: 0.5;
 }
 
-ul.main-navigation .active::before {
+ul.main-navigation .active::before,
+ul.main-navigation a:hover::before,
+ul.main-navigation a:focus::before,
+button.logout:hover::before,
+button.logout:focus::before {
   transform: scaleX(1);
 }
 .main-container {
@@ -698,7 +731,7 @@ h1:hover span:after {
   }
 }
 .main-container {
-  max-width: 600px;
+  max-width: 100%;
   margin-left: auto;
   margin-right: auto;
 }

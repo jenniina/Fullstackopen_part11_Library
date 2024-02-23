@@ -57,7 +57,7 @@ const Users = (props: {
           <div>No users yet!</div>
         ) : (
           <>
-            <table>
+            <table className="users">
               <caption className="screen-reader-text">List of users</caption>
               <tbody>
                 <tr>
