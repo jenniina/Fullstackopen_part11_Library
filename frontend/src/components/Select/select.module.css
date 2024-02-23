@@ -50,7 +50,15 @@
   border-radius: var(--radius);
   outline: none;
   margin-bottom: 1rem;
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  -ms-transform-style: preserve-3d;
+  -o-transform-style: preserve-3d;
   transform-style: preserve-3d;
+  -webkit-transform: perspective(100px) translateZ(0px);
+  -moz-transform: perspective(100px) translateZ(0px);
+  -ms-transform: perspective(100px) translateZ(0px);
+  -o-transform: perspective(100px) translateZ(0px);
   transform: perspective(100px) translateZ(0px);
 }
 .container.multiple {
@@ -108,6 +116,10 @@ button.clear-btn:hover {
 }
 
 .caret {
+  -webkit-translate: 0 25%;
+  -moz-translate: 0 25%;
+  -ms-translate: 0 25%;
+  -o-translate: 0 25%;
   translate: 0 25%;
   border: calc(var(--border) * 8) solid transparent;
   border-top-color: var(--color-fg);
@@ -171,8 +183,20 @@ button.clear-btn:hover {
   background: none;
   outline: calc(var(--border) * 2) solid transparent;
   outline-offset: calc(var(--border) * -3);
+  -webkit-transition-property: background-color, color, border-color, outline;
+  -moz-transition-property: background-color, color, border-color, outline;
+  -o-transition-property: background-color, color, border-color, outline;
+  -ms-transition-property: background-color, color, border-color, outline;
   transition-property: background-color, color, border-color, outline;
+  -webkit-transition-duration: var(--transition-duration);
+  -moz-transition-duration: var(--transition-duration);
+  -o-transition-duration: var(--transition-duration);
+  -ms-transition-duration: var(--transition-duration);
   transition-duration: var(--transition-duration);
+  -webkit-transition-timing-function: var(--transition-type);
+  -moz-transition-timing-function: var(--transition-type);
+  -o-transition-timing-function: var(--transition-type);
+  -ms-transition-timing-function: var(--transition-type);
   transition-timing-function: var(--transition-type);
 }
 
@@ -193,8 +217,20 @@ button.clear-btn:hover {
 .option-btn > .remove-btn {
   font-size: var(--size);
   color: var(--color-text);
+  -webkit-transition-property: color;
+  -moz-transition-property: color;
+  -o-transition-property: color;
+  -ms-transition-property: color;
   transition-property: color;
+  -webkit-transition-duration: var(--transition-duration);
+  -moz-transition-duration: var(--transition-duration);
+  -o-transition-duration: var(--transition-duration);
+  -ms-transition-duration: var(--transition-duration);
   transition-duration: var(--transition-duration);
+  -webkit-transition-timing-function: var(--transition-type);
+  -moz-transition-timing-function: var(--transition-type);
+  -o-transition-timing-function: var(--transition-type);
+  -ms-transition-timing-function: var(--transition-type);
   transition-timing-function: var(--transition-type);
 }
 

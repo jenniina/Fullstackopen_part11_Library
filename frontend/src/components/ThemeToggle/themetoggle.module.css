@@ -6,10 +6,18 @@
 /****************************************************/
 
 .dlt-theme-toggle-wrap {
+  -webkit-transform: translateY(-0.1em);
+  -moz-transform: translateY(-0.1em);
+  -o-transform: translateY(-0.1em);
+  -ms-transform: translateY(-0.1em);
   transform: translateY(-0.1em);
 }
 
 button.dlt-btn {
+  -webkit-transform-origin: 50% 50%;
+  -moz-transform-origin: 50% 50%;
+  -o-transform-origin: 50% 50%;
+  -ms-transform-origin: 50% 50%;
   transform-origin: 50% 50%;
   background: transparent;
   outline: none;
@@ -21,8 +29,20 @@ button.dlt-btn {
   background: transparent;
 }
 .transformations button.dlt-btn {
+  -webkit-transition-property: transform;
+  -moz-transition-property: transform;
+  -o-transition-property: transform;
+  -ms-transition-property: transform;
   transition-property: transform;
+  -webkit-transition-duration: 0.4s;
+  -moz-transition-duration: 0.4s;
+  -o-transition-duration: 0.4s;
+  -ms-transition-duration: 0.4s;
   transition-duration: 0.4s;
+  -webkit-transition-timing-function: ease-in-out;
+  -moz-transition-timing-function: ease-in-out;
+  -o-transition-timing-function: ease-in-out;
+  -ms-transition-timing-function: ease-in-out;
   transition-timing-function: ease-in-out;
 }
 button.dlt-btn:focus {
@@ -31,6 +51,10 @@ button.dlt-btn:focus {
 }
 .dlt-btn:hover,
 .dlt-btn:focus {
+  -webkit-transform: scale(1.2);
+  -moz-transform: scale(1.2);
+  -o-transform: scale(1.2);
+  -ms-transform: scale(1.2);
   transform: scale(1.2);
   outline: none;
   border: none;
@@ -54,10 +78,21 @@ button.dlt-btn:focus {
   margin: 0;
   padding: 0;
   outline: none;
+  -webkit-transition-duration: 0.4s;
+  -moz-transition-duration: 0.4s;
+  -o-transition-duration: 0.4s;
+  -ms-transition-duration: 0.4s;
   transition-duration: 0.4s;
+  -webkit-transition-timing-function: ease-in-out;
+  -moz-transition-timing-function: ease-in-out;
+  -o-transition-timing-function: ease-in-out;
+  -ms-transition-timing-function: ease-in-out;
   transition-timing-function: ease-in-out;
-  transition-property: transform, box-shadow, background-color, margin, border, outline,
-    right;
+  -webkit-transition-property: transform, box-shadow, background-color, margin, border, outline, right;
+  -moz-transition-property: transform, box-shadow, background-color, margin, border, outline, right;
+  -o-transition-property: transform, box-shadow, background-color, margin, border, outline, right;
+  -ms-transition-property: transform, box-shadow, background-color, margin, border, outline, right;
+  transition-property: transform, box-shadow, background-color, margin, border, outline, right;
 }
 .dlt-btn .dlt-btn-inner-left::before {
   /*Sun in light mode*/
@@ -75,6 +110,10 @@ button.dlt-btn:focus {
   border-radius: 50%;
   right: 1.625em;
   bottom: 0em;
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
   transform: rotate(-45deg);
   outline: dotted 0.143em darkorange; /*lightmode sun rays*/
   outline-offset: 0px;
@@ -90,6 +129,10 @@ button.dlt-btn:focus {
 .dlt-btn.active:hover .dlt-btn-inner-left::before  /*Crescent Moon*/ {
   box-shadow: 0.8125em 0.8125em 0 0 gold; /*dark mode moon on hover*/
   background-color: var(--color-primary-6);
+  -webkit-transform: translateX(-0.7em) rotate(-45deg);
+  -moz-transform: translateX(-0.7em) rotate(-45deg);
+  -o-transform: translateX(-0.7em) rotate(-45deg);
+  -ms-transform: translateX(-0.7em) rotate(-45deg);
   transform: translateX(-0.7em) rotate(-45deg);
 }
 .dlt-btn .dlt-btn-inner-left::after {
@@ -129,6 +172,10 @@ button.dlt-btn:focus {
 }
 
 .dlt-btn .dlt-inner-wrapper {
+  -webkit-transition: transform 0.4s ease-in-out;
+  -moz-transition: transform 0.4s ease-in-out;
+  -o-transition: transform 0.4s ease-in-out;
+  -ms-transition: transform 0.4s ease-in-out;
   transition: transform 0.4s ease-in-out;
 }
 .dlt-btn:hover .dlt-btn-inner-left::after {
