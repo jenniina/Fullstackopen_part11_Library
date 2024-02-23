@@ -136,6 +136,10 @@ body {
 
   --button-padding: 0.3em 0.8em 0.4em;
 
+  -webkit-transition: background-color ease-in-out 0.3s;
+  -o-transition: background-color ease-in-out 0.3s;
+  -moz-transition: background-color ease-in-out 0.3s;
+  -ms-transition: background-color ease-in-out 0.3s;
   transition: background-color ease-in-out 0.3s;
 }
 #root {
@@ -155,6 +159,10 @@ button {
   background-color: var(--color-primary-3);
   color: var(--color-primary-20);
   cursor: pointer;
+  -webkit-transition: border-color 0.25s;
+  -o-transition: border-color 0.25s;
+  -moz-transition: border-color 0.25s;
+  -ms-transition: border-color 0.25s;
   transition: border-color 0.25s;
   margin-top: 0.2em;
 }
@@ -227,8 +235,20 @@ button:focus-visible {
     bottom: 0;
     width: var(--width);
     border-radius: 0;
+    -webkit-transition-property: right, left;
+    -o-transition-property: right, left;
+    -moz-transition-property: right, left;
+    -ms-transition-property: right, left;
     transition-property: right, left;
+    -webkit-transition-timing-function: ease-in-out;
+    -o-transition-timing-function: ease-in-out;
+    -moz-transition-timing-function: ease-in-out;
+    -ms-transition-timing-function: ease-in-out;
     transition-timing-function: ease-in-out;
+    -webkit-transition-duration: 500ms;
+    -o-transition-duration: 500ms;
+    -moz-transition-duration: 500ms;
+    -ms-transition-duration: 500ms;
     transition-duration: 500ms;
   }
 
@@ -250,13 +270,27 @@ button:focus-visible {
   .edgeleft {
     left: 0;
     -webkit-animation: width-anim 2s forwards ease-in-out;
+    -o-animation: width-anim 2s forwards ease-in-out;
+    -moz-animation: width-anim 2s forwards ease-in-out;
+    -ms-animation: width-anim 2s forwards ease-in-out;
     animation: width-anim 2s forwards ease-in-out;
+    -webkit-transform-origin: left;
+    -o-transform-origin: left;
+    -moz-transform-origin: left;
+    -ms-transform-origin: left;
     transform-origin: left;
   }
   .edgeright {
     right: 0;
     -webkit-animation: width-anim 2s forwards ease-in-out;
+    -o-animation: width-anim 2s forwards ease-in-out;
+    -moz-animation: width-anim 2s forwards ease-in-out;
+    -ms-animation: width-anim 2s forwards ease-in-out;
     animation: width-anim 2s forwards ease-in-out;
+    -webkit-transform-origin: right;
+    -o-transform-origin: right;
+    -moz-transform-origin: right;
+    -ms-transform-origin: right;
     transform-origin: right;
   }
   .edgeleft::before,
@@ -276,25 +310,53 @@ button:focus-visible {
   .edgeleft::before {
     left: calc(var(--width) / -3);
     -webkit-animation: width-anim 2.2s forwards ease-in-out;
+    -o-animation: width-anim 2.2s forwards ease-in-out;
+    -moz-animation: width-anim 2.2s forwards ease-in-out;
+    -ms-animation: width-anim 2.2s forwards ease-in-out;
     animation: width-anim 2.2s forwards ease-in-out;
+    -webkit-transform-origin: left;
+    -o-transform-origin: left;
+    -moz-transform-origin: left;
+    -ms-transform-origin: left;
     transform-origin: left;
   }
   .edgeright::before {
     right: calc(var(--width) / -3);
     -webkit-animation: width-anim 2.2s forwards ease-in-out;
+    -o-animation: width-anim 2.2s forwards ease-in-out;
+    -moz-animation: width-anim 2.2s forwards ease-in-out;
+    -ms-animation: width-anim 2.2s forwards ease-in-out;
     animation: width-anim 2.2s forwards ease-in-out;
+    -webkit-transform-origin: right;
+    -o-transform-origin: right;
+    -moz-transform-origin: right;
+    -ms-transform-origin: right;
     transform-origin: right;
   }
   .edgeleft::after {
     left: calc(var(--width) / -1.5);
     -webkit-animation: width-anim 2.5s forwards ease-in-out;
+    -o-animation: width-anim 2.5s forwards ease-in-out;
+    -moz-animation: width-anim 2.5s forwards ease-in-out;
+    -ms-animation: width-anim 2.5s forwards ease-in-out;
     animation: width-anim 2.5s forwards ease-in-out;
+    -webkit-transform-origin: left;
+    -o-transform-origin: left;
+    -moz-transform-origin: left;
+    -ms-transform-origin: left;
     transform-origin: left;
   }
   .edgeright::after {
     right: calc(var(--width) / -1.5);
     -webkit-animation: width-anim 2.5s forwards ease-in-out;
+    -o-animation: width-anim 2.5s forwards ease-in-out;
+    -moz-animation: width-anim 2.5s forwards ease-in-out;
+    -ms-animation: width-anim 2.5s forwards ease-in-out;
     animation: width-anim 2.5s forwards ease-in-out;
+    -webkit-transform-origin: right;
+    -o-transform-origin: right;
+    -moz-transform-origin: right;
+    -ms-transform-origin: right;
     transform-origin: right;
   }
   .edge:hover {
@@ -310,14 +372,26 @@ button:focus-visible {
 
 @keyframes width-anim {
   0% {
+    -webkit-transform: scaleX(2);
+    -o-transform: scaleX(2);
+    -moz-transform: scaleX(2);
+    -ms-transform: scaleX(2);
     transform: scaleX(2);
     outline-width: 0.1vw;
   }
   40% {
+    -webkit-transform: scaleX(0.5);
+    -o-transform: scaleX(0.5);
+    -moz-transform: scaleX(0.5);
+    -ms-transform: scaleX(0.5);
     transform: scaleX(0.5);
     outline-width: 1vw;
   }
   100% {
+    -webkit-transform: scaleX(1);
+    -o-transform: scaleX(1);
+    -moz-transform: scaleX(1);
+    -ms-transform: scaleX(1);
     transform: scaleX(1);
   }
 }
@@ -576,11 +650,31 @@ button.logout::before {
   height: 0.1em;
   left: 0;
   right: 0;
+  -webkit-transform: scaleX(0);
+  -o-transform: scaleX(0);
+  -moz-transform: scaleX(0);
+  -ms-transform: scaleX(0);
   transform: scaleX(0);
   background-color: currentColor;
+  -webkit-transform-origin: center;
+  -o-transform-origin: center;
+  -moz-transform-origin: center;
+  -ms-transform-origin: center;
   transform-origin: center;
+  -webkit-transition-property: transform;
+  -o-transition-property: transform;
+  -moz-transition-property: transform;
+  -ms-transition-property: transform;
   transition-property: transform;
+  -webkit-transition-timing-function: ease-in-out;
+  -o-transition-timing-function: ease-in-out;
+  -moz-transition-timing-function: ease-in-out;
+  -ms-transition-timing-function: ease-in-out;
   transition-timing-function: ease-in-out;
+  -webkit-transition-duration: 300ms;
+  -o-transition-duration: 300ms;
+  -moz-transition-duration: 300ms;
+  -ms-transition-duration: 300ms;
   transition-duration: 300ms;
   opacity: 0.5;
 }
@@ -590,6 +684,10 @@ ul.main-navigation a:hover::before,
 ul.main-navigation a:focus::before,
 button.logout:hover::before,
 button.logout:focus::before {
+  -webkit-transform: scaleX(1);
+  -o-transform: scaleX(1);
+  -moz-transform: scaleX(1);
+  -ms-transform: scaleX(1);
   transform: scaleX(1);
 }
 .main-container {
@@ -598,6 +696,9 @@ button.logout:focus::before {
 .screen-reader-text {
   clip: rect(1px, 1px, 1px, 1px);
   -webkit-clip-path: inset(50%);
+  -moz-clip-path: inset(50%);
+  -ms-clip-path: inset(50%);
+  -o-clip-path: inset(50%);
   clip-path: inset(50%);
   position: absolute;
   width: 1px;
@@ -674,11 +775,30 @@ h1 span:before {
   z-index: 2;
   color: var(--color-primary-12);
   opacity: 0.9;
+  -webkit-transition-property: clip-path;
+  -o-transition-property: clip-path;
+  -moz-transition-property: clip-path;
+  -ms-transition-property: clip-path;
   transition-property: clip-path;
+  -webkit-transition-timing-function: ease-in-out;
+  -o-transition-timing-function: ease-in-out;
+  -moz-transition-timing-function: ease-in-out;
+  -ms-transition-timing-function: ease-in-out;
   transition-timing-function: ease-in-out;
+  -webkit-transition-duration: 600ms;
+  -o-transition-duration: 600ms;
+  -moz-transition-duration: 600ms;
+  -ms-transition-duration: 600ms;
   transition-duration: 600ms;
   -webkit-animation: wave 4s infinite ease-in-out;
+  -o-animation: wave 4s infinite ease-in-out;
+  -moz-animation: wave 4s infinite ease-in-out;
+  -ms-animation: wave 4s infinite ease-in-out;
   animation: wave 4s infinite ease-in-out;
+  -webkit-animation-play-state: paused;
+  -o-animation-play-state: paused;
+  -moz-animation-play-state: paused;
+  -ms-animation-play-state: paused;
   animation-play-state: paused;
 }
 h1 span:after {
@@ -691,15 +811,39 @@ h1 span:after {
   z-index: 2;
   color: var(--color-primary-8);
   opacity: 0.9;
+
+  -webkit-transition-property: clip-path;
+  -o-transition-property: clip-path;
+  -moz-transition-property: clip-path;
+  -ms-transition-property: clip-path;
   transition-property: clip-path;
+  -webkit-transition-timing-function: ease-in-out;
+  -o-transition-timing-function: ease-in-out;
+  -moz-transition-timing-function: ease-in-out;
+  -ms-transition-timing-function: ease-in-out;
   transition-timing-function: ease-in-out;
+  -webkit-transition-duration: 600ms;
+  -o-transition-duration: 600ms;
+  -moz-transition-duration: 600ms;
+  -ms-transition-duration: 600ms;
   transition-duration: 600ms;
   -webkit-animation: wave2 4s infinite ease-in-out;
+  -o-animation: wave2 4s infinite ease-in-out;
+  -moz-animation: wave2 4s infinite ease-in-out;
+  -ms-animation: wave2 4s infinite ease-in-out;
   animation: wave2 4s infinite ease-in-out;
+  -webkit-animation-play-state: paused;
+  -o-animation-play-state: paused;
+  -moz-animation-play-state: paused;
+  -ms-animation-play-state: paused;
   animation-play-state: paused;
 }
 h1:hover span:before,
 h1:hover span:after {
+  -webkit-animation-play-state: running;
+  -o-animation-play-state: running;
+  -moz-animation-play-state: running;
+  -ms-animation-play-state: running;
   animation-play-state: running;
 }
 @keyframes wave {
@@ -763,6 +907,10 @@ abbr[title].hide-decoration {
 }
 .page-exit svg {
   font-size: clamp(3em, 5vw, 4em);
+  -webkit-transform-origin: bottom;
+  -ms-transform-origin: bottom;
+  -o-transform-origin: bottom;
+  -moz-transform-origin: bottom;
   transform-origin: bottom;
 }
 .page-author h2 {
@@ -794,9 +942,25 @@ abbr[title].hide-decoration {
   width: clamp(10pc, auto, 30pc);
   margin-left: clamp(-5pc, -50%, -15pc);
   opacity: 0;
+  -webkit-transform: translateY(var(--radius-medium));
+  -ms-transform: translateY(var(--radius-medium));
+  -o-transform: translateY(var(--radius-medium));
+  -moz-transform: translateY(var(--radius-medium));
   transform: translateY(var(--radius-medium));
+  -webkit-transition-property: opacity, transform;
+  -o-transition-property: opacity, transform;
+  -moz-transition-property: opacity, transform;
+  -ms-transition-property: opacity, transform;
   transition-property: opacity, transform;
+  -webkit-transition-duration: 0.3s;
+  -o-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  -ms-transition-duration: 0.3s;
   transition-duration: 0.3s;
+  -webkit-transition-timing-function: ease-in-out;
+  -o-transition-timing-function: ease-in-out;
+  -moz-transition-timing-function: ease-in-out;
+  -ms-transition-timing-function: ease-in-out;
   transition-timing-function: ease-in-out;
 }
 
@@ -818,6 +982,10 @@ abbr[title].hide-decoration {
 .has-tooltip:focus-visible .tooltip {
   visibility: visible;
   opacity: 1;
+  -webkit-transform: translateY(0);
+  -ms-transform: translateY(0);
+  -o-transform: translateY(0);
+  -moz-transform: translateY(0);
   transform: translateY(0);
 }
 
@@ -869,14 +1037,34 @@ textarea:focus-visible {
   left: 0;
   right: 0;
   height: 2em;
+  -webkit-transform: scaleY(0.08);
+  -ms-transform: scaleY(0.08);
+  -o-transform: scaleY(0.08);
+  -moz-transform: scaleY(0.08);
   transform: scaleY(0.08);
+  -webkit-transform-origin: bottom;
+  -ms-transform-origin: bottom;
+  -o-transform-origin: bottom;
+  -moz-transform-origin: bottom;
   transform-origin: bottom;
   background-color: var(--color-primary-2);
   pointer-events: none;
   border-radius: var(--radius-medium);
   border-bottom: solid 0.1em var(--color-primary-6);
+  -webkit-transition-property: transform, background-color;
+  -o-transition-property: transform, background-color;
+  -moz-transition-property: transform, background-color;
+  -ms-transition-property: transform, background-color;
   transition-property: transform, background-color;
+  -webkit-transition-timing-function: ease-in-out;
+  -o-transition-timing-function: ease-in-out;
+  -moz-transition-timing-function: ease-in-out;
+  -ms-transition-timing-function: ease-in-out;
   transition-timing-function: ease-in-out;
+  -webkit-transition-duration: 300ms;
+  -o-transition-duration: 300ms;
+  -moz-transition-duration: 300ms;
+  -ms-transition-duration: 300ms;
   transition-duration: 300ms;
 }
 input:-internal-autofill-selected {
@@ -886,11 +1074,23 @@ input:-internal-autofill-selected {
 }
 input:-webkit-autofill,
 input:-webkit-autofill:focus {
+  -webkit-transition: background-color 600000s 0s, color 600000s 0s;
+  -o-transition: background-color 600000s 0s, color 600000s 0s;
+  -moz-transition: background-color 600000s 0s, color 600000s 0s;
+  -ms-transition: background-color 600000s 0s, color 600000s 0s;
   transition: background-color 600000s 0s, color 600000s 0s;
   -webkit-box-shadow: 0 0 0px 1000px gray inset;
+  -o-box-shadow: 0 0 0px 1000px gray inset;
+  -moz-box-shadow: 0 0 0px 1000px gray inset;
+  -ms-box-shadow: 0 0 0px 1000px gray inset;
+  box-shadow: 0 0 0px 1000px gray inset;
 }
 .input-wrap:has(input:focus)::before,
 .input-wrap:has(input:valid)::before {
+  -webkit-transform: scaleY(1);
+  -ms-transform: scaleY(1);
+  -o-transform: scaleY(1);
+  -moz-transform: scaleY(1);
   transform: scaleY(1);
 }
 .input-wrap label {
@@ -907,8 +1107,20 @@ input:-webkit-autofill:focus {
   left: 0.5em;
   min-width: max-content;
   cursor: text;
+  -webkit-transition-property: transform;
+  -o-transition-property: transform;
+  -moz-transition-property: transform;
+  -ms-transition-property: transform;
   transition-property: transform;
+  -webkit-transition-timing-function: ease-in-out;
+  -o-transition-timing-function: ease-in-out;
+  -moz-transition-timing-function: ease-in-out;
+  -ms-transition-timing-function: ease-in-out;
   transition-timing-function: ease-in-out;
+  -webkit-transition-duration: 300ms;
+  -o-transition-duration: 300ms;
+  -moz-transition-duration: 300ms;
+  -ms-transition-duration: 300ms;
   transition-duration: 300ms;
 }
 .input-wrap input:focus-visible {
@@ -917,6 +1129,10 @@ input:-webkit-autofill:focus {
 
 .input-wrap input:focus ~ span,
 .input-wrap input:valid ~ span {
+  -webkit-transform: translateY(-2em);
+  -ms-transform: translateY(-2em);
+  -o-transform: translateY(-2em);
+  -moz-transform: translateY(-2em);
   transform: translateY(-2em);
 }
 
@@ -966,6 +1182,10 @@ input[type='number'] {
 .main-container input:-webkit-autofill,
 .main-container input:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0 0 transparent inset;
+  -o-box-shadow: 0 0 0 0 transparent inset;
+  -moz-box-shadow: 0 0 0 0 transparent inset;
+  -ms-box-shadow: 0 0 0 0 transparent inset;
+  box-shadow: 0 0 0 0 transparent inset;
 }
 
 /*
